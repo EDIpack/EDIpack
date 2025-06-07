@@ -62,6 +62,9 @@ contains
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG allocate_dmft_bath"
 #endif
+    !
+    
+    !
     if(dmft_bath%status)call deallocate_dmft_bath()
     !
     select case(bath_type)
@@ -140,6 +143,9 @@ contains
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG deallocate_dmft_bath"
 #endif
+    !
+    
+    !
     if(.not.dmft_bath%status)return
     if(allocated(dmft_bath%e))   deallocate(dmft_bath%e)
     if(allocated(dmft_bath%d))   deallocate(dmft_bath%d)
@@ -194,6 +200,9 @@ contains
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG init_dmft_bath"
 #endif
+    !
+    if(Nbath.eq.0)return    
+    !
     if(.not.dmft_bath%status)stop "ERROR init_dmft_bath error: bath not allocated"
     !
     select case(bath_type)
@@ -321,6 +330,8 @@ contains
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG read_dmft_bath"
 #endif
+    !
+    if(Nbath.eq.0)return      
     !
     used_   = .true.      ;if(present(used))used_=used
     hsuffix = ".restart"  ;if(used_)hsuffix=reg(".used") !default=used
@@ -458,6 +469,9 @@ contains
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG save_dmft_bath"
 #endif
+    !
+    if(Nbath.eq.0)return    
+    !
     if(.not.dmft_bath%status)stop "save_dmft_bath error: bath is not allocated"
     !
     used_    =.false.    ;if(present(used))used_=used
@@ -498,7 +512,11 @@ contains
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG write_dmft_bath"
 #endif
+    !
+    if(Nbath.eq.0)return
+    !
     unit_=LOGfile;if(present(unit))unit_=unit
+    !
     if(.not.dmft_bath%status)stop "write_dmft_bath error: bath not allocated"
     !
     !BATH TYPE=normal,hybrid,replica,general
@@ -667,6 +685,9 @@ contains
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG set_dmft_bath: dmft_bath <- user_bath"
 #endif
+    !
+    if(Nbath.eq.0)return
+    !
     if(.not.dmft_bath%status)stop "set_dmft_bath error: bath not allocated"
     !
     check = check_bath_dimension(bath_)
@@ -876,6 +897,9 @@ contains
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG get_dmft_bath: dmft_bath -> user_bath"
 #endif
+    !
+    if(Nbath.eq.0)return  
+    !
     if(.not.dmft_bath%status)stop "get_dmft_bath error: bath not allocated"
     !
     check=check_bath_dimension(bath_)

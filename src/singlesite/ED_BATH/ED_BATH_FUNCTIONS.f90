@@ -167,7 +167,9 @@ contains
     !
     Delta=zero
     !
-    if(.not.dmft_bath%status)stop "delta_bath_array error: dmft_bath not allocated"
+    if(Nbath.eq.0)return
+    !
+    if(Nbath>0 .and. .not.dmft_bath%status)stop "delta_bath_array error: dmft_bath not allocated"
     !
     select case(bath_type)
     case default;stop "delta_bath_array error: bath_type not supported"
@@ -205,7 +207,9 @@ contains
     !
     Fdelta=zero
     !
-    if(.not.dmft_bath%status)stop "fdelta_bath_array error: dmft_bath not allocated"
+    if(Nbath.eq.0)return
+    !
+    if(Nbath>0 .and. .not.dmft_bath%status)stop "fdelta_bath_array error: dmft_bath not allocated"
     !
     if(ed_mode/="superc")then
        print*,"fdelta_bath_array WARNING: called with ed_mode != superc. Return zero"
@@ -259,7 +263,8 @@ contains
     !
     G0and = zero
     !
-    if(.not.dmft_bath%status)stop "g0and_bath_array error: dmft_bath not allocated"
+    !
+    if(Nbath>0 .and. .not.dmft_bath%status)stop "g0and_bath_array error: dmft_bath not allocated"
     !
     select case(bath_type)
     case default;stop "G0and_bath_array error: bath_type not supported"
@@ -294,7 +299,8 @@ contains
     !
     F0and=zero
     !
-    if(.not.dmft_bath%status)stop "f0and_bath_array error: dmft_bath not allocated"
+    !
+    if(Nbath>0 .and. .not.dmft_bath%status)stop "f0and_bath_array error: dmft_bath not allocated"
     !
     if(ed_mode/="superc")then
        print*,"f0and_bath_array WARNING: called with ed_mode != superc. Return zero"
@@ -346,7 +352,8 @@ contains
     !
     G0and = zero
     !
-    if(.not.dmft_bath%status)stop "invg0_bath_array error: dmft_bath not allocated"
+    !
+    if(Nbath>0 .and. .not.dmft_bath%status)stop "invg0_bath_array error: dmft_bath not allocated"
     !
     select case(bath_type)
     case default;stop "invg0_bath_array error: bath_type not supported"
@@ -379,7 +386,8 @@ contains
     !
     F0and=zero
     !
-    if(.not.dmft_bath%status)stop "invf0_bath_array error: dmft_bath not allocated"
+    !
+    if(Nbath>0 .and. .not.dmft_bath%status)stop "invf0_bath_array error: dmft_bath not allocated"
     !
     if(ed_mode/="superc")then
        print*,"f0and_bath_array WARNING: called with ed_mode != superc. Return zero"

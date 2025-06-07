@@ -1511,6 +1511,17 @@ void init_solver_site(double *bath, int64_t *dim_bath);
 
 /*!
 \rst
+This function initializes the solver for an isolated impurity.
+Interfaces to :f:func:`f/ed_main/ed_init_solver`.
+Single-site DMFT variant.
+\endrst
+* @param bath: user-accessible bath array
+* @param dim_bath: dimensions of the bath array
+*/ 
+void init_solver_site_nobath();
+
+/*!
+\rst
 This function initializes the solver.
 Interfaces to :f:func:`f/ed_main/ed_init_solver`.
 Real-space DMFT variant.
@@ -1520,9 +1531,21 @@ Real-space DMFT variant.
 */ 
 void init_solver_ineq(double *bath, int64_t *dim_bath);
 
+
 /*!
 \rst
-This function initializes the solver.
+This function initializes the solver for an isolated impurity.
+Interfaces to :f:func:`f/ed_main/ed_init_solver`.
+Real-space DMFT variant.
+\endrst
+* @param bath: user-accessible bath array
+* @param dim_bath: dimensions of the bath array
+*/ 
+void init_solver_ineq_nobath(int Nlat);
+
+/*!
+\rst
+Solves the impurity problem.
 Interfaces to :f:func:`f/ed_main/solve`.
 Single-site DMFT variant.
 \endrst
@@ -1539,7 +1562,24 @@ void solve_site(double *bath,
                 
 /*!
 \rst
-This function initializes the solver.
+This function solves the impurity problem for the case of
+an isolated impurity.
+Interfaces to :f:func:`f/ed_main/solve`.
+Single-site DMFT variant.
+\endrst
+* @param bath: user-accessible bath array
+* @param dim_bath: dimensions of the bath array
+* @param flag_gf: Green's function calculation flag (`1`=`True`, `0`=`False`)
+* @param flag_mpi: mpi setting flag (`1`=`True`, `0`=`False`)
+*/ 
+void solve_site_nobath(
+                int flag_gf, 
+                int flag_mpi
+                );
+                
+/*!
+\rst
+This function solves the impurity problem.
 Interfaces to :f:func:`f/e2i_main/solve`.
 Real-space DMFT variant.
 \endrst
@@ -1554,6 +1594,22 @@ void solve_ineq(double *bath,
                 int mpi_lanc 
                 );
 
+/*!
+\rst
+This function solves the impurity problem for the case of
+an isolated impuirty.
+Interfaces to :f:func:`f/e2i_main/solve`.
+Real-space DMFT variant.
+\endrst
+* @param bath: user-accessible bath array
+* @param dim_bath: dimensions of the bath array
+* @param flag_gf: Green's function calculation flag (`1`=`True`, `0`=`False`)
+* @param mpi_lanc: parallelization setting flag (`1`=`True`, `0`=`False`)
+*/                 
+void solve_ineq_nobath(int Nlat, 
+                       int flag_gf,                
+                       int mpi_lanc 
+                       );
 
 /*!
 \rst

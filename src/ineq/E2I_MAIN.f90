@@ -21,9 +21,11 @@ module E2I_MAIN
      !Initialize the Exact Diagonalization solver of `EDIpack`. This procedure reserves and allocates all the  
      !memory required by the solver, performs all the consistency check and initializes the bath instance guessing or reading from a file.      
      !It requires as an input a double precision array of rank-2 [ :f:var:`nb` , :f:var:`nlat` ] for the Real space DMFT case. :f:var:`nlat` is the number of inequivalent impurity sites,
-     !while :f:var:`nb` depends on the bath size and geometry and can be obtained from :f:func:`get_bath_dimension` .
+     !while :f:var:`nb` depends on the bath size and geometry and can be obtained from :f:func:`get_bath_dimension` .  If the simulation is to be run without a bath, an integer corresponding
+     !to :f:var:`nlat` has to be passed instead.
      !
      module procedure :: ed_init_solver_lattice
+     module procedure :: ed_init_solver_lattice_nobath
   end interface ed_init_solver
 
 
@@ -32,12 +34,13 @@ module E2I_MAIN
      !
      !Launch the Exact Diagonalizaton solver for the single-site and multiple-site (R-DMFT) quantum impurity problem.
      !It requires as an input a double precision array of  rank-2 [ :f:var:`nb` , :f:var:`nlat` ] for the Real space DMFT case. :f:var:`nlat` is the number of inequivalent impurity sites,
-     !while :f:var:`nb` depends on the bath size and geometry and can be obtained from :f:func:`get_bath_dimension` .
+     !while :f:var:`nb` depends on the bath size and geometry and can be obtained from :f:func:`get_bath_dimension` . If the simulation is to be run without a bath, an integer corresponding
+     !to :f:var:`nlat` has to be passed instead.
      !
      ! The solution is achieved in this sequence:
      !
      !  #. setup the MPI environment, if any 
-     !  #. Set the internal bath instance :f:var:`dmft_bath` copying from the user provided input :f:var:`bath`
+     !  #. Set the internal bath instance :f:var:`dmft_bath` copying from the user provided input :f:var:`bath`, if existing
      !  #. Get the low energy spectrum: call :f:func:`diagonalize_impurity`
      !  #. Get the impurity Green's functions: call :f:func:`buildgf_impurity` (if :f:var:`sflag` = :code:`.true.` )
      !  #. Get the impurity susceptibilities, if any: call :f:func:`buildchi_impurity` (if :f:var:`sflag` = :code:`.true.` )
@@ -47,6 +50,7 @@ module E2I_MAIN
      !  #. Delete MPI environment and deallocate used structures :f:var:`state_list` and :f:var:`dmft_bath`
      !
      module procedure :: ed_solve_lattice
+     module procedure :: ed_solve_lattice_nobath
   end interface ed_solve
 
 
@@ -94,12 +98,14 @@ contains
     if(allocated(neigen_total_ineq))deallocate(neigen_total_ineq)
     !
     Nineq = size(bath,1)
-    select case(bath_type)
-    case default
-    case('replica','general')
-       if(.not.allocated(Hlambda_ineq))&
-            stop "ERROR ed_init_solver: initial lambda not defined for all sites"
-    end select
+    if(Nbath>0)then
+      select case(bath_type)
+      case default
+      case('replica','general')
+         if(.not.allocated(Hlambda_ineq))&
+              stop "ERROR ed_init_solver: initial lambda not defined for all sites"
+      end select
+    endif
     !
     allocate(dens_ineq(Nineq,Norb))
     allocate(docc_ineq(Nineq,Norb))
@@ -113,10 +119,12 @@ contains
     !
     do ilat=1,Nineq
        call ed_set_suffix(ilat)
-       select case(bath_type)
-       case default;
-       case ('replica','general');call Hreplica_site(ilat)
-       end select
+       if(Nbath>0)then
+         select case(bath_type)
+         case default;
+         case ('replica','general');call Hreplica_site(ilat)
+         end select
+       endif
        !set the ilat-th lambda vector basis for the replica bath
        call ed_init_solver(bath(ilat,:))
     enddo
@@ -138,7 +146,13 @@ contains
   end subroutine ed_init_solver_lattice
 
 
-
+  subroutine ed_init_solver_lattice_nobath(Nlat)
+    integer                :: Nlat
+    real(8),dimension(Nlat,1) :: bath_dummy !user bath input array
+    !
+    bath_dummy=zero
+    call ed_init_solver_lattice(bath_dummy)
+  end subroutine ed_init_solver_lattice_nobath
 
 
 
@@ -354,6 +368,23 @@ contains
     !
   end subroutine ed_solve_lattice
 
+  subroutine ed_solve_lattice_nobath(Nlat,mpi_lanc,Uloc_ii,Ust_ii,Jh_ii,Jp_ii,Jx_ii,flag_gf)
+    integer                                       :: Nlat
+    real(8)                                       :: bath_dummy(Nlat,1) !user bath input array
+    logical,optional                              :: mpi_lanc  !parallelization strategy flag: if :code:`.false.` each core serially solves an inequivalent site, if :code:`.true.` all cores parallely solve each site in sequence. Default :code:`.false.` .
+    real(8),optional,dimension(Nlat,Norb) :: Uloc_ii !site-dependent values for :f:var:`uloc` , overriding the ones in the input file. It has dimension [ :f:var:`nlat` , :f:var:`norb` ].
+    real(8),optional,dimension(Nlat)      :: Ust_ii  !site-dependent values for :f:var:`ust` , overriding the ones in the input file. It has dimension [ :f:var:`nlat`].
+    real(8),optional,dimension(Nlat)      :: Jh_ii   !site-dependent values for :f:var:`jh` , overriding the ones in the input file. It has dimension [ :f:var:`nlat`].
+    real(8),optional,dimension(Nlat)      :: Jp_ii   !site-dependent values for :f:var:`jp` , overriding the ones in the input file. It has dimension [ :f:var:`nlat`].
+    real(8),optional,dimension(Nlat)      :: Jx_ii   !site-dependent values for :f:var:`jx` , overriding the ones in the input file. It has dimension [ :f:var:`nlat`].
+    logical,optional                      :: flag_gf   !flag to calculate ( :code:`.true.` ) or not ( :code:`.false.` ) Green's functions and susceptibilities. Default :code:`.true.` .   
+    logical                               :: mpi_lanc_,flag_gf_
+
+    mpi_lanc_=.false.;if(present(mpi_lanc))mpi_lanc_=mpi_lanc
+    flag_gf_=.true.;if(present(flag_gf))flag_gf=flag_gf_    
+    bath_dummy=zero
+    call ed_solve_lattice(bath_dummy,mpi_lanc,Uloc_ii,Ust_ii,Jh_ii,Jp_ii,Jx_ii,flag_gf)
+  end subroutine ed_solve_lattice_nobath
 
 
   !+-----------------------------------------------------------------------------+!

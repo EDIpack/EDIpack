@@ -79,6 +79,11 @@ contains
     write(Logfile,"(A)")"DEBUG chi2_fitgf_generic_normal_mpi: Start Chi**2 fit"
 #endif
     !
+    if(Nbath.eq.0)then
+      print*,"Nbath is 0. No bath to fit"
+      return
+    endif
+    !
     ispin_=1;if(present(ispin))ispin_=ispin
     fmpi_=.true.;if(present(fmpi))fmpi_=fmpi
     !
@@ -177,6 +182,11 @@ contains
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG chi2_fitgf_generic_normal_mpi: Start Chi**2 fit"
 #endif
+    !
+    if(Nbath.eq.0)then
+      print*,"Nbath is 0. No bath to fit"
+      return
+    endif
     !
     ispin_=1;if(present(ispin))ispin_=ispin
     fmpi_=.true.;if(present(fmpi))fmpi_=fmpi
@@ -282,6 +292,10 @@ contains
     write(Logfile,"(A)")"DEBUG chi2_fitgf_generic_superc: Start Chi**2 fit"
 #endif
     !
+    if(Nbath.eq.0)then
+      print*,"Nbath is 0. No bath to fit"
+      return
+    endif
     !
     ispin_=1;if(present(ispin))ispin_=ispin
     fmpi_=.true.;if(present(fmpi))fmpi_=fmpi
@@ -380,6 +394,10 @@ contains
     write(Logfile,"(A)")"DEBUG chi2_fitgf_generic_superc: Start Chi**2 fit"
 #endif
     !
+    if(Nbath.eq.0)then
+      print*,"Nbath is 0. No bath to fit"
+      return
+    endif
     !
     ispin_=1;if(present(ispin))ispin_=ispin
     fmpi_=.true.;if(present(fmpi))fmpi_=fmpi
