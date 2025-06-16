@@ -1399,11 +1399,14 @@ contains
     if(present(file))then
        open(free_unit(unit),file=reg(file))
        write(LOGfile,"(A)")"print_Hloc on file :"//reg(file)
+    else
+       write(unit,*)""
+       write(unit,"(A)")"Impurity local H:"
     endif
     !
     do ispin=1,Nspin
        do iorb=1,Norb
-          write(unit,"(100(A1,F8.4,A1,F8.4,A1,2x))")&
+          write(unit,"(100(A1,F10.4,A1,F10.4,A1,2x))")&
                (&
                (&
                '(',dreal(Hloc(ispin,jspin,iorb,jorb)),',',dimag(Hloc(ispin,jspin,iorb,jorb)),')',&
@@ -1430,11 +1433,14 @@ contains
     if(present(file))then
        open(free_unit(unit),file=reg(file))
        write(LOGfile,"(A)")"print_Hloc on file :"//reg(file)
+    else
+       write(unit,*)""
+       write(unit,"(A)")"Impurity local H:"
     endif
     !
     Nso = Nspin*Norb
     do is=1,Nso
-       write(unit,"(20(A1,F8.4,A1,F8.4,A1,2x))")&
+       write(unit,"(20(A1,F10.4,A1,F10.4,A1,2x))")&
             ('(',dreal(Hloc(is,js)),',',dimag(Hloc(is,js)),')',js =1,Nso)
     enddo
     write(unit,*)""

@@ -36,7 +36,7 @@ contains
     opline%c_k  = [ok, merge(1, 2, sk == "u")]
     opline%c_l  = [ol, merge(1, 2, sl == "u")]
     opline%U    = Uijkl
-    if(ed_verbose>0)then
+    if(ed_verbose>3)then
        write(dummy, '(F10.6)') opline%U 
        write(LOGfile,"(A)")'Runtime two-body operator:     '//&
             trim(dummy)//&
@@ -137,7 +137,9 @@ contains
      !Jh = zero
      !Jx = zero
      !Jp = zero
-     write(LOGfile,"(A)")'Clearing all internal interaction matrix coefficients and user-prodived two-body orbitals.'
+     if(ed_verbose>3)then
+       write(LOGfile,"(A)")'Clearing all internal interaction matrix coefficients and user-prodived two-body orbitals.'
+     endif
      if(allocated(mfHloc))mfHloc = zero
      if(allocated(Uloc_internal))Uloc_internal = zero
      if(allocated(Ust_internal))Ust_internal = zero
