@@ -476,6 +476,7 @@ contains
     integer,dimension(2,Ns_Orb)      :: Nud !Nbits(Ns_Orb)
     integer,dimension(2)             :: Iud
     integer,dimension(2*Ns)          :: ib
+    character(len=100)               :: fmt_print
     !
     if(MpiMaster)then
        !
@@ -499,7 +500,8 @@ contains
        if(ed_verbose>2)then
           select case(ed_mode)
           case ("normal")
-             write(LOGfile,"(A,I6,2I4,A,I6,2I4)")&
+             write(fmt_print, '(A,I0,A,I0,A)') '(A,I6,', 2*Ns_ud, 'I4,A,I6,', 2*Ns_ud, 'I4)' 
+             write(LOGfile,fmt_print)&
                   'From:',sectorI%index,sectorI%Nups,sectorI%Ndws,&
                   ' -> apply C  :',sectorJ%index,sectorJ%Nups,sectorJ%Ndws
           case default;stop "apply_Op_C ERROR: called with ed_mode != normal"
@@ -629,6 +631,7 @@ contains
     integer,dimension(2,Ns_Orb)      :: Nud !Nbits(Ns_Orb)
     integer,dimension(2)             :: Iud
     integer,dimension(2*Ns)          :: ib
+    character(len=100)               :: fmt_print
     !
     !
     if(MpiMaster)then
@@ -653,7 +656,8 @@ contains
        if(ed_verbose>2)then
           select case(ed_mode)
           case ("normal")
-             write(LOGfile,"(A,I6,2I4,A,I6,2I4)")&
+             write(fmt_print, '(A,I0,A,I0,A)') '(A,I6,', 2*Ns_ud, 'I4,A,I6,', 2*Ns_ud, 'I4)'
+             write(LOGfile,fmt_print)&
                   'From:',sectorI%index,sectorI%Nups,sectorI%Ndws,&
                   ' -> apply C^+:',sectorJ%index,sectorJ%Nups,sectorJ%Ndws
           case default;stop "apply_op_CDG ERROR: called with ed_mode/=normal"
