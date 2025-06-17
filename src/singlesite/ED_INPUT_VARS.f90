@@ -803,7 +803,7 @@ contains
           LOGfile=1000-rank
           open(LOGfile,file="stdOUT.rank"//str(rank)//".ed")
           do i=1,get_Size_MPI()
-             if(i==rank)write(*,"(A,I0,A,I0)")"Rank ",rank," writing to unit: ",LOGfile
+             if(i==rank .and. ed_verbose>1)write(*,"(A,I0,A,I0)")"Rank ",rank," writing to unit: ",LOGfile
           enddo
        endif
     endif
