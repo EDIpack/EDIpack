@@ -20,45 +20,48 @@ MODULE ED_OBSERVABLES_SUPERC
   public :: local_energy_superc
 
 
-  real(8),dimension(:),allocatable    :: dens,dens_up,dens_dw
-  real(8),dimension(:),allocatable    :: docc
-  real(8),dimension(:),allocatable    :: magZ,magX,magY
-  real(8),dimension(:,:),allocatable  :: phiscAB
-  real(8),dimension(:),allocatable    :: phisc
-  real(8),dimension(:,:),allocatable  :: sz2,n2
-  real(8)                             :: s2tot
-  real(8)                             :: Egs
-  real(8)                             :: Ei
-  real(8),dimension(:),allocatable    :: Prob
-  real(8),dimension(:),allocatable    :: prob_ph
-  real(8),dimension(:),allocatable    :: pdf_ph
-  real(8),dimension(:,:),allocatable  :: pdf_part
-  real(8)                             :: dens_ph
-  real(8)                             :: X_ph, X2_ph
+  real(8),dimension(:),allocatable      :: dens,dens_up,dens_dw
+  real(8),dimension(:),allocatable      :: docc
+  real(8),dimension(:),allocatable      :: magZ,magX,magY
+  complex(8),dimension(:,:),allocatable :: phiscAB
+  real(8),dimension(:,:),allocatable    :: rePhi,imPhi
+  real(8),dimension(:),allocatable      :: phisc
+  real(8),dimension(:,:),allocatable    :: sz2,n2
+  real(8)                               :: s2tot
+  real(8)                               :: Egs
+  real(8)                               :: Ei
+  real(8),dimension(:),allocatable      :: Prob
+  real(8),dimension(:),allocatable      :: prob_ph
+  real(8),dimension(:),allocatable      :: pdf_ph
+  real(8),dimension(:,:),allocatable    :: pdf_part
+  real(8)                               :: dens_ph
+  real(8)                               :: X_ph, X2_ph
 
   !
-  integer                             :: iorb,jorb,istate
-  integer                             :: ispin,jspin
-  integer                             :: isite,jsite
-  integer                             :: ibath
-  integer                             :: r,m,k,k1,k2,k3,k4
-  integer                             :: iup,idw
-  integer                             :: jup,jdw
-  integer                             :: mup,mdw
-  integer                             :: iph,i_el,j_el,isz
-  real(8)                             :: sgn,sgn1,sgn2,sg1,sg2,sg3,sg4
-  real(8)                             :: gs_weight
-  real(8)                             :: peso
-  real(8)                             :: norm
+  integer                               :: iorb,jorb,istate
+  integer                               :: ispin,jspin
+  integer                               :: isite,jsite
+  integer                               :: ibath
+  integer                               :: r,m,k,k1,k2,k3,k4
+  integer                               :: iup,idw
+  integer                               :: jup,jdw
+  integer                               :: mup,mdw
+  integer                               :: iph,i_el,j_el,isz
+  real(8)                               :: sgn,sgn1,sgn2,sg1,sg2,sg3,sg4
+  real(8)                               :: gs_weight
+  real(8)                               :: peso
+  real(8)                               :: norm
+
   !
-  integer                             :: i,j,ii,iprob
-  integer                             :: isector,jsector
+  integer                               :: i,j,ii,iprob
+  integer                               :: isector,jsector
   !
-  complex(8),dimension(:),allocatable :: vvinit
-  complex(8),dimension(:),allocatable :: v_state
-  logical                             :: Jcondition
+  complex(8),dimension(:),allocatable   :: vvinit
+  complex(8),dimension(:),allocatable   :: veta,vkappa
+  complex(8),dimension(:),allocatable   :: v_state
+  logical                               :: Jcondition
   !
-  type(sector)                        :: sectorI,sectorJ
+  type(sector)                          :: sectorI,sectorJ
 
 
 contains 
@@ -86,7 +89,7 @@ contains
     allocate(dens(Norb),dens_up(Norb),dens_dw(Norb))
     allocate(docc(Norb))
     allocate(magz(Norb),sz2(Norb,Norb),n2(Norb,Norb))
-    allocate(phisc(Norb),phiscAB(Norb,Norb))
+    allocate(phisc(Norb),phiscAB(Norb,Norb),RePhi(Norb,Norb),ImPhi(Norb,Norb))
     allocate(Prob(3**Norb))
     allocate(prob_ph(DimPh))
     allocate(pdf_ph(Lpos))
@@ -98,7 +101,9 @@ contains
     dens_dw = 0.d0
     docc    = 0.d0
     phisc   = 0.d0
-    phiscAB = 0.d0
+    phiscAB = zero
+    rePhi   = 0.d0
+    imPhi   = 0.d0
     magz    = 0.d0
     sz2     = 0.d0
     n2      = 0.d0
@@ -198,18 +203,25 @@ contains
           if(ed_verbose>2)write(Logfile,"(A)")"DEBUG observables_superc: get OP"
 #endif
           do ispin=1,Nspin 
-             !GET <(b_up + adg_dw)(bdg_up + a_dw)> = 
+             !GET: <(b_up + adg_dw)(bdg_up + a_dw)> = 
              !<b_up*bdg_up> + <adg_dw*a_dw> + <b_up*a_dw> + <adg_dw*bdg_up> = 
              !<n_a,dw> + < 1 - n_b,up> + 2*<PHI>_ab
              !EVALUATE [a_dw + bdg_up]|gs> = [1,1].[C_{-1},C_{+1}].[iorb,jorb].[dw,up]
+
+             !Get:
+             !\eta   = <(B_up + A^+_dw) (B^+_up + A_dw)>  = <n_Adw> + <1-n_Bup> + 2RePhi_AB
+             !\kappa = <(B_up +i.A^+_dw)(B^+_up -i.A_dw)> = <n_Adw> + <1-n_Bup> + 2ImPhi_AB
+
              do iorb=1,Norb !A
                 do jorb=1,Norb !B 
                    isz = getsz(isector)
                    if(isz<Ns)then
                       jsector = getsector(isz+1,1)
-                      vvinit  = apply_Cops(v_state,[one,one],[-1,1],[iorb,jorb],[2,1],isector,jsector)
-                      phiscAB(iorb,jorb) = phiscAB(iorb,jorb) + dot_product(vvinit,vvinit)*peso
-                      deallocate(vvinit)
+                      veta    = apply_Cops(v_state,[one,one],[-1,1],[iorb,jorb],[2,1],isector,jsector)
+                      vkappa  = apply_Cops(v_state,[one,xi], [-1,1],[iorb,jorb],[2,1],isector,jsector)
+                      RePhi(iorb,jorb) = RePhi(iorb,jorb) + dot_product(veta,veta)*peso
+                      ImPhi(iorb,jorb) = ImPhi(iorb,jorb) + dot_product(vkappa,vkappa)*peso
+                      deallocate(veta,vkappa)
                    endif
                 enddo
              enddo
@@ -228,9 +240,12 @@ contains
     !
     do iorb=1,Norb
        do jorb=1,Norb
-          phiscAB(iorb,jorb) = 0.5d0*(phiscAB(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
+          RePhi(iorb,jorb) = 0.5d0*(RePhi(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
+          ImPhi(iorb,jorb) = 0.5d0*(ImPhi(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
+          ! phiscAB(iorb,jorb) = 0.5d0*(phiscAB(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
+          phiscAB(iorb,jorb) = dcmplx(RePhi(iorb,jorb),ImPhi(iorb,jorb))
        enddo
-       phisc(iorb)=phiscAB(iorb,iorb)
+       phisc(iorb)=abs(phiscAB(iorb,iorb)) !sqrt(rePhi**2 + imPhi**2)
     enddo
     !
     !STATUS: IMPORTED FROM NORMAL, TO BE UPDATE TO NAMBU BASIS <\psi^+_a Psi_a>
@@ -638,12 +653,12 @@ contains
     integer :: unit,iorb,jorb,ispin
     !Parameters used:
     if(.not.ed_read_umatrix)then
-      unit = free_unit()
-      open(unit,file="parameters_info.ed")
-      write(unit,"(A1,90(A14,1X))")"#","1xmu","2beta",&
-           (reg(txtfy(2+iorb))//"U_"//reg(txtfy(iorb)),iorb=1,Norb),&
-           reg(txtfy(2+Norb+1))//"U'",reg(txtfy(2+Norb+2))//"Jh"
-      close(unit)
+       unit = free_unit()
+       open(unit,file="parameters_info.ed")
+       write(unit,"(A1,90(A14,1X))")"#","1xmu","2beta",&
+            (reg(txtfy(2+iorb))//"U_"//reg(txtfy(iorb)),iorb=1,Norb),&
+            reg(txtfy(2+Norb+1))//"U'",reg(txtfy(2+Norb+2))//"Jh"
+       close(unit)
     endif
     !
     !Generic observables 
@@ -705,10 +720,10 @@ contains
     !
     !Parameters used:
     if(.not.ed_read_umatrix)then
-      unit = free_unit()
-      open(unit,file="parameters_last"//reg(ed_file_suffix)//".ed")
-      write(unit,"(90F15.9)")xmu,beta,(uloc(iorb),iorb=1,Norb),Ust,Jh,Jx,Jp
-      close(unit)
+       unit = free_unit()
+       open(unit,file="parameters_last"//reg(ed_file_suffix)//".ed")
+       write(unit,"(90F15.9)")xmu,beta,(uloc(iorb),iorb=1,Norb),Ust,Jh,Jx,Jp
+       close(unit)
     endif
     !
     !Generic observables 
@@ -758,10 +773,10 @@ contains
        !
        !
        if(.not.ed_read_umatrix)then
-         unit = free_unit()
-         open(unit,file="Occupation_prob"//reg(ed_file_suffix)//".ed")
-         write(unit,"(125F15.9)")Uloc(1),Prob,sum(Prob)
-         close(unit)
+          unit = free_unit()
+          open(unit,file="Occupation_prob"//reg(ed_file_suffix)//".ed")
+          write(unit,"(125F15.9)")Uloc(1),Prob,sum(Prob)
+          close(unit)
        endif
        !
        !N_ph probability:
