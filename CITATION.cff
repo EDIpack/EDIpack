@@ -1,0 +1,36 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: EDIpack
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Adriano
+    family-names: Amaricci
+    email: amaricci@iom.cnr.it
+    affiliation: CNR-IOM
+identifiers:
+  - type: doi
+    value: 10.48550/arXiv.2506.01363
+    description: arXiv DOI
+  - type: doi
+    value: 10.1016/j.cpc.2021.108261
+    description: 'CPR DOI '
+repository-code: 'https://github.com/EDIpack/EDIpack'
+abstract: >-
+  EDIpack is a Lanczos based method for the solution of
+  generic Quantum Impurity problems, exploiting distributed
+  memory MPI parallelisation. This version, aims to solve
+  single-site, multi-orbital models, in either normal,
+  superconducting (s-wave) or Spin-non-conserving (e.g. with
+  Spin-Orbit Coupling or in-plane magnetization) phases,
+  including electron-phonons coupling. The code works at
+  zero and low temperatures.
+keywords:
+  - Exact Diagonalization
+  - Dynamical Mean-Field Theory
+  - Quantum Impurity Models
+license: LGPL-2.0+
