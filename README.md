@@ -36,9 +36,11 @@ In [Quickstart](https://edipack.github.io/EDIpack/quickstart/02_dmft.html) we il
 
 
 ### Reference
-A full overview of EDIpack can be found at [arXiv.2506.01363](https://doi.org/10.48550/arXiv.2506.01363) which is currently under review in Scipost Physics Codebases at [scipost_202506_00023v1](https://scipost.org/submissions/scipost_202506_00023v1/). The paper source is entirely available at [EDIpack/EDIpackManuscript](https://github.com/EDIpack/EDIpackManuscript)
+A full overview of EDIpack can be found at [arXiv.2506.01363](https://doi.org/10.48550/arXiv.2506.01363), currently under review in Scipost Physics Codebases  [scipost_202506_00023v1](https://scipost.org/submissions/scipost_202506_00023v1/). The paper source is also available at [EDIpack/EDIpackManuscript](https://github.com/EDIpack/EDIpackManuscript).  
+
 Useful informations about the distributed memory parallel algorithms underlying the functioning of EDIpack and their benchmarks are presented in [j.cpc.2021.108261](https://doi.org/10.1016/j.cpc.2021.108261) (also freely available in the arXiv).   
-Should you use EDIpack or any of the derived packages, please consider citing both papers:
+
+**Should you use EDIpack or any of the derived packages, please consider citing both papers**:
 
 ```
 @misc{Crippa2025arxiv,
