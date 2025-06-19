@@ -4,31 +4,64 @@
 cff-version: 1.2.0
 title: EDIpack
 message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
+  If you use this software please cite the related publications, see References section in the repo landing page. 
+  The metadata from this file can be used to reference the repository itself.
 type: software
 authors:
   - given-names: Adriano
     family-names: Amaricci
     email: amaricci@iom.cnr.it
-    affiliation: CNR-IOM
+    affiliation: CNR-IOM, Istituto Officina dei Materiali, Consiglio Nazionale delle Ricerche, Trieste, Italy
+  - given-names: Lorenzo
+    family-names: Crippa
+    email: lorenzo.crippa@uni-hamburg.de
+    affiliation: I. Institut für Theoretische Physik, University of Hamburg, Hamburg, Germany
+  - given-names: Samuele
+    family-names: Giuli
+    email: giuli@sissa.it 
+    affiliation: SISSA, Scuola Internazionale Superiore di Studi Avanzati, Trieste, Italy
+  - given-names: Gabriele
+    family-names: Bellomia
+    email: bellomia@sissa.it
+    affiliation: SISSA, Scuola Internazionale Superiore di Studi Avanzati, Trieste, Italy
+  - given-names: Francesco
+    family-names: Petocchi
+    email: francesco.petocchi@gmail.com
+    affiliation: Department of Quantum Matter Physics, University of Geneva, Geneva, Switzerland
+  - given-names: Alberto
+    family-names: Scazzola
+    email: alberto.scazzola@gmail.com
+    affiliation: Department of Electronics and Telecommunications, Politecnico di Torino, Torino, Italy
+  - given-names: Giacomo
+    family-names: Mazza
+    email: giacomo.mazza@unipi.it
+    affiliation: Department of Physics “E. Fermi”, University of Pisa, Pisa, Italy
+  - given-names: Luca 
+    family-names: de Medici
+    email: luca.demedici@espci.fr
+    affiliation: LPEM, ESPCI Paris, PSL Research University, CNRS, Sorbonne Université, Paris, France
+  - given-names: Massimo
+    family-names: Capone
+    email: capone@sissa.it
+    affiliation: SISSA, Scuola Internazionale Superiore di Studi Avanzati, Trieste, Italy  
 identifiers:
   - type: doi
     value: 10.48550/arXiv.2506.01363
-    description: arXiv DOI
+    description: 'EDIpack'
   - type: doi
     value: 10.1016/j.cpc.2021.108261
-    description: 'CPR DOI '
+    description: 'Benchmarks'
 repository-code: 'https://github.com/EDIpack/EDIpack'
 abstract: >-
-  EDIpack is a Lanczos based method for the solution of
-  generic Quantum Impurity problems, exploiting distributed
-  memory MPI parallelisation. This version, aims to solve
-  single-site, multi-orbital models, in either normal,
-  superconducting (s-wave) or Spin-non-conserving (e.g. with
-  Spin-Orbit Coupling or in-plane magnetization) phases,
-  including electron-phonons coupling. The code works at
-  zero and low temperatures.
+  EDIpack is a flexible, high-performance numerical library using Lanczos-based exact diagonalization 
+  to solve generic quantum impurity problems, such as those introduced in Dynamical Mean-Field Theory 
+  to describe extended strongly correlated materials. The library efficiently solves impurity problems 
+  allowing for different broken-symmetry solutions, including superconductivity and featuring local 
+  spin-orbit coupling and/or electron-phonon coupling. The modular architecture of the software not 
+  only provides Fortran APIs but also includes bindings to C/C++, interfaces with Python and Julia or 
+  with TRIQS and W2Dynamics research platforms, thus ensuring unprecedented level of inter-operability. 
+  The outlook includes further extensions to study quantum materials and cold atoms quantum simulators, 
+  as well as quantum information applications.
 keywords:
   - Exact Diagonalization
   - Dynamical Mean-Field Theory
