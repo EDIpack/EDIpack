@@ -32,6 +32,7 @@ MODULE E2I_VARS_GLOBAL
   real(8),dimension(:,:),allocatable,save            :: docc_ineq
   real(8),dimension(:,:,:),allocatable,save          :: mag_ineq
   real(8),dimension(:,:,:),allocatable,save          :: phisc_ineq
+  real(8),dimension(:,:,:),allocatable,save          :: argsc_ineq
   real(8),dimension(:,:,:,:),allocatable             :: exct_ineq ![1:4,Norb,Norb]
   real(8),dimension(:,:),allocatable,save            :: dd_ineq,e_ineq
   integer,allocatable,dimension(:,:)                 :: neigen_sector_ineq

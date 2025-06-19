@@ -170,7 +170,7 @@ MODULE E2I_IO
   end interface ed_get_docc
 
   interface ed_get_phi
-     !This subroutine gets from the EDIpack library the value of the superconducting order parameter :math:`\phi` ( :f:var:`ed_mode` = :code:`superc` ) and passes it to the user.
+     !This subroutine gets from the EDIpack library the modulus value of the superconducting order parameter :math:`\phi` ( :f:var:`ed_mode` = :code:`superc` ) and passes it to the user.
      !
      !The :f:var:`self` variable can have the following dimensions:
      ! 
@@ -180,6 +180,19 @@ MODULE E2I_IO
      module procedure :: ed_get_phisc_n1
      module procedure :: ed_get_phisc_n3
   end interface ed_get_phi
+
+
+  interface ed_get_arg
+     !This subroutine gets from the EDIpack library the argument value of the superconducting order parameter  :math:`\theta=tan^{-1}(Im\phi/Re\phi)` ( :f:var:`ed_mode` = :code:`superc` ) and passes it to the user.
+     !
+     !The :f:var:`self` variable can have the following dimensions:
+     ! 
+     !  * [:f:var:`nlat`]:  :math:`\theta` for the specified :f:var:`iorb` orbital and all impurity sites
+     !  * [:f:var:`nlat`, :f:var:`norb`]:  :math:`\theta` for all impurity sites and orbitals
+     !
+     module procedure :: ed_get_argsc_n1
+     module procedure :: ed_get_argsc_n3
+  end interface ed_get_arg
 
 
   interface ed_get_exct
@@ -194,9 +207,9 @@ MODULE E2I_IO
      module procedure :: ed_get_exct_n1
      module procedure :: ed_get_exct_n3
      module procedure :: ed_get_exct_n4
- end interface ed_get_exct
+  end interface ed_get_exct
 
- 
+
   !Get Energies
   interface ed_get_eimp
      !This subroutine gets from the EDIpack library and passes to the user the array [ :f:var:`ed_epot` , :f:var:`ed_eint` , :f:var:`ed_ehartree` , :f:var:`ed_eknot` ].
@@ -342,6 +355,7 @@ MODULE E2I_IO
   public :: ed_get_mag
   public :: ed_get_docc
   public :: ed_get_phi
+  public :: ed_get_arg
   public :: ed_get_exct
   public :: ed_get_eimp
   public :: ed_get_epot
@@ -430,14 +444,14 @@ contains
   ! include "get_sp_dm.f90"
 
 
-!   !+--------------------------------------------------------------------------+!
-!   ! PURPOSE: Single Particle DM
-!   !+--------------------------------------------------------------------------+!
-! #if __INTEL_COMPILER
-!   #include "get_sp_dm.f90"
-! #else
-!   include "get_sp_dm.f90"
-! #endif
+  !   !+--------------------------------------------------------------------------+!
+  !   ! PURPOSE: Single Particle DM
+  !   !+--------------------------------------------------------------------------+!
+  ! #if __INTEL_COMPILER
+  !   #include "get_sp_dm.f90"
+  ! #else
+  !   include "get_sp_dm.f90"
+  ! #endif
 
 
 

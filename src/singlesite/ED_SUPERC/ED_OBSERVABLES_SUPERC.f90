@@ -23,9 +23,8 @@ MODULE ED_OBSERVABLES_SUPERC
   real(8),dimension(:),allocatable      :: dens,dens_up,dens_dw
   real(8),dimension(:),allocatable      :: docc
   real(8),dimension(:),allocatable      :: magZ,magX,magY
-  complex(8),dimension(:,:),allocatable :: phiscAB
+  complex(8),dimension(:,:),allocatable :: phisc
   real(8),dimension(:,:),allocatable    :: rePhi,imPhi
-  real(8),dimension(:),allocatable      :: phisc
   real(8),dimension(:,:),allocatable    :: sz2,n2
   real(8)                               :: s2tot
   real(8)                               :: Egs
@@ -89,7 +88,7 @@ contains
     allocate(dens(Norb),dens_up(Norb),dens_dw(Norb))
     allocate(docc(Norb))
     allocate(magz(Norb),sz2(Norb,Norb),n2(Norb,Norb))
-    allocate(phisc(Norb),phiscAB(Norb,Norb),RePhi(Norb,Norb),ImPhi(Norb,Norb))
+    allocate(phisc(Norb,Norb),RePhi(Norb,Norb),ImPhi(Norb,Norb))
     allocate(Prob(3**Norb))
     allocate(prob_ph(DimPh))
     allocate(pdf_ph(Lpos))
@@ -100,8 +99,7 @@ contains
     dens_up = 0.d0
     dens_dw = 0.d0
     docc    = 0.d0
-    phisc   = 0.d0
-    phiscAB = zero
+    phisc   = zero
     rePhi   = 0.d0
     imPhi   = 0.d0
     magz    = 0.d0
@@ -242,10 +240,8 @@ contains
        do jorb=1,Norb
           RePhi(iorb,jorb) = 0.5d0*(RePhi(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
           ImPhi(iorb,jorb) = 0.5d0*(ImPhi(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
-          ! phiscAB(iorb,jorb) = 0.5d0*(phiscAB(iorb,jorb) - dens_dw(iorb) - (1.d0-dens_up(jorb)))
-          phiscAB(iorb,jorb) = dcmplx(RePhi(iorb,jorb),ImPhi(iorb,jorb))
+          phisc(iorb,jorb) = dcmplx(RePhi(iorb,jorb),ImPhi(iorb,jorb))
        enddo
-       phisc(iorb)=abs(phiscAB(iorb,iorb)) !sqrt(rePhi**2 + imPhi**2)
     enddo
     !
     !STATUS: IMPORTED FROM NORMAL, TO BE UPDATE TO NAMBU BASIS <\psi^+_a Psi_a>
@@ -336,10 +332,14 @@ contains
     !     if(ed_verbose>2)write(Logfile,"(A)")""
     ! #endif
     !     !
-    write(LOGfile,"(A,10f18.12,f18.12,A)")"dens"//reg(ed_file_suffix)//"=",(dens(iorb),iorb=1,Norb),sum(dens)
-    write(LOGfile,"(A,10f18.12,A)")    "docc"//reg(ed_file_suffix)//"=",(docc(iorb),iorb=1,Norb)
-    write(LOGfile,"(A,20f18.12,A)")    "phiAB "//reg(ed_file_suffix)//"=",((phiscAB(iorb,jorb),iorb=1,Norb),jorb=1,Norb)
-    write(LOGfile,"(A,20f18.12,A)")     " | phiAA*Uloc ",(abs(Uloc_internal(iorb))*phisc(iorb),iorb=1,Norb)
+    write(LOGfile,"(A,10f18.12,f18.12,A)")"dens "//reg(ed_file_suffix)//"=",(dens(iorb),iorb=1,Norb),sum(dens)
+    write(LOGfile,"(A,10f18.12,A)")       "docc "//reg(ed_file_suffix)//"=",(docc(iorb),iorb=1,Norb)
+    do iorb=1,Norb
+       write(LOGfile,"(A,20f18.12,A)")       "|phi|"//reg(ed_file_suffix)//"=",(abs(phisc(iorb,jorb)),jorb=1,Norb)
+    enddo
+    do iorb=1,Norb
+       write(LOGfile,"(A,20f18.12,A)")       "|arg|"//reg(ed_file_suffix)//"=",(atan2(imPhi(iorb,jorb),rePhi(iorb,jorb)),jorb=1,Norb)
+    enddo
     if(Nspin==2)then
        write(LOGfile,"(A,10f18.12,A)")    "magZ"//reg(ed_file_suffix)//"=",(magz(iorb),iorb=1,Norb)
     endif
@@ -349,18 +349,15 @@ contains
     endif
     !
     !
-    do iorb=1,Norb
-       ed_dens_up(iorb)=dens_up(iorb)
-       ed_dens_dw(iorb)=dens_dw(iorb)
-       ed_dens(iorb)   =dens(iorb)
-       ed_docc(iorb)   =docc(iorb)
-       ed_mag(3,iorb)  =magZ(iorb)
-       do jorb=1,Norb
-          ed_phisc(iorb,jorb)  =phiscAB(iorb,jorb)
-       enddo
-    enddo
+    ed_dens_up  = dens_up
+    ed_dens_dw  = dens_dw
+    ed_dens     = dens
+    ed_docc     = docc
+    ed_mag(3,:) = magZ
+    ed_phisc    = abs(phisc(:,:))
+    ed_argsc    = atan2(dimag(phisc(:,:)),dreal(phisc(:,:)))
     !
-    ed_imp_info=[s2tot,egs]
+    ed_imp_info = [s2tot,egs]
     !
 #ifdef _MPI
     if(MpiStatus)then
@@ -369,6 +366,7 @@ contains
        call Bcast_MPI(MpiComm,ed_dens)
        call Bcast_MPI(MpiComm,ed_docc)
        call Bcast_MPI(MpiComm,ed_phisc)
+       call Bcast_MPI(MpiComm,ed_argsc)
        call Bcast_MPI(MpiComm,ed_mag)
        call Bcast_MPI(MpiComm,ed_imp_info)
     endif
@@ -378,7 +376,7 @@ contains
        call write_observables()
     endif
     !
-    deallocate(dens,docc,phiscAB,phisc,dens_up,dens_dw,magz,sz2,n2,Prob)
+    deallocate(dens,docc,phisc,rephi,imphi,dens_up,dens_dw,magz,sz2,n2,Prob)
     deallocate(prob_ph,pdf_ph,pdf_part)
 #ifdef _DEBUG
     if(ed_verbose>2)write(Logfile,"(A)")""
@@ -760,8 +758,11 @@ contains
     !
     !SC order parameters
     unit = free_unit()
-    open(unit,file="phi_last"//reg(ed_file_suffix)//".ed")
-    write(unit,"(1X,*(F15.9,1x))")((phiscAB(iorb,jorb),jorb=1,Norb),iorb=1,Norb)
+    open(unit,file="phi_mod_last"//reg(ed_file_suffix)//".ed")
+    write(unit,"(1X,*(F15.9,1x))")((abs(phisc(iorb,jorb)),jorb=1,Norb),iorb=1,Norb)
+    close(unit)
+    open(unit,file="phi_arg_last"//reg(ed_file_suffix)//".ed")
+    write(unit,"(1X,*(F15.9,1x))")((atan2(dimag(phisc(iorb,jorb)),dreal(phisc(iorb,jorb))),jorb=1,Norb),iorb=1,Norb)
     close(unit)
     !
     !Phonons info
@@ -829,8 +830,11 @@ contains
     !
     !SC order parameters
     unit = free_unit()
-    open(unit,file="phi_all"//reg(ed_file_suffix)//".ed",position='append')
-    write(unit,"(1X,*(F15.9,1x))")((phiscAB(iorb,jorb),jorb=1,Norb),iorb=1,Norb)
+    open(unit,file="phi_mod_all"//reg(ed_file_suffix)//".ed",position='append')
+    write(unit,"(1X,*(F15.9,1x))")((abs(phisc(iorb,jorb)),jorb=1,Norb),iorb=1,Norb)
+    close(unit)
+    open(unit,file="phi_arg_all"//reg(ed_file_suffix)//".ed",position='append')
+    write(unit,"(1X,*(F15.9,1x))")((atan2(dimag(phisc(iorb,jorb)),dreal(phisc(iorb,jorb))),jorb=1,Norb),iorb=1,Norb)
     close(unit)
     !
     !Phonons info

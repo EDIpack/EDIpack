@@ -31,6 +31,7 @@ MODULE EDIPACK2INEQ
        ed_get_exctChi         , &       
        ed_get_dens            , &
        ed_get_phi             , &
+       ed_get_arg             , &
        ed_get_mag             , &
        ed_get_docc            , &
        ed_get_eimp            , &
