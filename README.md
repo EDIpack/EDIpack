@@ -86,7 +86,7 @@ Luca de Medici
 Francesco Petocchi  
 [Massimo Capone](https://github.com/massimocapone)
 
-Other important authors contributed to the development of the EDIpack ecosystem:
+Other important authors contributed to the development of the EDIpack ecosystem:   
 [Igor Krivenko](https://github.com/krivenko)  
 [Alexander Kowalski](https://github.com/alexkowalski)  
 [Markus Wallerberger](https://github.com/mwallerb)   
