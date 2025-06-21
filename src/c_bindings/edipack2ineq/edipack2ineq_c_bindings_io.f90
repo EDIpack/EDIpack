@@ -69,14 +69,14 @@ end subroutine ed_get_phisc_n3_c
 subroutine ed_get_argsc_n2_c(self) bind(c,name="ed_get_argsc_n2")
   use, intrinsic :: iso_c_binding
   real(c_double)     :: self(Norb,Norb)
-  call ed_get_arg(self)
+  call ed_get_argphi(self)
 end subroutine ed_get_argsc_n2_c
 
 subroutine ed_get_argsc_n3_c(self,Nlat) bind(c,name="ed_get_argsc_n3")
   use, intrinsic :: iso_c_binding
   integer(c_int),value     :: Nlat
   real(c_double)           :: self(Nlat,Norb,Norb)
-  call ed_get_arg(self,Nlat)
+  call ed_get_argphi(self,Nlat)
 end subroutine ed_get_argsc_n3_c
 
 !energy

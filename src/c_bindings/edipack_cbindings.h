@@ -1062,7 +1062,7 @@ void ed_get_phisc_n3(std::complex<double> *self, int Nlat);
 /*!                                         
 \rst
 This function obtains the superconductive order parameter argument.
-Interfaces to :f:func:`f/ed_io/ed_get_arg`. 
+Interfaces to :f:func:`f/ed_io/ed_get_argphi`. 
 Single-site DMFT version
 \endrst
 *
@@ -1073,7 +1073,7 @@ void ed_get_argsc_n2(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the superconductive order parameter argument.
-Interfaces to :f:func:`f/e2i_io/ed_get_arg`. 
+Interfaces to :f:func:`f/e2i_io/ed_get_argphi`. 
 Real-space DMFT version
 \endrst
 *
