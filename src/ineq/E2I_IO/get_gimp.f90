@@ -191,6 +191,7 @@ subroutine ed_get_gimp_lattice_n6(self,nlat,axis,type,z)
   L = size(z_)
   !
   call assert_shape(self,[Nlat,Nspin,Nspin,Norb,Norb,L],'ed_get_gimp','self')
+  self = zero
   !
   do ilat = 1 + MPI_ID, Nlat, MPI_SIZE
      call ed_set_suffix(ilat)

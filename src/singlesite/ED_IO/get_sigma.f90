@@ -37,6 +37,7 @@ subroutine ed_get_sigma_site_n3(self,axis,type,z)
   call assert_shape(self,[Nspin*Norb,Nspin*Norb,L],'ed_get_sigma','self')
   !
   allocate(gf(Nspin,Nspin,Norb,Norb,L))
+  gf = zero
   !
   select case(type_)
   case default; stop "ed_get_sigma ERROR: type is neither Normal, nor Anomalous"
@@ -87,6 +88,7 @@ subroutine ed_get_sigma_site_n5(self,axis,type,z)
   L = size(z_)
   !
   call assert_shape(self,[Nspin,Nspin,Norb,Norb,L],'ed_get_sigma','self')
+  self = zero
   !  
   select case(type_)
   case default; stop "ed_get_sigma ERROR: type is neither Normal, nor Anomalous"

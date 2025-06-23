@@ -35,6 +35,7 @@ subroutine ed_get_gimp_site_n3(self,axis,type,z)
   call assert_shape(self,[Nspin*Norb,Nspin*Norb,L],'ed_get_gimp','self')
   !
   allocate(gf(Nspin,Nspin,Norb,Norb,L))
+  gf = zero
   !
   select case(type_)
   case default; stop "ed_get_gimp ERROR: type is neither Normal, nor Anomalous"
@@ -83,6 +84,7 @@ subroutine ed_get_gimp_site_n5(self,axis,type,z)
   L = size(z_)
   !
   call assert_shape(self,[Nspin,Nspin,Norb,Norb,L],'ed_get_gimp','self')
+  self = zero
   !  
   select case(type_)
   case default; stop "ed_get_gimp ERROR: type is neither Normal, nor Anomalous"

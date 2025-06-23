@@ -724,6 +724,7 @@ contains
     auxG = zero
     barG = zero
     Gf   = zero
+    Ff   = zero
     !
     ispin=1 ! in this channel Nspin=2 is forbidden. check in ED_SETUP.
     !
