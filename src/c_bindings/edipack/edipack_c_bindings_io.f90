@@ -35,6 +35,12 @@ subroutine ed_get_phisc_n2_c(self) bind(c,name="ed_get_phisc_n2")
   call ed_get_phi(self)
 end subroutine ed_get_phisc_n2_c
 
+!superconductive arg
+subroutine ed_get_argsc_n2_c(self) bind(c,name="ed_get_argsc_n2")
+  use, intrinsic :: iso_c_binding
+  real(c_double)     :: self(Norb,Norb)
+  call ed_get_arg(self)
+end subroutine ed_get_argsc_n2_c
 
 !energy
 subroutine ed_get_eimp_n1_c(self) bind(c,name="ed_get_eimp_n1")
@@ -239,51 +245,51 @@ subroutine get_densChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
   !
   if(axis==0)axis_="m"
   if(axis==1)axis_="r"
-   if(axis==2)axis_="t"
-   !
-   if(zetaflag==0)then
-      if (latticeflag==0)then
-         call ed_get_densChi(self(1,:,:,:),axis_)
-      else
-         STOP "ed_get_denschi: Only single-site available without r-DMFT module"
-      endif
-   else
-      if (latticeflag==0)then
-         call ed_get_densChi(self(1,:,:,:),axis_,zeta)
-      else
-         STOP "ed_get_denschi: Only single-site available without r-DMFT module"
-      endif
-   endif
-!   !
- end subroutine get_densChi_c
+  if(axis==2)axis_="t"
+  !
+  if(zetaflag==0)then
+     if (latticeflag==0)then
+        call ed_get_densChi(self(1,:,:,:),axis_)
+     else
+        STOP "ed_get_denschi: Only single-site available without r-DMFT module"
+     endif
+  else
+     if (latticeflag==0)then
+        call ed_get_densChi(self(1,:,:,:),axis_,zeta)
+     else
+        STOP "ed_get_denschi: Only single-site available without r-DMFT module"
+     endif
+  endif
+  !   !
+end subroutine get_densChi_c
 
 subroutine get_pairChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bind(c,name='ed_get_pairchi')
-   use, intrinsic :: iso_c_binding
-   integer(c_int),value                                                :: dim_zeta
-   complex(c_double_complex),dimension(dim_zeta)                       :: zeta
-   integer(c_int),value                                                :: axis  ! 0="m", 1="r", 2="t"
-   integer(c_int),value                                                :: latticeflag, Nsites, zetaflag
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                                                :: dim_zeta
+  complex(c_double_complex),dimension(dim_zeta)                       :: zeta
+  integer(c_int),value                                                :: axis  ! 0="m", 1="r", 2="t"
+  integer(c_int),value                                                :: latticeflag, Nsites, zetaflag
   character(len=1)                                                    :: axis_
-   complex(c_double_complex),dimension(Nsites,Norb,Norb,dim_zeta)      :: self
-   !
-   if(axis==0)axis_="m"
-   if(axis==1)axis_="r"
-   if(axis==2)axis_="t"
-   !
-   if(zetaflag==0)then
-      if (latticeflag==0)then
-         call ed_get_pairChi(self(1,:,:,:),axis_)
-      else
-         STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
-      endif
-   else
-      if (latticeflag==0)then
-         call ed_get_pairChi(self(1,:,:,:),axis_,zeta)
-      else
-         STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
-      endif
-   endif
-   !
+  complex(c_double_complex),dimension(Nsites,Norb,Norb,dim_zeta)      :: self
+  !
+  if(axis==0)axis_="m"
+  if(axis==1)axis_="r"
+  if(axis==2)axis_="t"
+  !
+  if(zetaflag==0)then
+     if (latticeflag==0)then
+        call ed_get_pairChi(self(1,:,:,:),axis_)
+     else
+        STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
+     endif
+  else
+     if (latticeflag==0)then
+        call ed_get_pairChi(self(1,:,:,:),axis_,zeta)
+     else
+        STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
+     endif
+  endif
+  !
 end subroutine get_pairChi_c
 
 subroutine get_exctChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bind(c,name='ed_get_exctchi')
@@ -326,9 +332,9 @@ subroutine ed_get_impurity_rdm_c(rdm,doprint) bind(c,name='ed_get_impurity_rdm')
   integer(c_int),value                                :: doprint
   !
   if (doprint==0)then
-    rdm = ed_get_impurity_rdm(rdm)
+     rdm = ed_get_impurity_rdm(rdm)
   else
-    rdm = ed_get_impurity_rdm(rdm,.true.)
+     rdm = ed_get_impurity_rdm(rdm,.true.)
   endif
   !
 end subroutine ed_get_impurity_rdm_c

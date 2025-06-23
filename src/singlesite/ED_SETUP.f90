@@ -358,7 +358,7 @@ contains
     !
     !allocate observables
     allocate(ed_dens(Norb),ed_docc(Norb),ed_dens_up(Norb),ed_dens_dw(Norb))
-    allocate(ed_mag(3,Norb),ed_phisc(Norb,Norb),ed_imp_info(2))
+    allocate(ed_mag(3,Norb),ed_phisc(Norb,Norb),ed_argsc(Norb,Norb),ed_imp_info(2))
     allocate(ed_exct(4,Norb,Norb))
     ed_dens=0d0
     ed_docc=0d0
@@ -458,6 +458,7 @@ contains
     if(allocated(ed_dens))deallocate(ed_dens)
     if(allocated(ed_docc))deallocate(ed_docc)
     if(allocated(ed_phisc))deallocate(ed_phisc)
+    if(allocated(ed_argsc))deallocate(ed_argsc)
     if(allocated(ed_exct))deallocate(ed_exct)
     if(allocated(ed_imp_info))deallocate(ed_imp_info)
     if(allocated(ed_dens_up))deallocate(ed_dens_up)

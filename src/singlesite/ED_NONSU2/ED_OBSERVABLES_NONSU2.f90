@@ -29,7 +29,6 @@ MODULE ED_OBSERVABLES_NONSU2
   real(8),dimension(:),allocatable      :: magx ! orbital-resolved magnetization ( :code:`x` component )
   real(8),dimension(:),allocatable      :: magy ! orbital-resolved magnetization ( :code:`y` component )
   real(8),dimension(:),allocatable      :: magz ! orbital-resolved magnetization ( :code:`z` component )
-  real(8),dimension(:),allocatable      :: phisc ! superconductive order parameter
   real(8),dimension(:,:),allocatable    :: n2 ! :math:`\langle n_{i} n_{j} \rangle` for i,j orbitals
   real(8),dimension(:,:),allocatable    :: sz2! :math:`\langle S^{z}_{i} S^{z}_{j} \rangle` for i,j orbitals
   real(8),dimension(:,:),allocatable    :: exct_s0 ! excitonic order parameter :math:`\langle c^{\dagger}_{is}\sigma^{0}c_{js^{'}} \rangle`

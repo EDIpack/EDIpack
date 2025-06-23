@@ -161,7 +161,7 @@ MODULE ED_IO
   end interface ed_get_docc
 
   interface ed_get_phi
-     !This subroutine gets from the EDIpack library the value of the superconducting order parameter :math:`\phi` ( :f:var:`ed_mode` = :code:`superc` ) and passes it to the user.
+     !This subroutine gets from the EDIpack library the modulus of the superconducting order parameter :math:`|\phi|` ( :f:var:`ed_mode` = :code:`superc` ) and passes it to the user.
      !
      !The :f:var:`self` variable can have the following dimensions:
      ! 
@@ -173,6 +173,20 @@ MODULE ED_IO
      module procedure :: ed_get_phisc_n1
      module procedure :: ed_get_phisc_n2
   end interface ed_get_phi
+
+  interface ed_get_argphi
+     !This subroutine gets from the EDIpack library the argument of the superconducting order parameter :math:`\theta=tan^{-1}(Im\phi/Re\phi)` ( :f:var:`ed_mode` = :code:`superc` ) and passes it to the user.
+     !
+     !The :f:var:`self` variable can have the following dimensions:
+     ! 
+     !  * scalar: if :f:var:`iorb` is provided for single-impurity DMFT, :math:`\theta` for that orbital
+     !  * [:f:var:`norb`]: for single-impurity DMFT, :math:`\theta` for all diagonal orbitals
+     !  * [:f:var:`norb` , :f:var:`norb`]: for single-impurity DMFT, :math:`\theta` for all orbitals
+     !
+     module procedure :: ed_get_argsc_n0
+     module procedure :: ed_get_argsc_n1
+     module procedure :: ed_get_argsc_n2
+  end interface ed_get_argphi
 
 
   interface ed_get_exct
@@ -189,7 +203,7 @@ MODULE ED_IO
      module procedure :: ed_get_exct_n1
      module procedure :: ed_get_exct_n2
      module procedure :: ed_get_exct_n3
- end interface ed_get_exct
+  end interface ed_get_exct
 
 
   !Get Energies
@@ -348,6 +362,7 @@ MODULE ED_IO
   public :: ed_get_mag
   public :: ed_get_docc
   public :: ed_get_phi
+  public :: ed_get_argphi
   public :: ed_get_exct
   public :: ed_get_eimp
   public :: ed_get_epot

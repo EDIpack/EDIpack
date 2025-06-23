@@ -97,6 +97,7 @@ MODULE EDIPACK
        ed_get_exctChi         , &       
        ed_get_dens            , &
        ed_get_phi             , &
+       ed_get_argphi          , &
        ed_get_exct            , &
        ed_get_mag             , &
        ed_get_docc            , &

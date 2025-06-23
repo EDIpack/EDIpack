@@ -1036,27 +1036,54 @@ void ed_get_docc_n2(std::complex<double> *self, int Nlat);
 
 /*!                                         
 \rst
-This function obtains the superconductive order parameter.
+This function obtains the superconductive order parameter modulus.
 Interfaces to :f:func:`f/ed_io/ed_get_phi`. 
 Single-site DMFT version
 \endrst
 *
-* @param self: superconductive order parameter array
+* @param self: superconductive order parameter modulus array
 */  
 void ed_get_phisc_n2(std::complex<double> *self);
 
 /*!                                         
 \rst
-This function obtains the superconductive order parameter.
+This function obtains the superconductive order parameter modulus.
 Interfaces to :f:func:`f/e2i_io/ed_get_phi`. 
 Real-space DMFT version
 \endrst
 *
-* @param self: superconductive order parameter array
+* @param self: superconductive order parameter modulus array
 * @param Nlat: number of inequivalent sites
 */  
 void ed_get_phisc_n3(std::complex<double> *self, int Nlat);
 
+
+
+/*!                                         
+\rst
+This function obtains the superconductive order parameter argument.
+Interfaces to :f:func:`f/ed_io/ed_get_argphi`. 
+Single-site DMFT version
+\endrst
+*
+* @param self: superconductive order parameter argument array
+*/  
+void ed_get_argsc_n2(std::complex<double> *self);
+
+/*!                                         
+\rst
+This function obtains the superconductive order parameter argument.
+Interfaces to :f:func:`f/e2i_io/ed_get_argphi`. 
+Real-space DMFT version
+\endrst
+*
+* @param self: superconductive order parameter argument array
+* @param Nlat: number of inequivalent sites
+*/  
+void ed_get_argsc_n3(std::complex<double> *self, int Nlat);
+
+  
+  
 /*!                                         
 \rst
 This function obtains the local energy.

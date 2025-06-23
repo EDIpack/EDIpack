@@ -65,6 +65,19 @@ subroutine ed_get_phisc_n3_c(self,Nlat) bind(c,name="ed_get_phisc_n3")
   call ed_get_phi(self,Nlat)
 end subroutine ed_get_phisc_n3_c
 
+!superconductive arg
+subroutine ed_get_argsc_n2_c(self) bind(c,name="ed_get_argsc_n2")
+  use, intrinsic :: iso_c_binding
+  real(c_double)     :: self(Norb,Norb)
+  call ed_get_argphi(self)
+end subroutine ed_get_argsc_n2_c
+
+subroutine ed_get_argsc_n3_c(self,Nlat) bind(c,name="ed_get_argsc_n3")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value     :: Nlat
+  real(c_double)           :: self(Nlat,Norb,Norb)
+  call ed_get_argphi(self,Nlat)
+end subroutine ed_get_argsc_n3_c
 
 !energy
 subroutine ed_get_eimp_n1_c(self) bind(c,name="ed_get_eimp_n1")
@@ -478,9 +491,9 @@ subroutine ed_get_impurity_rdm_c(rdm,doprint) bind(c,name='ed_get_impurity_rdm')
   integer(c_int),value                                :: doprint
   !
   if (doprint==0)then
-    call ed_get_impurity_rdm(rdm)
+     call ed_get_impurity_rdm(rdm)
   else
-    call ed_get_impurity_rdm(rdm,.true.)
+     call ed_get_impurity_rdm(rdm,.true.)
   endif
   !
 end subroutine ed_get_impurity_rdm_c
