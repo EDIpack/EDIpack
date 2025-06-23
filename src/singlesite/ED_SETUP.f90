@@ -458,6 +458,7 @@ contains
     if(allocated(ed_dens))deallocate(ed_dens)
     if(allocated(ed_docc))deallocate(ed_docc)
     if(allocated(ed_phisc))deallocate(ed_phisc)
+    if(allocated(ed_argsc))deallocate(ed_argsc)
     if(allocated(ed_exct))deallocate(ed_exct)
     if(allocated(ed_imp_info))deallocate(ed_imp_info)
     if(allocated(ed_dens_up))deallocate(ed_dens_up)
