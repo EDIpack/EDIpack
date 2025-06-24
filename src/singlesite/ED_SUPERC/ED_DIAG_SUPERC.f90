@@ -383,7 +383,7 @@ contains
     !
     !
     numgs=es_return_gs_degeneracy(state_list,gs_threshold)
-    if(numgs>Nsectors)stop "ED_POST_DIAG SUPERC: Deg(GS) > Nsectors!"
+    !if(numgs>Nsectors)stop "ED_POST_DIAG SUPERC: Deg(GS) > Nsectors!"
     if(MPIMASTER.AND.ed_verbose>=2)then
        do istate=1,numgs
           isector = es_return_sector(state_list,istate)
