@@ -814,10 +814,11 @@ contains
     !
     Ltau=max(int(beta),Ltau)
     if(master)then
+       if(ed_verbose>0) call print_logo()
+       call scifor_version()
+       call code_version(version,name="EDIpack")
        if(print_input_vars)call print_input()
        call save_input(INPUTunit)
-       call scifor_version()
-       call code_version(version)
     endif
     !
     !
@@ -960,6 +961,24 @@ contains
     s(s_length+ilo2-ihi2:s_length) = ' '
     return
   end subroutine s_chop
+  
+  
+  subroutine print_logo()
+      write(*,*)" "
+      write(*,*)"            ╔════╗"
+      write(*,*)"            ║    ║"
+      write(*,*)"            ╚════╝"
+      write(*,*)"           𜰟 𜱁 𜱁 𜰠"
+      write(*,*)"          𜰟  𜱁 𜱁  ╭╴╮"
+      write(*,*)"         𜰟   𜱁 𜱁  ╰╴╯"
+      write(*,*)"        ╭╴╮ ╭╴╮╭╴╮"
+      write(*,*)"        ╰╴╯ ╰╴╯╰╴╯"
+      write(*,*)"╔═╗  ╔╦╗  ╦  ╔═╗  ╔═╗  ╔═╗  ╦╔═"
+      write(*,*)"║╣    ║║  ║  ╠═╝  ╠═╣  ║    ╠╩╗"
+      write(*,*)"╚═╝  ═╩╝  ╩  ╩    ╩ ╩  ╚═╝  ╩ ╩"
+      write(*,*)"Version " // trim(GIT_TAG)
+      write(*,*)" "
+  end subroutine print_logo
 
 
 END MODULE ED_INPUT_VARS
