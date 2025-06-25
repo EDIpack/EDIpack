@@ -29,12 +29,12 @@ function fdelta_bath_array_hybrid(x,axis) result(Fdelta)
            case ("m")
               do i=1,L
                  Fdelta(ispin,ispin,iorb,jorb,i) = &
-                      -sum( dps(:)*vops(iorb,:)*vops(jorb,:)/(dimag(x(i))**2+eps(:)**2+dps(:)**2))
+                      sum( dps(:)*vops(iorb,:)*vops(jorb,:)/(dimag(x(i))**2+eps(:)**2+dps(:)**2))
               enddo
            case ("r")
               do i=1,L
                  Fdelta(ispin,ispin,iorb,jorb,i) = &
-                      -sum( dps(:)*vops(iorb,:)*vops(jorb,:)/(x(i)*(-x(i)) + eps(:)**2 + dps(:)**2) )
+                      sum( dps(:)*vops(iorb,:)*vops(jorb,:)/(x(i)*(-x(i)) + eps(:)**2 + dps(:)**2) )
               enddo
            end select
         enddo
