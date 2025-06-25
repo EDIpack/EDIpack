@@ -29,21 +29,11 @@ function invg0_bath_array_normal(x,axis) result(G0and)
      !
   case ("superc")
      Delta =  delta_bath_array(x,axis_)
-     select case(axis_)
-     case default ;stop "invg0_bath_array_normal error: axis not supported"         !mats
-     case ("m")
-        do ispin=1,Nspin
-           do iorb=1,Norb
-              G0and(ispin,ispin,iorb,iorb,:)  =  x(:) + xmu - impHloc(ispin,ispin,iorb,iorb) -  Delta(ispin,ispin,iorb,iorb,:)
-           enddo
+     do ispin=1,Nspin
+        do iorb=1,Norb
+           G0and(ispin,ispin,iorb,iorb,:) = x(:) + xmu - impHloc(ispin,ispin,iorb,iorb) - Delta(ispin,ispin,iorb,iorb,:)
         enddo
-     case("r")
-        do ispin=1,Nspin
-           do iorb=1,Norb
-              G0and(ispin,ispin,iorb,iorb,:) = dreal(x(:)) + xmu - impHloc(ispin,ispin,iorb,iorb) - Delta(ispin,ispin,iorb,iorb,:)
-           enddo
-        enddo
-     end select
+     enddo
      !
   case ("nonsu2")
      Delta = delta_bath_array(x)

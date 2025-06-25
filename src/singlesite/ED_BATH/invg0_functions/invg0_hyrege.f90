@@ -30,31 +30,16 @@ function invg0_bath_array_hyrege(x,axis) result(G0and)
   case ("superc")
      allocate(zeta(Nso,Nso))
      Delta =  delta_bath_array(x,axis_)
-     select case(axis_)
-     case default;stop "invg0_bath_array_hyrege error: axis not supported"
-     case ("m")
-        do ispin=1,Nspin
-           do i=1,L
-              zeta = (x(i)+xmu)*zeye(Nso)
-              do iorb=1,Norb
-                 do jorb=1,Norb
-                    G0and(ispin,ispin,iorb,jorb,i) = zeta(iorb,jorb) - impHloc(ispin,ispin,iorb,jorb) - Delta(ispin,ispin,iorb,jorb,i)
-                 enddo
-              enddo
-           enddo
-        enddo
-     case ("r")
-        do ispin=1,Nspin
-           do i=1,L
-              zeta = ((x(i))  + xmu)*zeye(Nso)
-              do iorb=1,Norb
-                 do jorb=1,Norb
-                    G0and(ispin,ispin,iorb,jorb,i) = zeta(iorb,jorb) - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                 enddo
-              enddo
-           enddo
-        enddo
-     end select
+     do ispin=1,Nspin
+        do i=1,L
+          zeta = (x(i)+xmu)*zeye(Nso)
+          do iorb=1,Norb
+             do jorb=1,Norb
+                G0and(ispin,ispin,iorb,jorb,i) = zeta(iorb,jorb) - impHloc(ispin,ispin,iorb,jorb) - Delta(ispin,ispin,iorb,jorb,i)
+             enddo
+          enddo
+       enddo
+     enddo
      deallocate(zeta)
      !
   case ("nonsu2")
