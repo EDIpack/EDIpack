@@ -258,7 +258,7 @@ contains
           enddo
        endif
        !
-       if(MPIMASTER)then
+       if(MPIMASTER .AND. print_sector_eigenvalues)then
           unit=free_unit()
           open(unit,file="eigenvalues_list"//reg(ed_file_suffix)//".ed",position='append',action='write')
           call print_eigenvalues_list(isector,eig_values(1:Neigen),unit,lanc_solve,mpiAllThreads)

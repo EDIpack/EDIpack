@@ -526,6 +526,10 @@ MODULE ED_INPUT_VARS
   !values
   ! :Default print_input_vars:`T`
   !
+  logical                                                      :: print_sector_eigenvalues   !
+  !Flag to toggle the printing of the eigenvalues of each sectors to a file. 
+  ! :Default print_sector_eigenvalues:`T`
+  !
   !THIS IS JUST A RELOCATED GLOBAL VARIABLE
   character(len=200)                                 :: ed_input_file=""    !Name of input file
 
@@ -730,6 +734,7 @@ contains
     call parse_input_variable(HLOCfile,"HLOCfile",INPUTunit,default="inputHLOC.in",comment="File read the input local H.")
     call parse_input_variable(umatrix_file,"umatrix_file",INPUTunit,default="umatrix",comment="File read the two-body operator list from.")
     call parse_input_variable(print_input_vars,"PRINT_INPUT_VARS",INPUTunit,default=.true.,comment="Flag to toggle console printing of input variables list")
+    call parse_input_variable(print_sector_eigenvalues,"PRINT_SECTOR_EIGENVALUES",INPUTunit,default=.true.,comment="Flag to toggle printing to file  of sector eigenvalues list")
     call parse_input_variable(LOGfile,"LOGFILE",INPUTunit,default=6,comment="LOG unit.")
 
     !Parameter checks:
