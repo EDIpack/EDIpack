@@ -7,7 +7,8 @@ function invg0_bath_array_hyrege(x,axis) result(G0and)
   complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: G0and    
   character(len=1)                                    :: axis_
   complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: Delta
-  complex(8),dimension(:,:),allocatable               :: fgorb,zeta
+  complex(8),dimension(2*Nspin*Norb,size(x))          :: z
+  complex(8),dimension(Nspin*Norb,Nspin*Norb)         :: zeta
   integer                                             :: i,iorb,jorb,ispin,jspin,io,jo,Nso,L
   !
   axis_="m";if(present(axis))axis_=str(to_lower(axis))
@@ -28,23 +29,20 @@ function invg0_bath_array_hyrege(x,axis) result(G0and)
      enddo
      !
   case ("superc")
-     allocate(zeta(Nso,Nso))
      Delta =  delta_bath_array(x,axis_)
-     do ispin=1,Nspin
-        do i=1,L
-          zeta = (x(i)+xmu)*zeye(Nso)
-          do iorb=1,Norb
-             do jorb=1,Norb
-                G0and(ispin,ispin,iorb,jorb,i) = zeta(iorb,jorb) - impHloc(ispin,ispin,iorb,jorb) - Delta(ispin,ispin,iorb,jorb,i)
-             enddo
-          enddo
-       enddo
+     z     = zeta_superc(x,xmu,axis_)
+     do i=1,L
+        zeta = diag(z(:,i))
+        do ispin=1,Nspin
+           do iorb=1,Norb
+              do jorb=1,Norb
+                 G0and(ispin,ispin,iorb,jorb,i) =  zeta(iorb,jorb) - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
+              enddo
+           enddo
+        enddo
      enddo
-     deallocate(zeta)
-     !
   case ("nonsu2")
      Nso=Nspin*Norb
-     allocate(zeta(Nso,Nso))
      Delta = delta_bath_array(x)
      do i=1,L
         zeta  = (x(i) + xmu)*zeye(Nso)
@@ -60,7 +58,6 @@ function invg0_bath_array_hyrege(x,axis) result(G0and)
            enddo
         enddo
      enddo
-     deallocate(zeta)
   end select
   !
 end function invg0_bath_array_hyrege

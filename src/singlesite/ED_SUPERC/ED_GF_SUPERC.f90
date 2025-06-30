@@ -2,7 +2,7 @@ MODULE ED_GF_SUPERC
   !:synopsis: Routines for Green's functions calculation, :code:`SUPERC` case
   USE SF_CONSTANTS, only:one,xi,zero,pi
   USE SF_TIMER
-  USE SF_IOTOOLS, only: str,reg,txtfy, save_array, to_lower
+  USE SF_IOTOOLS, only: str,reg,txtfy, save_array, to_lower, splot
   USE SF_LINALG,  only: inv,eigh,eye
   USE ED_INPUT_VARS
   USE ED_VARS_GLOBAL
@@ -811,11 +811,11 @@ contains
 #ifdef _DEBUG
       if(ed_verbose>2)write(LOGfile,"(A)")"DEBUG Get F_l"//str(iorb)//"_m"//str(jorb)//"_axis: "//str(axis_)
 #endif
-      if(.not.allocated(impGmatrix(1,1,iorb,jorb)%state)) return
+      if(.not.allocated(impGmatrix(1,2,iorb,jorb)%state)) return
       !
       Nstates = size(impGmatrix(1,2,iorb,jorb)%state)
       do istate=1,Nstates
-         Nchannels = size(impGmatrix(1,2,iorb,jorb)%state(istate)%channel)     
+         Nchannels = size(impGmatrix(1,2,iorb,jorb)%state(istate)%channel)
          do ic=1,Nchannels        
             Nexcs  = size(impGmatrix(1,2,iorb,jorb)%state(istate)%channel(ic)%poles)
             if(Nexcs==0)cycle
@@ -969,7 +969,7 @@ contains
           case("m")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
              M(1     :Norb  ,Norb+1:2*Norb) = F(ispin,ispin,:,:,i)
-             M(Norb+1:2*Norb,     1:Norb  ) = conjg(F(ispin,ispin,:,:,i)) !this is real so conjg does none, but it shouldn't be there
+             M(Norb+1:2*Norb,     1:Norb  ) = F(ispin,ispin,:,:,i)
              M(Norb+1:2*Norb,Norb+1:2*Norb) =-conjg(G(ispin,ispin,:,:,i))
           case("r")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
@@ -981,6 +981,15 @@ contains
           call inv(M)
           invG(ispin,ispin,:,:,i) = M(1:Norb,1:Norb)
        enddo
+       !
+       select case(axis_)
+       case("m")
+          call splot("invG0_l11_s1_iw.dat",dimag(zeta),invG0(1,1,1,1,:))
+          call splot("invG_l11_s1_iw.dat",dimag(zeta),invG(1,1,1,1,:))
+       case("r")
+          call splot("invG0_l11_s1_realw.dat",dreal(zeta),invG0(1,1,1,1,:))
+          call splot("invG_l11_s1_realw.dat",dreal(zeta),invG(1,1,1,1,:))
+       end select
        !
        Sigma(ispin,ispin,:,:,:)  = invG0(ispin,ispin,:,:,:) - invG(ispin,ispin,:,:,:)       
        !
@@ -1011,7 +1020,7 @@ contains
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG get_Self_superc"
 #endif
     !
-  axis_="m";if(present(axis))axis_=str(to_lower(axis))
+    axis_="m";if(present(axis))axis_=str(to_lower(axis))
     !
     L = size(zeta)
     !
@@ -1053,7 +1062,7 @@ contains
           case("m")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
              M(1     :Norb  ,Norb+1:2*Norb) = F(ispin,ispin,:,:,i)
-             M(Norb+1:2*Norb,     1:Norb  ) = conjg(F(ispin,ispin,:,:,i)) !this is real so conjg does none, but it shouldn't be there
+             M(Norb+1:2*Norb,     1:Norb  ) = F(ispin,ispin,:,:,i)
              M(Norb+1:2*Norb,Norb+1:2*Norb) =-conjg(G(ispin,ispin,:,:,i))
           case("r")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
@@ -1065,6 +1074,15 @@ contains
           call inv(M)
           invF(ispin,ispin,:,:,i) = M(1:Norb,Norb+1:2*Norb)
        enddo
+       !
+       select case(axis_)
+       case("m")
+          call splot("invF0_l11_s1_iw.dat",dimag(zeta),invF0(1,1,1,1,:))
+          call splot("invF_l11_s1_iw.dat",dimag(zeta),invF(1,1,1,1,:))
+       case("r")
+          call splot("invF0_l11_s1_realw.dat",dreal(zeta),invF0(1,1,1,1,:))
+          call splot("invF_l11_s1_realw.dat",dreal(zeta),invF(1,1,1,1,:))
+       end select
        !
        Self(ispin,ispin,:,:,:)  = invF0(ispin,ispin,:,:,:) - invF(ispin,ispin,:,:,:)
     end select

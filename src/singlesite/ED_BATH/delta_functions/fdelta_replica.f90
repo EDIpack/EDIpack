@@ -2,8 +2,8 @@ function fdelta_bath_array_replica(x,axis) result(Fdelta)
 #if __INTEL_COMPILER
   use ED_INPUT_VARS, only: Nspin,Norb,Nbath
 #endif
-  complex(8),dimension(:),intent(in)                                :: x !complex  array for the frequency
-  character(len=*),optional                                         :: axis    !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis
+  complex(8),dimension(:),intent(in)                                :: x     !complex  array for the frequency
+  character(len=*),optional                                         :: axis  !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis
   complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x))               :: Fdelta
   character(len=1)                                                  :: axis_
   integer                                                           :: ibath

@@ -24,6 +24,7 @@ function delta_bath_array_hybrid(x,axis) result(Delta)
   complex(8),dimension(Nnambu*Nspin*Norb,Nnambu*Nspin*Norb)         :: invH_k
   complex(8),dimension(Nnambu*Nspin,Nnambu*Nspin,Norb,Norb)         :: invH_knn
   complex(8),dimension(Nnambu*Norb,Nnambu*Norb)                     :: JJ
+  complex(8)                                                        :: detH(Nbath),zz(2)
   character(len=1)                                                  :: axis_
   !
   axis_="m";if(present(axis))axis_=str(to_lower(axis))
@@ -58,13 +59,21 @@ function delta_bath_array_hybrid(x,axis) result(Delta)
               case default ;stop "delta_bath_array_hybrid error: axis not supported"         !mats
               case ("m")
                  do i=1,L
-                    Delta(ispin,ispin,iorb,jorb,i) = &
-                         -sum( vops(iorb,:)*vops(jorb,:)*(x(i) + eps(:))/(dimag(x(i))**2 + eps(:)**2 + dps(:)**2) )
+                    zz(1) = x(i)
+                    zz(2) = x(i)
+                    detH  = dps(:)**2 + (eps(:)+zz(2))*(eps(:)-zz(1))
+                    Delta(ispin,ispin,iorb,jorb,i) = -sum( vops(iorb,:)*vops(jorb,:)*(eps(:)+zz(2))/detH(:) )
+                    ! Delta(ispin,ispin,iorb,jorb,i) = &
+                    !      -sum( vops(iorb,:)*vops(jorb,:)*(x(i) + eps(:))/(dimag(x(i))**2 + eps(:)**2 + dps(:)**2) )
                  enddo
               case ("r")
                  do i=1,L
-                    Delta(ispin,ispin,iorb,jorb,i) = &
-                         -sum( vops(iorb,:)*vops(jorb,:)*(x(i) + eps(:))/((x(i)*(-x(i)) + eps(:)**2 + dps(:)**2)) )
+                    zz(1) = x(i)
+                    zz(2) = -conjg(x(L-i+1))
+                    detH  = dps(:)**2 + (eps(:)+zz(2))*(eps(:)-zz(1))
+                    Delta(ispin,ispin,iorb,jorb,i) = -sum( vops(iorb,:)*vops(jorb,:)*(eps(:)+zz(2))/detH(:) )
+                    ! Delta(ispin,ispin,iorb,jorb,i) = &
+                    !      -sum( vops(iorb,:)*vops(jorb,:)*(x(i) + eps(:))/((x(i)*(-x(i)) + eps(:)**2 + dps(:)**2)) )
                  enddo
               end select
            enddo
