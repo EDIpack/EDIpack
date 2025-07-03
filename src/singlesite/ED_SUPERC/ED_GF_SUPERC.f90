@@ -697,7 +697,7 @@ contains
 
 
 
-  function get_impF_superc(zeta_,axis,imsign) result(Ff)
+  function get_impF_superc(zeta_,axis,zconj) result(Ff)
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
@@ -710,8 +710,8 @@ contains
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta_)) :: Ff
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta_)) :: Gf
     integer                                                :: iorb,jorb,ispin,jspin,i,L
-    real(8)                                                :: imsign_
-    real(8),optional                                       :: imsign
+    logical,optional                                       :: zconj
+    logical                                                :: zconj_
     character(len=1)                                       :: axis_
     complex(8)                                             :: barG(Norb,size(zeta_))
     complex(8)                                             :: auxG(4,size(zeta_))
@@ -721,9 +721,13 @@ contains
 #endif
     !
     axis_ = 'm' ; if(present(axis))axis_ = axis(1:1) !only for self-consistency, not used here
-    imsign_ = 1d0 ; if(present(imsign))imsign_ = imsign
+    zconj_ = .false. ; if(present(zconj)) zconj_ = zconj
     !
-    zeta(:) = dreal(zeta_(:)) + imsign_* xi * dimag(zeta_(:))
+    if(zconj_)then
+      zeta(:) = conjg(zeta_(:))
+    else
+      zeta(:) = zeta_(:)
+    endif
     !
     if(.not.allocated(impGmatrix))stop "get_impF_superc ERROR: impGmatrix not allocated!"
     !
@@ -945,7 +949,7 @@ contains
     !Get G, F
     G       = get_impG_superc(zeta,axis_)
     F12     = get_impF_superc(zeta,axis_)
-    F21     = get_impF_superc(zeta,axis_,imsign=-1d0)
+    F21     = get_impF_superc(zeta,axis_,zconj=.true.)
     !
     !get G^{-1},F^{-1} --> Sigma
     Sigma = zero
@@ -1031,7 +1035,7 @@ contains
     !Get G, F
     G     = get_impG_superc(zeta)
     F12     = get_impF_superc(zeta,axis_)
-    F21     = get_impF_superc(zeta,axis_,imsign=-1d0)
+    F21     = get_impF_superc(zeta,axis_,zconj=.true.)
     !
     !get G^{-1},F^{-1} --> Self
     Self = zero
