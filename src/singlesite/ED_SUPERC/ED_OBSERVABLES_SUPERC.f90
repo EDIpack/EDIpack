@@ -335,10 +335,12 @@ contains
     write(LOGfile,"(A,10f18.12,f18.12,A)")"dens "//reg(ed_file_suffix)//"=",(dens(iorb),iorb=1,Norb),sum(dens)
     write(LOGfile,"(A,10f18.12,A)")       "docc "//reg(ed_file_suffix)//"=",(docc(iorb),iorb=1,Norb)
     do iorb=1,Norb
-       write(LOGfile,"(A,20f18.12,A)")       "|phi|"//reg(ed_file_suffix)//"=",(abs(phisc(iorb,jorb)),jorb=1,Norb)
+       if(iorb==1)write(LOGfile,"(A,20f18.12,A)")       "|phi|"//reg(ed_file_suffix)//"=",(abs(phisc(iorb,jorb)),jorb=1,Norb)
+       if(iorb/=1)write(LOGfile,"(A,20f18.12,A)")       "     "//reg(ed_file_suffix)//"=",(abs(phisc(iorb,jorb)),jorb=1,Norb)
     enddo
     do iorb=1,Norb
-       write(LOGfile,"(A,20f18.12,A)")       "|arg|"//reg(ed_file_suffix)//"=",(atan2(imPhi(iorb,jorb),rePhi(iorb,jorb)),jorb=1,Norb)
+       if(iorb==1)write(LOGfile,"(A,20f18.12,A)")       "arg  "//reg(ed_file_suffix)//"=",(atan2(imPhi(iorb,jorb),rePhi(iorb,jorb)),jorb=1,Norb)
+       if(iorb/=1)write(LOGfile,"(A,20f18.12,A)")       "     "//reg(ed_file_suffix)//"=",(atan2(imPhi(iorb,jorb),rePhi(iorb,jorb)),jorb=1,Norb)
     enddo
     if(Nspin==2)then
        write(LOGfile,"(A,10f18.12,A)")    "magZ"//reg(ed_file_suffix)//"=",(magz(iorb),iorb=1,Norb)
