@@ -710,8 +710,8 @@ contains
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta_)) :: Ff
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta_)) :: Gf
     integer                                                :: iorb,jorb,ispin,jspin,i,L
-    integer                                                :: imsign_
-    integer,optional                                       :: imsign
+    real(8)                                                :: imsign_
+    real(8),optional                                       :: imsign
     character(len=1)                                       :: axis_
     complex(8)                                             :: barG(Norb,size(zeta_))
     complex(8)                                             :: auxG(4,size(zeta_))
@@ -723,7 +723,7 @@ contains
     axis_ = 'm' ; if(present(axis))axis_ = axis(1:1) !only for self-consistency, not used here
     imsign_ = 1d0 ; if(present(imsign))imsign_ = imsign
     !
-    zeta(:) = dreal(zeta_(:)) + ((-1.0)**imsign_) * xi * dimag(zeta_(:))
+    zeta(:) = dreal(zeta_(:)) + imsign_* xi * dimag(zeta_(:))
     !
     if(.not.allocated(impGmatrix))stop "get_impF_superc ERROR: impGmatrix not allocated!"
     !
@@ -1031,7 +1031,7 @@ contains
     !Get G, F
     G     = get_impG_superc(zeta)
     F12     = get_impF_superc(zeta,axis_)
-    F21     = get_impF_superc(zeta,axis_,imsign=-1)
+    F21     = get_impF_superc(zeta,axis_,imsign=-1d0)
     !
     !get G^{-1},F^{-1} --> Self
     Self = zero
