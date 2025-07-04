@@ -47,7 +47,7 @@ Hamiltonian and the hopping between the impurity and the bath levels.
 .. math::
 
       H_{\rm bath} & = \sum_p \sum_{ab\sigma} h^p_{ab\sigma}p^{\dagger}_{a\sigma}p_{b\sigma} +
-      \sum_p \sum_{a} \Delta^p_a p_{a\uparrow}p_{a\downarrow} + H.c.\\\\
+      \sum_p \sum_{a} \Delta^p_a p_{a\downarrow}p_{a\uparrow} + H.c.\\\\
       H_{\rm hyb} & = \sum_p \sum_{a\sigma} V^p_{a\sigma}
       c^{\dagger}_{a\sigma} p_{p\sigma}  + H.c.
 
