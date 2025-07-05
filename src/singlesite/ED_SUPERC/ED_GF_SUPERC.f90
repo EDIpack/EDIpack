@@ -697,27 +697,37 @@ contains
 
 
 
-  function get_impF_superc(zeta,axis) result(Ff)
+  function get_impF_superc(zeta_,axis,zconj) result(Ff)
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     !
     ! Reconstructs the system impurity anomalous electrons Green's functions using :f:var:`impgmatrix` to retrieve weights and poles.
     !
-    complex(8),dimension(:),intent(in)                     :: zeta
+    complex(8),dimension(:),intent(in)                     :: zeta_
+    complex(8),dimension(size(zeta_))                      :: zeta
     character(len=*),optional                              :: axis
-    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: Ff
-    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: Gf
-    integer                                                :: iorb,jorb,ispin,jspin,i
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta_)) :: Ff
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta_)) :: Gf
+    integer                                                :: iorb,jorb,ispin,jspin,i,L
+    logical,optional                                       :: zconj
+    logical                                                :: zconj_
     character(len=1)                                       :: axis_
-    complex(8)                                             :: barG(Norb,size(zeta))
-    complex(8)                                             :: auxG(4,size(zeta))
+    complex(8)                                             :: barG(Norb,size(zeta_))
+    complex(8)                                             :: auxG(4,size(zeta_))
     !
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG get_impF_superc"
 #endif
     !
     axis_ = 'm' ; if(present(axis))axis_ = axis(1:1) !only for self-consistency, not used here
+    zconj_ = .false. ; if(present(zconj)) zconj_ = zconj
+    !
+    if(zconj_)then
+      zeta(:) = conjg(zeta_(:))
+    else
+      zeta(:) = zeta_(:)
+    endif
     !
     if(.not.allocated(impGmatrix))stop "get_impF_superc ERROR: impGmatrix not allocated!"
     !
@@ -914,7 +924,7 @@ contains
     complex(8),dimension(:),intent(in)                     :: zeta
     character(len=*),optional                              :: axis       !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: Sigma
-    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: G,F
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: G,F12,F21
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: invG,invF,invG0,invF0
     real(8)                                                :: Gdet(size(zeta))
     complex(8)                                             :: detG(size(zeta))
@@ -937,8 +947,9 @@ contains
     invF0 = invf0_bath_function(zeta,axis_)
     !
     !Get G, F
-    G     = get_impG_superc(zeta,axis_)
-    F     = get_impF_superc(zeta,axis_)
+    G       = get_impG_superc(zeta,axis_)
+    F12     = get_impF_superc(zeta,axis_)
+    F21     = get_impF_superc(zeta,axis_,zconj=.true.)
     !
     !get G^{-1},F^{-1} --> Sigma
     Sigma = zero
@@ -949,10 +960,10 @@ contains
           select case(axis_)
           case default;stop "get_Sigma_superc error: axis_ != mats,real"
           case("m")
-             Gdet =  dreal(abs(G(ispin,ispin,iorb,iorb,:))**2 + F(ispin,ispin,iorb,iorb,:)**2)
+             Gdet =  dreal(abs(G(ispin,ispin,iorb,iorb,:))**2 + F12(ispin,ispin,iorb,iorb,:)**2)
              invG(ispin,ispin,iorb,iorb,:)  =  conjg(G(ispin,ispin,iorb,iorb,:))/Gdet
           case("r")
-             detG = -G(ispin,ispin,iorb,iorb,:)*conjg(G(ispin,ispin,iorb,iorb,L:1:-1)) - F(ispin,ispin,iorb,iorb,:)**2
+             detG = -G(ispin,ispin,iorb,iorb,:)*conjg(G(ispin,ispin,iorb,iorb,L:1:-1)) - F12(ispin,ispin,iorb,iorb,:)**2
              invG(ispin,ispin,iorb,iorb,:)  = -conjg(G(ispin,ispin,iorb,iorb,L:1:-1))/detG
           end select
           !
@@ -968,13 +979,13 @@ contains
           case default;stop "get_Sigma_superc error: axis_ != mats,real"
           case("m")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
-             M(1     :Norb  ,Norb+1:2*Norb) = F(ispin,ispin,:,:,i)
-             M(Norb+1:2*Norb,     1:Norb  ) = conjg(F(ispin,ispin,:,:,i)) !this is real so conjg does none, but it shouldn't be there
+             M(1     :Norb  ,Norb+1:2*Norb) = F12(ispin,ispin,:,:,i)
+             M(Norb+1:2*Norb,     1:Norb  ) = transpose(conjg(F21(ispin,ispin,:,:,i)))
              M(Norb+1:2*Norb,Norb+1:2*Norb) =-conjg(G(ispin,ispin,:,:,i))
           case("r")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
-             M(1     :Norb  ,Norb+1:2*Norb) = F(ispin,ispin,:,:,i)
-             M(Norb+1:2*Norb,     1:Norb  ) = F(ispin,ispin,:,:,i)
+             M(1     :Norb  ,Norb+1:2*Norb) = F12(ispin,ispin,:,:,i)
+             M(Norb+1:2*Norb,     1:Norb  ) = transpose(conjg(F21(ispin,ispin,:,:,i)))
              M(Norb+1:2*Norb,Norb+1:2*Norb) =-conjg(G(ispin,ispin,:,:,L-i+1))
           end select
           !
@@ -1000,7 +1011,7 @@ contains
     complex(8),dimension(:),intent(in)                     :: zeta
     character(len=*),optional                              :: axis       !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: Self
-    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: G,F
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: G,F12,F21
     complex(8),dimension(Nspin,Nspin,Norb,Norb,size(zeta)) :: invG,invF,invG0,invF0
     complex(8)                                             :: detG(size(zeta))
     complex(8),dimension(2*Norb,2*Norb)                    :: M
@@ -1023,7 +1034,8 @@ contains
     !
     !Get G, F
     G     = get_impG_superc(zeta)
-    F     = get_impF_superc(zeta)
+    F12     = get_impF_superc(zeta,axis_)
+    F21     = get_impF_superc(zeta,axis_,zconj=.true.)
     !
     !get G^{-1},F^{-1} --> Self
     Self = zero
@@ -1034,11 +1046,11 @@ contains
           select case(axis_)
           case default;stop "get_Sigma_superc error: axis_ != mats,real"
           case("m")
-             detG =  dreal(abs(G(ispin,ispin,iorb,iorb,:))**2 + F(ispin,ispin,iorb,iorb,:)**2)
-             invF(ispin,ispin,iorb,iorb,:)  =  F(ispin,ispin,iorb,iorb,:)/detG
+             detG =  dreal(abs(G(ispin,ispin,iorb,iorb,:))**2 + F12(ispin,ispin,iorb,iorb,:)**2)
+             invF(ispin,ispin,iorb,iorb,:)  =  F12(ispin,ispin,iorb,iorb,:)/detG
           case("r")
-             detG = -G(ispin,ispin,iorb,iorb,:)*conjg(G(ispin,ispin,iorb,iorb,L:1:-1)) - F(ispin,ispin,iorb,iorb,:)**2
-             invF(ispin,ispin,iorb,iorb,:)  = -F(ispin,ispin,iorb,iorb,:)/detG
+             detG = -G(ispin,ispin,iorb,iorb,:)*conjg(G(ispin,ispin,iorb,iorb,L:1:-1)) - F12(ispin,ispin,iorb,iorb,:)**2
+             invF(ispin,ispin,iorb,iorb,:)  = -F12(ispin,ispin,iorb,iorb,:)/detG
           end select
           !
           Self(ispin,ispin,iorb,iorb,:) = invF0(ispin,ispin,iorb,iorb,:) - invF(ispin,ispin,iorb,iorb,:)
@@ -1052,13 +1064,13 @@ contains
           case default;stop "get_Sigma_superc error: axis_ != mats,real"
           case("m")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
-             M(1     :Norb  ,Norb+1:2*Norb) = F(ispin,ispin,:,:,i)
-             M(Norb+1:2*Norb,     1:Norb  ) = conjg(F(ispin,ispin,:,:,i)) !this is real so conjg does none, but it shouldn't be there
+             M(1     :Norb  ,Norb+1:2*Norb) = F12(ispin,ispin,:,:,i)
+             M(Norb+1:2*Norb,     1:Norb  ) = transpose(conjg(F21(ispin,ispin,:,:,i)))
              M(Norb+1:2*Norb,Norb+1:2*Norb) =-conjg(G(ispin,ispin,:,:,i))
           case("r")
              M(1     :Norb  ,     1:Norb  ) = G(ispin,ispin,:,:,i)
-             M(1     :Norb  ,Norb+1:2*Norb) = F(ispin,ispin,:,:,i)
-             M(Norb+1:2*Norb,     1:Norb  ) = F(ispin,ispin,:,:,i)
+             M(1     :Norb  ,Norb+1:2*Norb) = F12(ispin,ispin,:,:,i)
+             M(Norb+1:2*Norb,     1:Norb  ) = transpose(conjg(F21(ispin,ispin,:,:,i)))
              M(Norb+1:2*Norb,Norb+1:2*Norb) =-conjg(G(ispin,ispin,:,:,L-i+1))
           end select
           !

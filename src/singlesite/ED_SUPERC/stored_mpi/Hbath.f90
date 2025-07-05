@@ -103,7 +103,7 @@
         do iorb=1,size(dmft_bath%e,2)
            do kp=1,Nbath
               ms=getBathStride(iorb,kp)
-              !\Delta_l c_{\up,ms} c_{\dw,ms}
+              !\Delta_l c_{\dw,ms} c_{\up,ms}
               if( (dmft_bath%d(1,iorb,kp)/=0d0) .AND. (ib(ms)==1) .AND. (ib(ms+Ns)==1) )then
                  call c(ms,m,k1,sg1)
                  call c(ms+Ns,k1,k2,sg2)

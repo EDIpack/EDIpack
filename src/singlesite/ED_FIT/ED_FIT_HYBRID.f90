@@ -1252,13 +1252,13 @@ contains
        do iorb=1,Norb
           Delta(1,iorb,iorb,i) = -sum( vops(iorb,:)*vops(iorb,:)*(xi*Xdelta(i) + eps(:))/Den(i,:) )
           !
-          Delta(2,iorb,iorb,i) = -sum( dps(:)*vops(iorb,:)*vops(iorb,:)/Den(i,:) )
+          Delta(2,iorb,iorb,i) = sum( dps(:)*vops(iorb,:)*vops(iorb,:)/Den(i,:) )
           do jorb=iorb+1,Norb
              Delta(1,iorb,jorb,i) = -sum( vops(iorb,:)*vops(jorb,:)*(xi*Xdelta(i) + eps(:))/Den(i,:) )
              Delta(1,jorb,iorb,i) = -sum( vops(jorb,:)*vops(iorb,:)*(xi*Xdelta(i) + eps(:))/Den(i,:) )
              !
-             Delta(2,iorb,jorb,i) = -sum( dps(:)*vops(iorb,:)*vops(jorb,:)/Den(i,:) )
-             Delta(2,jorb,iorb,i) = -sum( dps(:)*vops(jorb,:)*vops(iorb,:)/Den(i,:) )
+             Delta(2,iorb,jorb,i) = sum( dps(:)*vops(iorb,:)*vops(jorb,:)/Den(i,:) )
+             Delta(2,jorb,iorb,i) = sum( dps(:)*vops(jorb,:)*vops(iorb,:)/Den(i,:) )
           enddo
        enddo
     enddo
@@ -1318,20 +1318,20 @@ contains
           do k=1,Nbath
              ik = stride + k
              dDelta(1,iorb,jorb,:,ik) = -vops(iorb,k)*vops(jorb,k)*(1d0/Den(:,k) - 2d0*eps(k)*( xi*Xdelta(:) + eps(k))/Den(:,k)**2)
-             dDelta(2,iorb,jorb,:,ik) = -2d0*vops(iorb,k)*vops(jorb,k)*eps(k)*dps(k)/Den(:,k)**2
+             dDelta(2,iorb,jorb,:,ik) = 2d0*vops(iorb,k)*vops(jorb,k)*eps(k)*dps(k)/Den(:,k)**2
           enddo
           stride=Nbath
           do k=1,Nbath
              ik = stride + k
              dDelta(1,iorb,jorb,:,ik) = 2d0*vops(iorb,k)*vops(jorb,k)*dps(k)*(xi*Xdelta(:) + eps(k))/Den(:,k)**2
-             dDelta(2,iorb,jorb,:,ik) = vops(iorb,k)*vops(jorb,k)*( 1d0/Den(:,k) - 2d0*dps(k)*dps(k)/Den(:,k)**2 )
+             dDelta(2,iorb,jorb,:,ik) = -vops(iorb,k)*vops(jorb,k)*( 1d0/Den(:,k) - 2d0*dps(k)*dps(k)/Den(:,k)**2 )
           enddo
           stride=2*Nbath
           do l=1,Norb
              do k=1,Nbath
                 ik = stride + k + (l-1)*Nbath
                 dDelta(1,iorb,jorb,:,ik) = (delta_orb(l,iorb)*vops(jorb,k) + delta_orb(l,jorb)*vops(iorb,k))*(xi*Xdelta(:) + eps(k))/Den(:,k)
-                dDelta(2,iorb,jorb,:,ik) = (delta_orb(l,iorb)*vops(jorb,k) + delta_orb(l,jorb)*vops(iorb,k))*dps(k)/Den(:,k)
+                dDelta(2,iorb,jorb,:,ik) = -(delta_orb(l,iorb)*vops(jorb,k) + delta_orb(l,jorb)*vops(iorb,k))*dps(k)/Den(:,k)
              enddo
           enddo
           !
