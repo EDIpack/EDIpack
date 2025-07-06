@@ -44,9 +44,12 @@ IF(VERBOSE)
 ELSE(VERBOSE)
   SET(CMAKE_VERBOSE_MAKEFILE OFF)
 ENDIF(VERBOSE)
-
-
-
+OPTION(PREFIX_TYPE "Set long (ON) or short (OFF) installation prefix DEFAULT_PREFIX(/<fc_id>/[<git_branch>{/<debug>}]/<version>):  " ON)
+if(PREFIX_TYPE)
+  message(STATUS "PREFIX_TYPE is ON")
+else()
+  message(STATUS "PREFIX_TYPE is OFF")
+endif()
 
 ############################################################
 # Look for MPI if needed
@@ -71,12 +74,6 @@ $ export PKG_CONFIG_PATH=<path_to_scifor_dir>/etc:$PKG_CONFIG_PATH")
 ENDIF()
 INCLUDE_DIRECTORIES(BEFORE ${SCIFOR_INCLUDE_DIRS})
 
-#message(STATUS "SCIFOR_FOUND: ${SCIFOR_FOUND}")
-#message(STATUS "SCIFOR_LIBRARIES: ${SCIFOR_LIBRARIES}")
-#message(STATUS "SCIFOR_LDFLAGS: ${SCIFOR_LDFLAGS}")
-#message(STATUS "SCIFOR_LIBS: ${SCIFOR_LIBS}")
-#message(STATUS "SCIFOR_LINK_LIBRARIES: ${SCIFOR_LINK_LIBRARIES}")
-
 
 ############################################################
 # Configure Fortran Compiler Main options
@@ -98,7 +95,6 @@ INCLUDE(${CMAKE_MODULE_PATH}/GitConfig.cmake)
 # Define the actual files and folders that make up the build
 ############################################################
 INCLUDE(${CMAKE_MODULE_PATH}/MainConfig.cmake)
-
 
 
 ############################################################
