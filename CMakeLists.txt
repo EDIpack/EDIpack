@@ -279,10 +279,6 @@ TARGET_LINK_LIBRARIES(${EDI_C} PRIVATE ${SCIFOR_LDFLAGS})
 ############################################################
 ############################################################
 
-SET(PERMISSION_777
-  OWNER_WRITE OWNER_READ OWNER_EXECUTE
-  GROUP_WRITE GROUP_READ GROUP_EXECUTE
-  WORLD_WRITE WORLD_READ WORLD_EXECUTE)
 
 
 

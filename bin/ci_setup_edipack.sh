@@ -1,20 +1,24 @@
 #Building EDIpack
 #Errors
 set -e
+set -v
 
 cd edipack
-mkdir build
-cd build
+pwd 
 
-echo "cmake .."
+mkdir -p build
+cd build
+pwd
+
 cmake ..
 
-echo "make"
 make -j
 
-echo "make install"
 make install
 
-echo "source ~/opt/edipack/gnu/*/bin/edipack_config_user.sh" >> ~/.edipack_config_user
-echo -e "\e[32m EDIpack installed and sourced \e[0m"
 
+CONF_PATH=$(grep CONFIG_FILE_PATH CMakeCache.txt |cut -d "=" -f2)
+
+echo "source $CONF_PATH/edipack_config_user.sh" >> ~/.edipack_config_user
+
+echo -e "\e[32m EDIpack compiled and sourced \e[0m"
