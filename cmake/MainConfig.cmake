@@ -30,12 +30,14 @@ IF (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     #set module name accordingly
     SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}/${VERSION}")    
     SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}/${VERSION}")
+    SET(FULL_VER "${PATH_ID}/${VERSION}")
   ELSE()
     SET(PATH_ID "default")
     #set to $HOME/opt/<libname>
     #set module name accordingly
     SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}")
     SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
+    SET(FULL_VER "${PATH_ID}")
   ENDIF(LONG_PREFIX)
 ELSE()
   SET(PATH_ID "default")
@@ -43,6 +45,7 @@ ELSE()
   #set module name accordingly
   SET(DEFAULT_PREFIX "${CMAKE_INSTALL_PREFIX}")
   SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
+  SET(FULL_VER "${PATH_ID}")
 ENDIF()
 
 
