@@ -85,10 +85,16 @@ additional variables:
    * - Option
      - Scope
      - Value
+
+
+   * - :code:`-DLONG_PREFIX`
+     - set a long or short prefix for the default installation directory  
+     -  yes/True OR no/False (default: True)
+
        
-   * - :code:`-DPREFIX`
-     - prefix directory  
-     - ~/opt/EDIpack/VERSION/PLATFORM/[GIT_BRANCH]
+   * - :code:`-DCMAKE_INSTALL_PREFIX`
+     - specify custom installation prefix  
+     - User defined path
        
    * - :code:`-DUSE_MPI`
      - MPI support pre-compilation flag
@@ -158,9 +164,10 @@ System-wide installation is completed after the build step using
 Please follow the instructions on the screen to complete installation on your environment.  
 The library can be loaded using one of the following, automatically generated, files :  
 
-*  A generated `environment module`_ , installed to `~/.modules.d/edipack/<PLAT>`
+*  A generated `environment module`_ , installed to
+   `~/.modules.d/edipack/<PREFIX/default if LONG_PREFIX=T/F>`
   
-* A generated `bash` script at `<PREFIX>/bin/configvars.sh`, to be sourced for permanent loading.
+* A generated `bash` script installed to `<PREFIX>/bin/configvars.sh`, to be sourced for permanent loading.
 
 *  A generated `pkg-config`_ file to, installed to `~/.pkg-config.d/edipack.pc`  
 
