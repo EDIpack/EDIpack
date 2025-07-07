@@ -9,7 +9,7 @@ MODULE ED_SETUP
   USE ED_SECTOR
   USE SF_TIMER
   USE SF_PARSE_INPUT, only: delete_input
-  USE SF_IOTOOLS, only:free_unit,reg,file_length
+  USE SF_IOTOOLS, only:free_unit,reg,file_length,txtfy
   USE SF_MISC, only: assert_shape
   USE SF_LINALG, only: eye
 #ifdef _MPI
@@ -208,24 +208,27 @@ contains
     !
     if(MpiMaster)then
        write(LOGfile,"(A)")"Summary:"
-       write(LOGfile,"(A)")"--------------------------------------------"
-       write(LOGfile,"(A,I15)")'# of levels/spin      = ',Ns
-       write(LOGfile,"(A,I15)")'Total size            = ',2*Ns
-       write(LOGfile,"(A,I15)")'# of impurities       = ',Norb
-       write(LOGfile,"(A,I15)")'# of bath/impurity    = ',Nbath
-       write(LOGfile,"(A,I15)")'# of Bath levels/spin = ',Ns-Norb
-       write(LOGfile,"(A,I15)")'# of  sectors         = ',Nsectors
-       write(LOGfile,"(A,I15)")'Ns_Orb                = ',Ns_Orb
-       write(LOGfile,"(A,I15)")'Ns_Ud                 = ',Ns_Ud
-       write(LOGfile,"(A,I15)")'Nph                   = ',Nph
+       write(LOGfile,"(A)")"-----------------------------------------------------"
+       write(LOGfile,"(A,I27)")'# of levels/spin      = ',Ns
+       write(LOGfile,"(A,I27)")'Total size            = ',2*Ns
+       write(LOGfile,"(A,I27)")'# of impurities       = ',Norb
+       write(LOGfile,"(A,I27)")'# of bath/impurity    = ',Nbath
+       write(LOGfile,"(A,I27)")'# of Bath levels/spin = ',Ns-Norb
+       write(LOGfile,"(A,I27)")'# of  sectors         = ',Nsectors
+       write(LOGfile,"(A,I27)")'Ns_Orb                = ',Ns_Orb
+       write(LOGfile,"(A,I27)")'Ns_Ud                 = ',Ns_Ud
+       write(LOGfile,"(A,I27)")'Nph                   = ',Nph
        select case(ed_mode)
        case default
-          write(LOGfile,"(A,"//str(Ns_Ud)//"I8,2X,"//str(Ns_Ud)//"I8,I8,I20)")&
-               'Largest Sector(s)     = ',DimUps,DimDws,DimPh,product(DimUps)*product(DimDws)*DimPh
+          write(LOGfile,"(A)")'Largest Sector(s):'
+          write(LOGfile,"(A,"//str(Ns_Ud)//"A)")' Dim(s) Up            =',(repeat(' ', (28 - Ns_Ud * len_trim(reg(txtfy(DimUps(iorb))))) / Ns_Ud) // reg(txtfy(DimUps(iorb))), iorb=1,Ns_Ud)
+          write(LOGfile,"(A,"//str(Ns_Ud)//"A)")' Dim(s) Up            =',(repeat(' ', (28 - Ns_Ud * len_trim(reg(txtfy(DimUps(iorb))))) / Ns_Ud) // reg(txtfy(DimDws(iorb))), iorb=1,Ns_Ud)
+          write(LOGfile,"(A,A)")                ' Dim(s) Ph            =', repeat(' ', 28 - len_trim(reg(txtfy(DimPh)))) // reg(txtfy(DimPh))
+          write(LOGfile,"(A,A)")                ' Total Dim            =', repeat(' ', 28 - len_trim(reg(txtfy(product(DimUps)*product(DimDws)*DimPh)))) // reg(txtfy(product(DimUps)*product(DimDws)*DimPh))      
        case("superc","nonsu2")
-          write(LOGfile,"(A,I15)")'Largest Sector(s)    = ',dim_sector_max
+          write(LOGfile,"(A,I27)")'Largest Sector(s)     = ',dim_sector_max
        end select
-       write(LOGfile,"(A)")"--------------------------------------------"
+       write(LOGfile,"(A)")"-----------------------------------------------------"
     endif
     !
     allocate(spH0ups(Ns_Ud))
