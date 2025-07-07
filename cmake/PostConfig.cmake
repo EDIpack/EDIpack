@@ -18,7 +18,7 @@ set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
 #Create default .version file if following conditions are verified:
 #1. master branch
 #2. no debug
-IF( (NOT "${BUILD_TYPE}" MATCHES "debug") AND (GIT_BRANCH MATCHES "master"))
+IF( (NOT "${BUILD_TYPE}" MATCHES "debug") AND (NOT "${PATH_ID}" MATCHES "custom") AND (GIT_BRANCH MATCHES "master"))
   SET(TMP_VER_MODULE_FILE ${LIB_TMP_ETC}/modules/${VERSION_PATH}/.version)
   CONFIGURE_FILE(${LIB_ENV}/version.in ${TMP_VER_MODULE_FILE}  @ONLY)
   MESSAGE(STATUS "${Red}Version file${ColourReset}: ${TMP_VER_MODULE_FILE}")

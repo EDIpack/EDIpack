@@ -17,7 +17,7 @@ SET(DEFAULT_LOCATION "$ENV{HOME}/opt")
 #if LONG_PREFIX=on
 IF (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   IF (LONG_PREFIX)
-    SET(PATH_ID "${FC_ID}")
+    SET(PATH_ID "${FC_ID}" CACHE INTERNAL "Default Path ID" FORCE)
     #IF not master branch, include simplified branch name
     IF( (NOT GIT_BRANCH MATCHES "master") )
       SET(PATH_ID  "${PATH_ID}/${GIT_BRANCH}")
@@ -30,19 +30,22 @@ IF (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     #set module name accordingly
     SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}/${VERSION}")    
     SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}/${VERSION}")
+    SET(FULL_VER "${PATH_ID}/${VERSION}")
   ELSE()
-    SET(PATH_ID "default")
+    SET(PATH_ID "custom" CACHE INTERNAL "Custom Path ID" FORCE)
     #set to $HOME/opt/<libname>
     #set module name accordingly
     SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}")
     SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
+    SET(FULL_VER "${PATH_ID}")
   ENDIF(LONG_PREFIX)
 ELSE()
-  SET(PATH_ID "default")
+  SET(PATH_ID "custom" CACHE INTERNAL "Custom Path ID" FORCE)
   #set to user defined CMAKE_INSTALL_PREFIX
   #set module name accordingly
   SET(DEFAULT_PREFIX "${CMAKE_INSTALL_PREFIX}")
   SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
+  SET(FULL_VER "${PATH_ID}")
 ENDIF()
 
 
