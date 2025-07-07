@@ -32,12 +32,14 @@ if(USE_MPI)
 else()
   message(STATUS "USE_MPI is OFF")
 endif()
+
 OPTION(WITH_INEQ "Includes Support for inequivalent impurities" ON)
 if(WITH_INEQ)
   message(STATUS "WITH_INEQ is ON")
 else()
   message(STATUS "WITH_INEQ is OFF")
 endif()
+
 OPTION(VERBOSE "Build a verbose Makefile" OFF)
 IF(VERBOSE)
   SET(CMAKE_VERBOSE_MAKEFILE ON)
@@ -45,8 +47,12 @@ ELSE(VERBOSE)
   SET(CMAKE_VERBOSE_MAKEFILE OFF)
 ENDIF(VERBOSE)
 
-
-
+OPTION(LONG_PREFIX "Set long (ON) or short (OFF) installation prefix DEFAULT_PREFIX(/<fc_id>/[<git_branch>{/<debug>}]/<version>):  " ON)
+if(LONG_PREFIX)
+  message(STATUS "LONG_PREFIX is ON")
+else()
+  message(STATUS "LONG_PREFIX is OFF")
+endif()
 
 ############################################################
 # Look for MPI if needed
@@ -71,12 +77,6 @@ $ export PKG_CONFIG_PATH=<path_to_scifor_dir>/etc:$PKG_CONFIG_PATH")
 ENDIF()
 INCLUDE_DIRECTORIES(BEFORE ${SCIFOR_INCLUDE_DIRS})
 
-#message(STATUS "SCIFOR_FOUND: ${SCIFOR_FOUND}")
-#message(STATUS "SCIFOR_LIBRARIES: ${SCIFOR_LIBRARIES}")
-#message(STATUS "SCIFOR_LDFLAGS: ${SCIFOR_LDFLAGS}")
-#message(STATUS "SCIFOR_LIBS: ${SCIFOR_LIBS}")
-#message(STATUS "SCIFOR_LINK_LIBRARIES: ${SCIFOR_LINK_LIBRARIES}")
-
 
 ############################################################
 # Configure Fortran Compiler Main options
@@ -98,7 +98,6 @@ INCLUDE(${CMAKE_MODULE_PATH}/GitConfig.cmake)
 # Define the actual files and folders that make up the build
 ############################################################
 INCLUDE(${CMAKE_MODULE_PATH}/MainConfig.cmake)
-
 
 
 ############################################################
@@ -283,10 +282,6 @@ TARGET_LINK_LIBRARIES(${EDI_C} PRIVATE ${SCIFOR_LDFLAGS})
 ############################################################
 ############################################################
 
-SET(PERMISSION_777
-  OWNER_WRITE OWNER_READ OWNER_EXECUTE
-  GROUP_WRITE GROUP_READ GROUP_EXECUTE
-  WORLD_WRITE WORLD_READ WORLD_EXECUTE)
 
 
 
