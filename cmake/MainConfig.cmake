@@ -14,9 +14,9 @@ SET(DEFAULT_LOCATION "$ENV{HOME}/opt")
 
 
 #IF CIP IS DEFAULT (i.e. /usr/local in Unix/Linux) then we use DEFAULT_LOCATION + possible addendum
-#if PREFIX_TYPE=on
+#if LONG_PREFIX=on
 IF (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  IF (PREFIX_TYPE)
+  IF (LONG_PREFIX)
     SET(PATH_ID "${FC_ID}")
     #IF not master branch, include simplified branch name
     IF( (NOT GIT_BRANCH MATCHES "master") )
@@ -36,7 +36,7 @@ IF (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     #set module name accordingly
     SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}")
     SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
-  ENDIF(PREFIX_TYPE)
+  ENDIF(LONG_PREFIX)
 ELSE()
   SET(PATH_ID "default")
   #set to user defined CMAKE_INSTALL_PREFIX
