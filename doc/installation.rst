@@ -185,8 +185,8 @@ Uninstalling
 
 
 
-Although CMake does not officially provide uninstall procedures in the
-generated makefiles. Hence SciFortran supplies a homebrew
+CMake does not officially provide uninstall procedures in the
+generated makefiles. Hence EDIpack supplies a homebrew
 method to remove the generated files by calling (from the relevant
 build folder):
 

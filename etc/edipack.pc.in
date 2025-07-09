@@ -1,7 +1,7 @@
 edipack_dir=@CMAKE_INSTALL_PREFIX@
 
 exec_prefix=${edipack_dir}/bin
-includedir=${edipack_dir}/include
+includedir=${edipack_dir}/include/edipack
 libdir=${edipack_dir}/lib
 ineq=@PKGCONFIG_VARIABLE_INEQ@
 mpi=@PKGCONFIG_VARIABLE_MPI@
