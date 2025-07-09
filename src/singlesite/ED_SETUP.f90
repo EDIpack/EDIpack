@@ -222,7 +222,7 @@ contains
        case default
           write(LOGfile,"(A)")'Largest Sector(s):'
           write(LOGfile,"(A,"//str(Ns_Ud)//"A)")' Dim(s) Up            =',(repeat(' ', (28 - Ns_Ud * len_trim(reg(txtfy(DimUps(iorb))))) / Ns_Ud) // reg(txtfy(DimUps(iorb))), iorb=1,Ns_Ud)
-          write(LOGfile,"(A,"//str(Ns_Ud)//"A)")' Dim(s) Up            =',(repeat(' ', (28 - Ns_Ud * len_trim(reg(txtfy(DimUps(iorb))))) / Ns_Ud) // reg(txtfy(DimDws(iorb))), iorb=1,Ns_Ud)
+          write(LOGfile,"(A,"//str(Ns_Ud)//"A)")' Dim(s) Dw            =',(repeat(' ', (28 - Ns_Ud * len_trim(reg(txtfy(DimUps(iorb))))) / Ns_Ud) // reg(txtfy(DimDws(iorb))), iorb=1,Ns_Ud)
           write(LOGfile,"(A,A)")                ' Dim(s) Ph            =', repeat(' ', 28 - len_trim(reg(txtfy(DimPh)))) // reg(txtfy(DimPh))
           write(LOGfile,"(A,A)")                ' Total Dim            =', repeat(' ', 28 - len_trim(reg(txtfy(product(DimUps)*product(DimDws)*DimPh)))) // reg(txtfy(product(DimUps)*product(DimDws)*DimPh))      
        case("superc","nonsu2")
