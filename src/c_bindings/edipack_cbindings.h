@@ -1533,7 +1533,7 @@ Interfaces to :f:func:`f/ed_io/ed_get_impurity_rdm`.
 * @param rdm: impurity reduced density matrix
 * @param doprint: flag to print to file (`1`) or not (`0`) the RDM
 */                      
-void ed_get_impurity_rdm(std::complex<double> *self, 
+void ed_get_impurity_rdm(std::complex<double> *rdm, 
                     int doprint
                     );             
 

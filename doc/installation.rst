@@ -78,40 +78,28 @@ and working.
 The `CMake` compilation can be customized using the following
 additional variables:   
 
-.. list-table:: CMake Options
-   :widths: 30 20 50
-   :header-rows: 1
-
-   * - Option
-     - Scope
-     - Value
-
-
-   * - :code:`-DLONG_PREFIX`
-     - set a long or short prefix for the default installation directory  
-     -  yes/True OR no/False (default: True)
-
-       
-   * - :code:`-DCMAKE_INSTALL_PREFIX`
-     - specify custom installation prefix  
-     - User defined path
-       
-   * - :code:`-DUSE_MPI`
-     - MPI support pre-compilation flag
-     - yes/True OR no/False (default: True)
-
-   * - :code:`-DWITH_INEQ`
-     - Include inequivalent impurities extension (in :code:`EDIPACK2INEQ`)
-     - yes/True OR no/False (default: True)
-
-     
-   * - :code:`-DVERBOSE`
-     - Verbose CMake output 
-     - yes/True OR no/False (default: True, superseded by :code:`make VERBOSE=yes/no`
-
-   * - :code:`-DBUILD_TYPE`
-     - Compilation flags
-     - RELEASE/TESTING/DEBUG/AGGRESSIVE (Default RELEASE)
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+| Option                        | Scope                                                       | Value                                   |
++===============================+=============================================================+=========================================+
+| ``-DLONG_PREFIX``             | Set install prefix. If ``True``, installs to                | ``yes``/``True`` or ``no``/``False``    |
+|                               | ``~/opt/EDIpack/TAG/PLAT/BRANCH``; else to                  | (default: True)                         |
+|                               | ``~/opt/EDIpack/custom``.                                   |                                         |
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+| ``-DCMAKE_INSTALL_PREFIX``    | Specify custom installation path. Overrides                 | User-defined path                       |
+|                               | ``-DLONG_PREFIX``. No default subfolders added.             |                                         |
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+| ``-DUSE_MPI``                 | Enable MPI support at compile time.                         | ``yes``/``True`` or ``no``/``False``    |
+|                               |                                                             | (default: True)                         |
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+| ``-DWITH_INEQ``               | Include inequivalent impurity extension                     | ``yes``/``True`` or ``no``/``False``    |
+|                               | (in ``EDIPACK2INEQ``).                                      | (default: True)                         |
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+| ``-DVERBOSE``                 | Verbose CMake output.                                       | ``yes``/``True`` or ``no``/``False``    |
+|                               | Superseded by ``make VERBOSE=yes/no``.                      | (default: True)                         |
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+| ``-DBUILD_TYPE``              | Set build mode flags.                                       | ``RELEASE``, ``DEBUG``, ``TESTING``,    |
+|                               |                                                             | ``AGGRESSIVE`` (default: ``RELEASE``)   |
++-------------------------------+-------------------------------------------------------------+-----------------------------------------+
 
 
 .. warning::
