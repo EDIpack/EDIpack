@@ -17,7 +17,7 @@ extern int has_ineq;
 
 /*!
 \rst
-Inverse temperature
+Inverse temperature. 
 Interfaces to :f:var:`beta`.
 \endrst
 */ 
@@ -25,7 +25,7 @@ extern double beta;
 
 /*!
 \rst
-Convergence threshold
+Convergence threshold. 
 Interfaces to :f:var:`dmft_error`.
 \endrst
 */ 
@@ -33,7 +33,7 @@ extern double dmft_error;
 
 /*!
 \rst
-Twin sector simmetry flag
+Twin sector simmetry flag. 
 Interfaces to :f:var:`ed_twin`.
 \endrst
 */ 
@@ -41,7 +41,7 @@ extern bool ed_twin;
 
 /*!
 \rst
-Flag setting orbital-resolved sectorization of Fock space Hamiltoniaj
+Flag setting orbital-resolved sectorization of Fock space Hamiltonian. 
 Interfaces to :f:var:`ed_total_ud`.
 \endrst
 */ 
@@ -49,7 +49,7 @@ extern bool ed_total_ud;
 
 /*!
 \rst
-Real axis broadening
+Real axis broadening. 
 Interfaces to :f:var:`eps`.
 \endrst
 */ 
@@ -57,7 +57,7 @@ extern double eps;
 
 /*!
 \rst
-Hund's coupling.
+Hund's coupling. 
 Interfaces to :f:var:`Jh`.
 \endrst
 */ 
@@ -65,7 +65,7 @@ extern double Jh;
 
 /*!
 \rst
-Pair-hopping interaction strength.
+Pair-hopping interaction strength. 
 Interfaces to :f:var:`Jp`.
 \endrst
 */ 
@@ -73,7 +73,7 @@ extern double Jp;
 
 /*!
 \rst
-Spin-exchange interaction strength.
+Spin-exchange interaction strength. 
 Interfaces to :f:var:`Jx`.
 \endrst
 */ 
@@ -81,7 +81,7 @@ extern double Jx;
 
 /*!
 \rst
-Number of frequencies used in :math:`\chi^{2}` fit
+Number of frequencies used in :math:`\chi^{2}` fit. 
 Interfaces to :f:var:`Lfit`.
 \endrst
 */ 
@@ -89,7 +89,7 @@ extern int Lfit;
 
 /*!
 \rst
-Number of Matsubara frequencies.
+Number of Matsubara frequencies. 
 Interfaces to :f:var:`Lmats`.
 \endrst
 */ 
@@ -97,7 +97,7 @@ extern int Lmats;
 
 /*!
 \rst
-Number of real frequencies.
+Number of real frequencies. 
 Interfaces to :f:var:`Lreal`.
 \endrst
 */ 
@@ -105,6 +105,7 @@ extern int Lreal;
 
 /*!
 \rst
+Number of points in Probability Distribution Function lattice for phonons. 
 Interfaces to :f:var:`Lpos`.
 \endrst
 */ 
@@ -112,7 +113,7 @@ extern int Lpos;
 
 /*!
 \rst
-Number of imaginary-time points.
+Number of imaginary-time points. 
 Interfaces to :f:var:`Ltau`.
 \endrst
 */ 
@@ -120,7 +121,7 @@ extern int Ltau;
 
 /*!
 \rst
-Number of bath sites
+Number of bath sites. 
 Interfaces to :f:var:`Nbath`.
 \endrst
 */ 
@@ -128,7 +129,7 @@ extern int Nbath;
 
 /*!
 \rst
-Number of DMFT loops
+Number of DMFT loops. 
 Interfaces to :f:var:`Nloop`.
 \endrst
 */ 
@@ -136,7 +137,7 @@ extern int Nloop;
 
 /*!
 \rst
-Number of orbitals
+Number of orbitals. 
 Interfaces to :f:var:`Norb`.
 \endrst
 */ 
@@ -144,7 +145,7 @@ extern int Norb;
 
 /*!
 \rst
-Number of phonons.
+Number of phonons. 
 Interfaces to :f:var:`Nph`.
 \endrst
 */ 
@@ -152,7 +153,7 @@ extern int Nph;
 
 /*!
 \rst
-Occupation value for fixed-density calculations
+Occupation value for fixed-density calculations. 
 Interfaces to :f:var:`nread`.
 \endrst
 */ 
@@ -160,7 +161,7 @@ extern double nread;
 
 /*!
 \rst
-Number of spins
+Number of spins. 
 Interfaces to :f:var:`Nspin`.
 \endrst
 */ 
@@ -168,7 +169,7 @@ extern int Nspin;
 
 /*!
 \rst
-Number of iterations under convergence threshod
+Number of iterations under convergence threshod. 
 Interfaces to :f:var:`Nsuccess`.
 \endrst
 */ 
@@ -176,7 +177,7 @@ extern int Nsuccess;
 
 /*!
 \rst
-Symmetry-breaking field.
+Symmetry-breaking field. 
 Interfaces to :f:var:`sb_field`.
 \endrst
 */ 
@@ -184,7 +185,7 @@ extern double sb_field;
 
 /*!
 \rst
-Hubbard interaction strength.
+Hubbard interaction strength. 
 Interfaces to :f:var:`Uloc`.
 \endrst
 */ 
@@ -192,7 +193,7 @@ extern double Uloc[5];
 
 /*!
 \rst
-Density-density Kanamori interaction strength.
+Density-density Kanamori interaction strength. 
 Interfaces to :f:var:`Ust`.
 \endrst
 */ 
@@ -200,7 +201,7 @@ extern double Ust;
 
 /*!
 \rst
-Upper bound on real axis frequencies
+Upper bound on real axis frequencies. 
 Interfaces to :f:var:`wfin`.
 \endrst
 */ 
@@ -208,7 +209,7 @@ extern double wfin;
 
 /*!
 \rst
-Upper bound on real axis frequencies
+Upper bound on real axis frequencies. 
 Interfaces to :f:var:`wini`.
 \endrst
 */ 
@@ -216,14 +217,16 @@ extern double wini;
 
 /*!
 \rst
-Interfaces to :f:var:`xmax`.
+Maximum of the x-range for the local lattice probability distribution function. 
+Interfaces to :f:var:`xmax`. 
 \endrst
 */ 
 extern double xmax;
 
 /*!
 \rst
-Interfaces to :f:var:`xmin`.
+Minimum of the x-range for the local lattice probability distribution function. 
+Interfaces to :f:var:`xmin`. 
 \endrst
 */ 
 extern double xmin;
@@ -231,7 +234,7 @@ extern double xmin;
 
 /*!
 \rst
-Chemical potential
+Chemical potential. 
 Interfaces to :f:var:`xmu`.
 \endrst
 */ 
