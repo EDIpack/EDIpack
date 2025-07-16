@@ -69,7 +69,9 @@ INCLUDE(${CMAKE_MODULE_PATH}/MpiConfig.cmake)
 FIND_PACKAGE(PkgConfig)
 PKG_SEARCH_MODULE(SCIFOR REQUIRED scifor)
 IF(${SCIFOR_FOUND})
-  MESSAGE(STATUS "SCIFOR found at: ${SCIFOR_PREFIX}")
+  get_filename_component(SCIFOR_INCLUDE_PARENT "${SCIFOR_INCLUDE_DIRS}" DIRECTORY)
+  get_filename_component(SCIFOR_ROOT_DIR "${SCIFOR_INCLUDE_PARENT}" DIRECTORY) 
+  MESSAGE(STATUS "SCIFOR found at: ${SCIFOR_ROOT_DIR}")
 ELSE()
   MESSAGE(FATAL_ERROR "
 Can not find SciFortran in this system. Check SciFor installation. Try adding the provided PKG-CONFIG file to the environment:
