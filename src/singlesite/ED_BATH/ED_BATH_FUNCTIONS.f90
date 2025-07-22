@@ -595,14 +595,8 @@ contains
     N = Nspin*Norb
     L = size(x)
     do concurrent(iorb=1:N)
-       select case(axis)
-       case default
-          zeta(iorb ,1:L)   = x(1:L) + mu
-          zeta(N+iorb,1:L)  = x(1:L) - mu
-       case ('real')
-          zeta(iorb ,1:L)   = x(1:L) + mu
-          zeta(N+iorb,1:L) = -conjg(x(L:1:-1) + mu)
-       end select
+       zeta(iorb ,1:L)   = x(1:L) + mu
+       zeta(N+iorb,1:L)  = x(1:L) - mu
     enddo
   end function zeta_superc
 
