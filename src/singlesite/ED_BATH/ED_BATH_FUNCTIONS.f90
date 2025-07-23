@@ -444,9 +444,9 @@ contains
     select case(type_)
     case default;stop "ed_get_g0and ERROR: type is wrong: either Normal or Anomalous"
     case ('n','N')
-       g0 = g0and_bath_function(x)
+       g0 = g0and_bath_function(x,axis_)
     case('a','A')
-       g0 = f0and_bath_function(x)
+       g0 = f0and_bath_function(x,axis_)
     end select
     call deallocate_dmft_bath()
     !
@@ -479,9 +479,9 @@ contains
     select case(type_)
     case default;stop "ed_get_g0and ERROR: type is wrong: either Normal or Anomalous"
     case ('n','N')
-       g0 = g0and_bath_function(x)
+       g0 = g0and_bath_function(x,axis_)
     case('a','A')
-       g0 = f0and_bath_function(x)
+       g0 = f0and_bath_function(x,axis_)
     end select
     call deallocate_dmft_bath()
     !
@@ -590,19 +590,21 @@ contains
     complex(8),dimension(:)                        :: x
     real(8)                                        :: mu
     character(len=*)                               :: axis
+    character(len=1)                               :: axis_
     complex(8),dimension(2*Nspin*Norb,size(x))     :: zeta
     integer                                        :: iorb,N,L
     N = Nspin*Norb
     L = size(x)
+    axis_ = to_lower(axis(1:1))
     do concurrent(iorb=1:N)
-       select case(axis)
-       case default
-          zeta(iorb ,1:L)   = x(1:L) + mu
-          zeta(N+iorb,1:L)  = x(1:L) - mu
-       case ('real')
-          zeta(iorb ,1:L)   = x(1:L) + mu
-          zeta(N+iorb,1:L) = -conjg(x(L:1:-1) + mu)
-       end select
+        select case(axis_)
+        case default
+            zeta(iorb,1:L) = x(1:L) + mu
+            zeta(N+iorb,1:L) = x(1:L) - mu
+        case ('r')
+            zeta(iorb,1:L) = x(1:L) + mu
+            zeta(N+iorb,1:L) = -conjg(x(L:1:-1) + mu)
+        end select
     enddo
   end function zeta_superc
 
