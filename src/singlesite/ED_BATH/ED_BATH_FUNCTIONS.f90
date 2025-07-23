@@ -444,9 +444,9 @@ contains
     select case(type_)
     case default;stop "ed_get_g0and ERROR: type is wrong: either Normal or Anomalous"
     case ('n','N')
-       g0 = g0and_bath_function(x)
+       g0 = g0and_bath_function(x,axis_)
     case('a','A')
-       g0 = f0and_bath_function(x)
+       g0 = f0and_bath_function(x,axis_)
     end select
     call deallocate_dmft_bath()
     !
@@ -479,9 +479,9 @@ contains
     select case(type_)
     case default;stop "ed_get_g0and ERROR: type is wrong: either Normal or Anomalous"
     case ('n','N')
-       g0 = g0and_bath_function(x)
+       g0 = g0and_bath_function(x,axis_)
     case('a','A')
-       g0 = f0and_bath_function(x)
+       g0 = f0and_bath_function(x,axis_)
     end select
     call deallocate_dmft_bath()
     !
