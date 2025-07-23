@@ -590,13 +590,21 @@ contains
     complex(8),dimension(:)                        :: x
     real(8)                                        :: mu
     character(len=*)                               :: axis
+    character(len=1)                               :: axis_
     complex(8),dimension(2*Nspin*Norb,size(x))     :: zeta
     integer                                        :: iorb,N,L
     N = Nspin*Norb
     L = size(x)
+    axis_ = to_lower(axis(1:1))
     do concurrent(iorb=1:N)
-       zeta(iorb ,1:L)   = x(1:L) + mu
-       zeta(N+iorb,1:L)  = x(1:L) - mu
+        select case(axis_)
+        case default
+            zeta(iorb,1:L) = x(1:L) + mu
+            zeta(N+iorb,1:L) = x(1:L) - mu
+        case ('r')
+            zeta(iorb,1:L) = x(1:L) + mu
+            zeta(N+iorb,1:L) = -conjg(x(L:1:-1) + mu)
+        end select
     enddo
   end function zeta_superc
 
