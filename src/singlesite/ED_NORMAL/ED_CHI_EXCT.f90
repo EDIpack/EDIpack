@@ -386,9 +386,9 @@ contains
                de   = exctChimatrix(indx,iorb,jorb)%state(istate)%channel(ichan)%poles(iexc)
                select case(axis_)
                case("m","M")
-                  if(beta*dE > 1d-3)Chi(indx,iorb,jorb,1)=Chi(indx,iorb,jorb,1) + &
-                       peso*2*(1d0-exp(-beta*dE))/dE 
-                  do i=2,size(zeta)
+                  !if(beta*dE > 1d-3)Chi(indx,iorb,jorb,1)=Chi(indx,iorb,jorb,1) + &
+                  !     peso*2*(1d0-exp(-beta*dE))/dE 
+                  do i=1,size(zeta)
                      Chi(indx,iorb,jorb,i)=Chi(indx,iorb,jorb,i) + &
                           peso*(1d0-exp(-beta*dE))*2d0*dE/(dimag(zeta(i))**2 + dE**2)
                   enddo
