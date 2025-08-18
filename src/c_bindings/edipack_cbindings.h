@@ -25,6 +25,39 @@ extern double beta;
 
 /*!
 \rst
+Flag to activate spin susceptibility evaluation.
+Interfaces to :f:var:`chispin_flag`.
+\endrst
+*/ 
+extern bool chispin_flag;
+
+/*!
+\rst
+Flag to activate charge susceptibility evaluation.
+Interfaces to :f:var:`chidens_flag`.
+\endrst
+*/ 
+extern bool chidens_flag;
+
+/*!
+\rst
+Flag to activate pair susceptibility evaluation.
+Interfaces to :f:var:`chipair_flag`.
+\endrst
+*/ 
+extern bool chipair_flag;
+
+/*!
+\rst
+Flag to activate exciton susceptibility evaluation.
+Interfaces to :f:var:`chiexct_flag`.
+\endrst
+*/ 
+extern bool chiexct_flag;
+
+
+/*!
+\rst
 Convergence threshold. 
 Interfaces to :f:var:`dmft_error`.
 \endrst

@@ -209,19 +209,23 @@ MODULE ED_INPUT_VARS
   !Flag to activate Reduced Density Matrix evaluation 
   ! :Default rdm_flag:`F`
   !
-  logical              :: chispin_flag      !
+  logical                                                     :: chispin_flag_      
+  logical(c_bool),bind(c, name="chispin_flag")                :: chispin_flag      !
   !Flag to activate spin susceptibility evaluation 
   ! :Default chispin_flag:`F`
   !
-  logical              :: chidens_flag       !
+  logical                                                     :: chidens_flag_      
+  logical(c_bool),bind(c, name="chidens_flag")                :: chidens_flag      !
   !Flag to activate charge susceptibility evaluation 
   ! :Default chidens_flag:`F`
   !
-  logical              :: chipair_flag       !
+  logical                                                     :: chipair_flag_
+  logical(c_bool),bind(c, name="chipair_flag")                :: chipair_flag      !
   !Flag to activate pairing susceptibility evaluation 
   ! :Default chipair_flag:`F`
   !
-  logical              :: chiexct_flag       !
+  logical                                                     :: chiexct_flag_
+  logical(c_bool),bind(c, name="chiexct_flag")                :: chiexct_flag      !
   !Flag to activate excitonic susceptibility evaluation 
   ! :Default chiexct_flag:`F`
   !
@@ -618,10 +622,14 @@ contains
     call parse_input_variable(exc_field,"EXC_FIELD",INPUTunit,default=[0d0,0d0,0d0,0d0],comment="external field coupling to exciton order parameters (Norb)")
     !
     !
-    call parse_input_variable(chispin_flag,"CHISPIN_FLAG",INPUTunit,default=.false.,comment="Flag to activate spin susceptibility calculation.")
-    call parse_input_variable(chidens_flag,"CHIDENS_FLAG",INPUTunit,default=.false.,comment="Flag to activate density susceptibility calculation.")
-    call parse_input_variable(chipair_flag,"CHIPAIR_FLAG",INPUTunit,default=.false.,comment="Flag to activate pair susceptibility calculation.")
-    call parse_input_variable(chiexct_flag,"CHIEXCT_FLAG",INPUTunit,default=.false.,comment="Flag to activate excitonis susceptibility calculation.")
+    call parse_input_variable(chispin_flag_,"CHISPIN_FLAG",INPUTunit,default=.false.,comment="Flag to activate spin susceptibility calculation.")
+    chispin_flag = chispin_flag_
+    call parse_input_variable(chidens_flag_,"CHIDENS_FLAG",INPUTunit,default=.false.,comment="Flag to activate density susceptibility calculation.")
+    chidens_flag = chidens_flag_
+    call parse_input_variable(chipair_flag_,"CHIPAIR_FLAG",INPUTunit,default=.false.,comment="Flag to activate pair susceptibility calculation.")
+    chipair_flag = chipair_flag_
+    call parse_input_variable(chiexct_flag_,"CHIEXCT_FLAG",INPUTunit,default=.false.,comment="Flag to activate excitonis susceptibility calculation.")
+    chiexct_flag = chiexct_flag_
     !
     !
     call parse_input_variable(ed_mode,"ED_MODE",INPUTunit,default='normal',comment="Flag to set ED type: normal=normal, superc=superconductive, nonsu2=broken SU(2)")
@@ -676,11 +684,6 @@ contains
     call parse_input_variable(xmin,"XMIN",INPUTunit,default=-3.d0,comment="Smallest position for the lattice PDF")
     call parse_input_variable(xmax,"XMAX",INPUTunit,default=3.d0,comment="Largest position for the lattice PDF")
     call parse_input_variable(rdm_flag,"RDM_FLAG",INPUTunit,default=.false.,comment="Flag to activate RDM calculation.")
-    call parse_input_variable(chispin_flag,"CHISPIN_FLAG",INPUTunit,default=.false.,comment="Flag to activate spin susceptibility calculation.")
-    call parse_input_variable(chispin_flag,"CHISPIN_FLAG",INPUTunit,default=.false.,comment="Flag to activate spin susceptibility calculation.")
-    call parse_input_variable(chidens_flag,"CHIDENS_FLAG",INPUTunit,default=.false.,comment="Flag to activate density susceptibility calculation.")
-    call parse_input_variable(chipair_flag,"CHIPAIR_FLAG",INPUTunit,default=.false.,comment="Flag to activate pair susceptibility calculation.")
-    call parse_input_variable(chiexct_flag,"CHIEXCT_FLAG",INPUTunit,default=.false.,comment="Flag to activate excitonis susceptibility calculation.")
     !
     !
     call parse_input_variable(hfmode,"HFMODE",INPUTunit,default=.true.,comment="Flag to set the Hartree form of the interaction (n-1/2). see xmu.")
