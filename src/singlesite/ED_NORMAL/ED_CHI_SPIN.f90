@@ -285,8 +285,8 @@ contains
                case("m","M")
                   !if(beta*dE > 1d-3)Chi(iorb,jorb,1)=Chi(iorb,jorb,1) + peso*2*(1d0-exp(-beta*dE))/dE 
                   do i=1,size(zeta)
-                     if (dimag(zeta(i))<1e-10)then
-                        if(beta*dE > 1d-3)Chi(iorb,jorb,1)=Chi(iorb,jorb,1) + peso*2*(1d0-exp(-beta*dE))/dE
+                     if (abs(zeta(i))<1e-10)then
+                        if(beta*dE > 1d-3)Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + peso*2*(1d0-exp(-beta*dE))/dE
                      else
                         Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + &
                           peso*(1d0-exp(-beta*dE))*2d0*dE/(dimag(zeta(i))**2 + dE**2)
