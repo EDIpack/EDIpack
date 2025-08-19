@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir">
+    <compoundname>/home/runner/work/EDIpack/EDIpack/src</compoundname>
+    <innerdir refid="dir_05f4f7c08c080c93819ceccea3e4de66">/home/runner/work/EDIpack/EDIpack/src/c_bindings</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/EDIpack/EDIpack/src/"/>
+  </compounddef>
+</doxygen>
