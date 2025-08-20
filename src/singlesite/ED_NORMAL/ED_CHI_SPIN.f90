@@ -299,7 +299,15 @@ contains
                   enddo
                case("t","T")
                   do i=1,size(zeta)
-                     Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + peso*exp(-zeta(i)*dE)
+                     ! Zero energy poles are to be taken into account only once
+                     if(abs(beta*dE) < 1e-8) then
+                        Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + peso
+                     ! Ignore the negative energy poles and add contributions
+                     ! from dE and -dE for each positive dE
+                     elseif(dE > 0) then
+                        Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + &
+                           peso*(exp(-zeta(i)*dE) + exp(-(beta-zeta(i))*dE))
+                     endif
                   enddo
                end select
             enddo
