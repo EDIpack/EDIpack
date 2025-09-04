@@ -497,8 +497,7 @@ contains
     !
     !See if we have to do anythin: if both c operators cannot be applied, exit.
     if(ksector==0 .AND. lsector==0)then
-       call allocate_GFmatrix(exctChimatrix(indx,iorb,jorb),istate,1,Nexc=0)
-       call allocate_GFmatrix(exctChimatrix(indx,iorb,jorb),istate,2,Nexc=0)
+       call allocate_GFmatrix(exctChimatrix(indx,iorb,jorb),istate,ichan,Nexc=0)
     else
       !startup
       if(allocated(alfa_))deallocate(alfa_)
