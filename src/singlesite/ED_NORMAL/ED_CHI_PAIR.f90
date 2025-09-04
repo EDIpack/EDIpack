@@ -3,7 +3,7 @@ MODULE ED_CHI_PAIR
   !Evaluates the impurity pair susceptibility.
   !
   USE SF_CONSTANTS, only:one,xi,zero,pi
-  USE SF_TIMER  
+  USE SF_TIMER
   USE SF_IOTOOLS, only: str,reg,txtfy
   USE SF_LINALG,  only: inv,eigh
   USE ED_INPUT_VARS
@@ -28,7 +28,8 @@ MODULE ED_CHI_PAIR
   integer                          :: ialfa
   integer                          :: jalfa
   integer                          :: i,j,k
-  real(8)                          :: sgn,norm2
+  real(8)                          :: sgn
+  real(8)                          :: norm2
   real(8),dimension(:),allocatable :: v_state
   real(8)                          :: e_state
 
@@ -40,12 +41,12 @@ contains
 
   !+------------------------------------------------------------------+
   !                            PAIR
-  !PURPOSE  : Evaluate the pair susceptibility \Chi_pair for a 
+  !PURPOSE  : Evaluate the pair susceptibility \Chi_pair for a
   ! \chi_ab = <Delta*_a(\tau)Delta_b(0)>
   !+------------------------------------------------------------------+
   subroutine build_pairChi_normal()
-    ! Evaluates the impurity Pair susceptibility :math:`\chi^{\Delta}=\langle T_\tau \Delta_a(\tau) \Delta_b\rangle` in the Matsubara :math:`i\omega_n` and Real :math:`\omega` frequency axis as well as imaginary time :math:`\tau`. 
-    ! As for the Green's function, the off-diagonal component of the the susceptibility is determined using an algebraic manipulation to ensure use of Hermitian operator in the dynamical Lanczos. 
+    ! Evaluates the impurity Pair susceptibility :math:`\chi^{\Delta}=\langle T_\tau \Delta^\dagger_a(\tau) \Delta_b\rangle` in the Matsubara :math:`i\omega_n` and Real :math:`\omega` frequency axis as well as imaginary time :math:`\tau`.
+    ! As for the Green's function, the off-diagonal component of the the susceptibility is determined using an algebraic manipulation to ensure use of Hermitian operator in the dynamical Lanczos.
     !
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
@@ -100,10 +101,12 @@ contains
     endif
     !
     do istate=1,state_list%size
-       call allocate_GFmatrix(pairChimatrix(iorb,iorb),istate,Nchan=1)
+       call allocate_GFmatrix(pairChimatrix(iorb,iorb),istate,Nchan=2)
        isector  =  es_return_sector(state_list,istate)
        e_state  =  es_return_energy(state_list,istate)
        v_state  =  es_return_dvec(state_list,istate)
+       !
+       ! Lesser
        !
        ksector = getCsector(ialfa,2,isector);jsector=0
        if(ksector/=0)jsector = getCsector(ialfa,1,ksector)
@@ -113,10 +116,26 @@ contains
           !C_up|tmp> = C_up[C_dw|gs>] = |vvinit>
           vvinit = apply_op_C(vtmp,iorb,1,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,iorb,iorb)
+          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,+1,iorb,iorb,ichan=1,istate=istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
-        else
+       else
           call allocate_GFmatrix(pairChiMatrix(iorb,iorb),istate,1,Nexc=0)
+       endif
+       !
+       ! Greater
+       !
+       ksector = getCDGsector(ialfa,1,isector);jsector=0
+       if(ksector/=0)jsector = getCDGsector(ialfa,2,ksector)
+       if(jsector/=0.AND.ksector/=0)then
+          !C^+_up|gs>  = |tmp>
+          vtmp   = apply_op_CDG(v_state,iorb,1,isector,ksector)
+          !C^+_dw|tmp> = C^+_dw[C^+_up|gs>] = |vvinit>
+          vvinit = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
+          call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
+          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,-1,iorb,iorb,ichan=2,istate=istate)
+          deallocate(alfa_,beta_,vtmp,vvinit)
+       else
+          call allocate_GFmatrix(pairChiMatrix(iorb,iorb),istate,2,Nexc=0)
        endif
        if(allocated(v_state))deallocate(v_state)
     enddo
@@ -129,26 +148,28 @@ contains
 
   ! \chi_ab = <Delta*_a(\tau)Delta_b(0)>
   !         = <[C^+_a(\tau)C^+_a(\tau)][C_b(0)C_b(0)]>
-  !from aux: <[C^+_a C^+_a + C^+_b C^+_b][C_a C_a + C_b C_b]>  
+  !from aux: <[C^+_a C^+_a + C^+_b C^+_b][C_a C_a + C_b C_b]>
   subroutine lanc_ed_build_pairChi_mix(iorb,jorb)
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    integer                     :: iorb,jorb
-    real(8),dimension(:),allocatable :: va,vb,vtmp
+    integer                             :: iorb,jorb
+    real(8),dimension(:),allocatable    :: va,vb,vtmp
     !
     write(LOGfile,"(A)")"Get Chi_pair_mix_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
-    !    
+    !
     if(.not.ed_total_ud)then
        write(LOGfile,"(A)")"ED_CHI_PAIR warning: can not evaluate \Chi_pair_ab with ed_total_ud=F"
        return
     endif
     !
     do istate=1,state_list%size
-       call allocate_GFmatrix(pairChimatrix(iorb,jorb),istate,Nchan=1)
+       call allocate_GFmatrix(pairChimatrix(iorb,jorb),istate,Nchan=2) !Nchan+4 for complex case
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
        v_state  =  es_return_dvec(state_list,istate)
+       !
+       !First lesser
        ! --> Apply [C_b C_b + C_a C_a]|state>
        ksector = getCsector(1,2,isector);jsector=0
        if(ksector/=0)jsector = getCsector(1,1,ksector)
@@ -164,12 +185,80 @@ contains
           !C_b.up|tmp> = C_b.up[C_b.dw|gs>] = |vvinit>
           vb   = apply_op_C(vtmp,jorb,1,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,va+vb,alfa_,beta_,norm2)
-          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,iorb,jorb)
+          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,+1,iorb,jorb,ichan=1,istate=istate)
           deallocate(alfa_,beta_,vtmp,va,vb)
        else
           call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,1,Nexc=0)
        endif
-       if(allocated(v_state))deallocate(v_state)
+       !
+       !First greater
+       ! --> Apply [C^+_b C^+_b + C^+_a C^+_a]|state>
+       ksector = getCDGsector(1,1,isector);jsector=0
+       if(ksector/=0)jsector = getCDGsector(1,2,ksector)
+       if(jsector/=0.AND.ksector/=0)then
+          !Apply C^+_a,dw*C^+_a,up:
+          !C^+_a.up|gs>  = |tmp>
+          vtmp = apply_op_CDG(v_state,iorb,1,isector,ksector)
+          !C^+_a.dw|tmp> = C^+_a.dw[C^+_a.up|gs>] = |vvinit>
+          va   = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
+          !Apply + C^+_b,dw*C^+_b,up
+          !C^+_b.up|gs>  = |tmp>
+          vtmp = apply_op_CDG(v_state,jorb,1,isector,ksector)
+          !C^+_b.dw|tmp> = C^+_b.dw[C^+_b.up|gs>] = |vvinit>
+          vb   = apply_op_CDG(vtmp,jorb,2,ksector,jsector)
+          call tridiag_Hv_sector_normal(jsector,va+vb,alfa_,beta_,norm2)
+          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,-1,iorb,jorb,ichan=2,istate=istate)
+          deallocate(alfa_,beta_,vtmp,va,vb)
+       else
+          call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,2,Nexc=0)
+       endif
+       !
+       !Uncomment for complex case
+       !!Second lesser
+       !! --> Apply [C_a C_a - xi* C_b C_b]|state>
+       !ksector = getCsector(1,2,isector);jsector=0
+       !if(ksector/=0)jsector = getCsector(1,1,ksector)
+       !if(jsector/=0.AND.ksector/=0)then
+       !   !Apply C_a,up*C_a,dw:
+       !   !C_a.dw|gs>  = |tmp>
+       !   vtmp = apply_op_C(v_state,iorb,2,isector,ksector)
+       !   !C_a.up|tmp> = C_a.up[C_a.dw|gs>] = |vvinit>
+       !   va   = apply_op_C(vtmp,iorb,1,ksector,jsector)
+       !   !Apply + C_b,up*C_b,dw
+       !   !C_b.dw|gs>  = |tmp>
+       !   vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
+       !   !C_b.up|tmp> = C_b.up[C_b.dw|gs>] = |vvinit>
+       !   vb   = apply_op_C(vtmp,jorb,1,ksector,jsector)
+       !   call tridiag_Hv_sector_normal_complex(jsector,va - xi*vb,alfa_,beta_,norm2)
+       !   call add_to_lanczos_pairChi(-xi*norm2,e_state,alfa_,beta_,+1,iorb,jorb,ichan=3,istate=istate)
+       !   deallocate(alfa_,beta_,vtmp,va,vb)
+       !else
+       !   call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,3,Nexc=0)
+       !endif
+       !
+       !!Second greater
+       !! --> Apply [C^+_a C^+_a + xi* C^+_b C^+_b]|state>
+       !ksector = getCDGsector(1,1,isector);jsector=0
+       !if(ksector/=0)jsector = getCDGsector(1,2,ksector)
+       !if(jsector/=0.AND.ksector/=0)then
+       !   !Apply C^+_a,dw*C^+_a,up:
+       !   !C^+_a.up|gs>  = |tmp>
+       !   vtmp = apply_op_CDG(v_state,iorb,1,isector,ksector)
+       !   !C^+_a.dw|tmp> = C^+_a.dw[C^+_a.up|gs>] = |vvinit>
+       !   va   = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
+       !   !Apply + C^+_b,dw*C^+_b,up
+       !   !C^+_b.up|gs>  = |tmp>
+       !   vtmp = apply_op_CDG(v_state,jorb,1,isector,ksector)
+       !   !C^+_b.dw|tmp> = C^+_b.dw[C^+_b.up|gs>] = |vvinit>
+       !   vb   = apply_op_CDG(vtmp,jorb,2,ksector,jsector)
+       !   call tridiag_Hv_sector_normal_complex(jsector,va + xi*vb,alfa_,beta_,norm2)
+       !   call add_to_lanczos_pairChi(-xi*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ichan=4,istate=istate)
+       !   deallocate(alfa_,beta_,vtmp,va,vb)
+       !else
+       !   call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,4,Nexc=0)
+       !endif
+       !!
+       !if(allocated(v_state))deallocate(v_state)
     enddo
     return
   end subroutine lanc_ed_build_pairChi_mix
@@ -180,16 +269,17 @@ contains
 
 
 
-  subroutine add_to_lanczos_pairChi(vnorm2,Ei,alanc,blanc,iorb,jorb)
+  subroutine add_to_lanczos_pairChi(vnorm2,Ei,alanc,blanc,isign,iorb,jorb,ichan,istate)
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    integer                                    :: iorb,jorb
-    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso,vnorm2  
+    integer                                    :: iorb,jorb,ichan,isign,istate
+    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso
+    real(8)                                    :: vnorm2
     real(8)                                    :: Ei,Ej,Egs,de
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
-    real(8),dimension(size(alanc))             :: blanc 
+    real(8),dimension(size(alanc))             :: blanc
     real(8),dimension(size(alanc),size(alanc)) :: Z
     real(8),dimension(size(alanc))             :: diag,subdiag
     integer                                    :: i,j,ierr
@@ -200,11 +290,16 @@ contains
          "DEBUG add_to_lanczos_pairChi: add-up to GF istate "//str(istate)
 #endif
     !
+    if(vnorm2==0d0)then
+       call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,ichan,Nexc=0)
+       return
+    endif
+    !
     Egs = state_list%emin       !get the gs energy
     !
     Nlanc = size(alanc)
     !
-    pesoF  = vnorm2/zeta_function 
+    pesoF  = vnorm2/zeta_function
     if((finiteT).and.(beta*(Ei-Egs) < 200))then
        pesoBZ = exp(-beta*(Ei-Egs))
     elseif(.not.finiteT)then
@@ -228,7 +323,7 @@ contains
 #endif
     call eigh(diag(1:Nlanc),subdiag(2:Nlanc),Ev=Z(:Nlanc,:Nlanc))
     !
-    call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,1,Nlanc)
+    call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,ichan,Nlanc)
     !
     do j=1,nlanc
        Ej     = diag(j)
@@ -236,8 +331,8 @@ contains
        pesoAB = Z(1,j)*Z(1,j)
        peso   = pesoF*pesoAB*pesoBZ
        !
-       pairChiMatrix(iorb,jorb)%state(istate)%channel(1)%weight(j) = peso
-       pairChiMatrix(iorb,jorb)%state(istate)%channel(1)%poles(j)  = de
+       pairChiMatrix(iorb,jorb)%state(istate)%channel(ichan)%weight(j) = peso
+       pairChiMatrix(iorb,jorb)%state(istate)%channel(ichan)%poles(j)  = isign*de
     enddo
     !
   end subroutine add_to_lanczos_pairChi
@@ -283,9 +378,13 @@ contains
     if(Norb>1)then
        do iorb=1,Norb
           do jorb=iorb+1,Norb
-             call get_Chiab(iorb,jorb)
-             Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:)-Chi(iorb,iorb,:)-Chi(jorb,jorb,:))
-             Chi(jorb,iorb,:) = Chi(iorb,jorb,:)
+             !if (iorb /= jorb) then
+                call get_Chiab(iorb,jorb)
+                !Uncomment for complex case
+                !Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:) - (1-xi)*Chi(iorb,iorb,:) - (1-xi)*Chi(jorb,jorb,:))
+                Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:) - Chi(iorb,iorb,:) - Chi(jorb,jorb,:))
+                Chi(jorb,iorb,:) = Chi(iorb,jorb,:)
+             !endif
           enddo
        enddo
     end if
@@ -316,27 +415,77 @@ contains
             do iexc=1,Nexcs
                peso = pairChimatrix(iorb,jorb)%state(istate)%channel(ichan)%weight(iexc)
                de   = pairChimatrix(iorb,jorb)%state(istate)%channel(ichan)%poles(iexc)
-               select case(axis_)
-               case("m","M")
-                  do i=1,size(zeta)
-                    if (abs(zeta(i))<1e-10)then
-                      if(beta*dE > 1d-3)Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + &
-                           peso*2*(1d0-exp(-beta*dE))/dE
-                    else
-                       Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + &
-                            peso*(1d0-exp(-beta*dE))*2d0*dE/(dimag(zeta(i))**2 + dE**2)
-                    endif
-                  enddo
-               case("r","R")
-                  do i=1,size(zeta)
-                     Chi(iorb,jorb,i)=Chi(iorb,jorb,i) - &
-                          peso*(1d0-exp(-beta*dE))*(1d0/(zeta(i) - dE) - 1d0/(zeta(i) + dE))
-                  enddo
-               case("t","T")
-                  do i=1,size(zeta)
-                     Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + peso*exp(-zeta(i)*dE)
-                  enddo
-               end select
+               ! Zero energy poles are to be taken into account only once
+               ! The coefficient 0.5 accounts for the two lesser/greater channels
+               if(abs(beta*de) < 1e-8) then
+                 select case(axis_)
+                    case("m","M")
+                       do i=1,size(zeta)
+                          if(abs(zeta(i))<1e-10) then ! \nu=0
+                             Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + 0.5*peso*beta
+                             !Uncomment for complex case
+                             !if(iorb /= jorb) then
+                             !   Chi(jorb,iorb,i) = Chi(jorb,iorb,i) + 0.5*peso*beta
+                             !endif
+                          endif
+                       enddo
+                    case("r","R")
+                       ! A zero energy pole contributes only to \chi(Re(z) = 0) and
+                       ! its contribution is taken to be the same as for \chi(\nu=0),
+                       ! regardless of the imaginary shift in z
+                       do i=1,size(zeta)
+                          if(abs(dreal(zeta(i)))<1e-10) then
+                             Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + 0.5*peso*beta
+                             !Uncomment for complex case
+                             !if(iorb /= jorb) then
+                             !   Chi(jorb,iorb,i) = Chi(jorb,iorb,i) + 0.5*peso*beta
+                             !endif
+                          endif
+                       enddo
+                    case("t","T")
+                       Chi(iorb,jorb,:) = Chi(iorb,jorb,:) + 0.5*peso
+                 end select
+               ! Nonzero energy poles
+               elseif(merge(de, -de, mod(ichan,2)==1)>0) then
+                  select case(axis_)
+                     case("m","M","r","R")
+                        do i=1,size(zeta)
+                           if(mod(ichan,2) == 1) then ! Lesser
+                              Chi(iorb,jorb,i) = Chi(iorb,jorb,i) - &
+                                 peso*(1d0-exp(-beta*de)) / (zeta(i) - de)
+                              !Uncomment for complex case
+                              !if(iorb /= jorb) then
+                              !   Chi(jorb,iorb,i) = Chi(jorb,iorb,i) + &
+                              !   peso*(1d0-exp(-beta*de)) / (zeta(i) + de)
+                              !endif
+                           else ! Greater
+                              Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + &
+                                 peso*(1d0-exp(beta*de)) / (zeta(i) - de)
+                              !Uncomment for complex case
+                              !if(iorb /= jorb) then
+                              !   Chi(jorb,iorb,i) = Chi(jorb,iorb,i) - &
+                              !   peso*(1d0-exp(beta*de)) / (zeta(i) + de)
+                              !endif
+                           endif
+                        enddo
+                     case("t","T")
+                        do i=1,size(zeta)
+                           if(mod(ichan,2) == 1) then ! Lesser
+                              Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + peso*exp(-zeta(i)*de)
+                              !Uncomment for complex case
+                              !if(iorb /= jorb) then
+                              !   Chi(jorb,iorb,i) = Chi(jorb,iorb,i) + peso*exp(-(beta-zeta(i))*de)
+                              !endif
+                           else ! Greater
+                              Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + peso*exp((beta-zeta(i))*de)
+                              !Uncomment for complex case
+                              !if(iorb /= jorb) then
+                              !   Chi(jorb,iorb,i) = Chi(jorb,iorb,i) + peso*exp(zeta(i)*de)
+                              !endif
+                           endif
+                        enddo
+                  end select
+               endif
             enddo
          enddo
       enddo
@@ -348,27 +497,3 @@ contains
 
 
 END MODULE ED_CHI_PAIR
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

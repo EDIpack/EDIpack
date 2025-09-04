@@ -5,19 +5,19 @@ Pair Susceptibility
 
 
 
-In :f:mod:`ed_chi_pair` we evaluate the impurity pair 
+In :f:mod:`ed_chi_pair` we evaluate the impurity pair
 susceptibility, defined as:
 
 .. math::
 
    \chi^{\Delta}_{ab}(\omega) = \frac{1}{\cal
-   Z}\sum_m e^{-\beta E_m} (\langle m | \Delta_a [\omega-H]^{-1} \Delta_b  | m \rangle +
-    \langle m | \Delta_b [\omega+H]^{-1} \Delta_a  | m \rangle )
+   Z}\sum_m e^{-\beta E_m} (\langle m | \Delta^\dagger_a [\omega-H]^{-1} \Delta_b  | m \rangle +
+    \langle m | \Delta_b [\omega+H]^{-1} \Delta^\dagger_a  | m \rangle )
 
 where :math:`\Delta_a = c_{a\uparrow} c_{a\downarrow}` is the fermion
 singlet pair operator of the orbital :math:`a` and :math:`\omega \in {\mathbb C}`. As for the
 Green's functions, the susceptibility is evaluated using the dynamical
-Lanczos method: a) the partial tridiagonalization of the 
+Lanczos method: a) the partial tridiagonalization of the
 sector Hamiltonian :math:`H` with quantum numbers
 :math:`\vec{Q}=[\vec{N}_\uparrow,\vec{N}_\downarrow]` on the Krylov
 basis of :math:`n_a|m\rangle` is obtained; b) the resulting
@@ -27,7 +27,7 @@ any state :math:`| p \rangle` in the spectrum (*without knowing the
 state itself* ) and the excitations energies :math:`\delta E = E_p -
 E_m` or **poles**; c) an controlled approximation to the
 Kallen-Lehmann sum is constructed for  :math:`a,b=1,\dots,N_{\rm
-orb}`. 
+orb}`.
 
 
 
