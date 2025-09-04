@@ -3,7 +3,7 @@ MODULE ED_CHI_EXCT
   !Evaluates the impurity excitonc susceptibility.
   !
   USE SF_CONSTANTS, only:one,xi,zero,pi
-  USE SF_TIMER  
+  USE SF_TIMER
   USE SF_IOTOOLS, only: str,free_unit,reg,free_units,txtfy
   USE SF_LINALG,  only: inv,eigh,eye
   USE SF_SP_LINALG, only: sp_lanc_tridiag
@@ -40,15 +40,15 @@ contains
 
   !+------------------------------------------------------------------+
   !                            EXCITON
-  !PURPOSE  : Evaluate the Exciton susceptibility \Chi_exct for a 
+  !PURPOSE  : Evaluate the Exciton susceptibility \Chi_exct for a
   ! \chi_ab = <O*_a(\tau)O_b(0)>
   ! a/=b
-  ! Singlet: \sum_\sigma <C^+_{a\sigma}C_{b\sigma} 
+  ! Singlet: \sum_\sigma <C^+_{a\sigma}C_{b\sigma}
   ! Triplet: \sum_{\sigma\rho} C^+_{a\sigma} \tau_{\sigma\rho} C_{b\rho}
   !+------------------------------------------------------------------+
   subroutine build_exctChi_normal()
-    ! Evaluates the impurity exciton-exciton susceptibility :math:`\chi^{X}_{ab}=\langle T_\tau X^\dagger_{ab}(\tau) X_{ab}\rangle` in the Matsubara :math:`i\omega_n` and Real :math:`\omega` frequency axis, the imaginary time :math:`\tau` as well as the singlet and triplet components of the operator. 
-    ! As for the Green's function, the off-diagonal component of the the susceptibility is determined using an algebraic manipulation to ensure use of Hermitian operator in the dynamical Lanczos. 
+    ! Evaluates the impurity exciton-exciton susceptibility :math:`\chi^{X}_{ab}=\langle T_\tau X^\dagger_{ab}(\tau) X_{ab}\rangle` in the Matsubara :math:`i\omega_n` and Real :math:`\omega` frequency axis, the imaginary time :math:`\tau` as well as the singlet and triplet components of the operator.
+    ! As for the Green's function, the off-diagonal component of the the susceptibility is determined using an algebraic manipulation to ensure use of Hermitian operator in the dynamical Lanczos.
     !
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
@@ -141,7 +141,7 @@ contains
   ! O_ab = \sum_sp C^+_{as}.tau^o_{sp}.C_{bp} with o=X,Y
   ! O_ab|0> X:=   [C^+_{a,up}C_{b,dw} + C^+_{a,dw}C_{b,up}]|0>
   !         Y:= -i[C^+_{a,up}C_{b,dw} - C^+_{a,dw}C_{b,up}]|0>
-  !         X:=   [P_{up,dw} +  P_{dw,up}]|0> = |v> + |w> 
+  !         X:=   [P_{up,dw} +  P_{dw,up}]|0> = |v> + |w>
   !         X:= -i[P_{up,dw} -  P_{dw,up}]|0> = |v> + |w>
   ! If |0>\in\SS(N_up,N_dw) => |v>\in\SS(N_up+1,N_dw-1), |w>\in\SS(N_up-1,N_dw+1)
   ! so that the sum |v> + |w> can not be accumulated onto a single vector |vvinit>
@@ -151,7 +151,7 @@ contains
   ! the mixed terms: <v|[z-H]^{-1}|w> and <w|[z-H]^{-1}|v> are indeed null.
   ! Proof:
   ! |v> and |w> belong to different sectors. H has a sector-block structure and so
-  ! does its inverse H^{-1} made of the inverse of each block. 
+  ! does its inverse H^{-1} made of the inverse of each block.
   ! The expected values <v|H^{-1}|w> are taken across different sectors, but unless
   ! spin-conservation is broken these sectors are not connected and, as such, these
   ! numbers have to be zero.
@@ -174,7 +174,7 @@ contains
        e_state    =  es_return_energy(state_list,istate)
        v_state    =  es_return_dvec(state_list,istate)
        !
-       !X - Component == Y -Component 
+       !X - Component == Y -Component
        !X_{ab}= C^+_{a,up}C_{b,dw} + C^+_{a,dw}C_{b,up}
        !
        !C^+_{a,dw}C_{b,up}: First Lesser component
@@ -317,11 +317,11 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     integer                                    :: iorb,jorb,ichan,indx,isign,istate
-    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso,vnorm2  
+    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso,vnorm2
     real(8)                                    :: Ei,Ej,Egs,de
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
-    real(8),dimension(size(alanc))             :: blanc 
+    real(8),dimension(size(alanc))             :: blanc
     real(8),dimension(size(alanc),size(alanc)) :: Z
     real(8),dimension(size(alanc))             :: diag,subdiag
     integer                                    :: i,j,ierr
@@ -341,7 +341,7 @@ contains
     !
     Nlanc = size(alanc)
     !
-    pesoF  = vnorm2/zeta_function 
+    pesoF  = vnorm2/zeta_function
     if((finiteT).and.(beta*(Ei-Egs) < 200))then
        pesoBZ = exp(-beta*(Ei-Egs))
     elseif(.not.finiteT)then
@@ -381,7 +381,7 @@ contains
 
 
 
-  
+
   !################################################################
   !################################################################
   !################################################################
@@ -480,6 +480,9 @@ contains
                        enddo
                     case("t","T")
                        Chi(indx,iorb,jorb,:) = Chi(indx,iorb,jorb,:) + 0.5*peso
+                       if(iorb /= jorb) then
+                          Chi(indx,jorb,iorb,:) = Chi(indx,jorb,iorb,:) + 0.5*peso
+                       endif
                  end select
                ! Nonzero energy poles
                elseif(merge(de, -de, mod(ichan,2)==1)>0) then
