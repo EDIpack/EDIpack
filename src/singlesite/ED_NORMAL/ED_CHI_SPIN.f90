@@ -270,7 +270,7 @@ contains
       write(LOGfile,"(A)")"Get Chi_spin_l"//reg(txtfy(iorb))//reg(txtfy(jorb))//"_axis:"//str(axis_)
       if(.not.allocated(spinChimatrix(iorb,jorb)%state)) return
       !
-      Chi(iorb,jorb,:)= zero
+      Chi(iorb,jorb,:) = zero
       Nstates = size(spinChimatrix(iorb,jorb)%state)
       do istate=1,Nstates
          if(.not.allocated(spinChimatrix(iorb,jorb)%state(istate)%channel))cycle
@@ -281,27 +281,48 @@ contains
             do iexc=1,Nexcs
                peso = spinChimatrix(iorb,jorb)%state(istate)%channel(ichan)%weight(iexc)
                de   = spinChimatrix(iorb,jorb)%state(istate)%channel(ichan)%poles(iexc)
-               select case(axis_)
-               case("m","M")
-                  !if(beta*dE > 1d-3)Chi(iorb,jorb,1)=Chi(iorb,jorb,1) + peso*2*(1d0-exp(-beta*dE))/dE 
-                  do i=1,size(zeta)
-                     if (abs(zeta(i))<1e-10)then
-                        if(beta*dE > 1d-3)Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + peso*2*(1d0-exp(-beta*dE))/dE
-                     else
-                        Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + &
-                          peso*(1d0-exp(-beta*dE))*2d0*dE/(dimag(zeta(i))**2 + dE**2)
-                     endif
-                  enddo
-               case("r","R")
-                  do i=1,size(zeta)
-                     Chi(iorb,jorb,i)=Chi(iorb,jorb,i) -&
-                          peso*(1d0-exp(-beta*dE))*(1d0/(zeta(i) - dE) - 1d0/(zeta(i) + dE))
-                  enddo
-               case("t","T")
-                  do i=1,size(zeta)
-                     Chi(iorb,jorb,i)=Chi(iorb,jorb,i) + peso*exp(-zeta(i)*dE)
-                  enddo
-               end select
+               ! Zero energy poles are to be taken into account only once
+               if(abs(beta*de) < 1e-8) then
+                 select case(axis_)
+                    case("m","M")
+                       do i=1,size(zeta)
+                          if(abs(zeta(i))<1e-10) then ! \nu=0
+                             Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + peso*beta
+                          endif
+                       enddo
+                    case("r","R")
+                       ! A zero energy pole contributes only to \chi(Re(z) = 0) and
+                       ! its contribution is taken to be the same as for \chi(\nu=0),
+                       ! regardless of the imaginary shift in z
+                       do i=1,size(zeta)
+                          if(abs(dreal(zeta(i)))<1e-10) then
+                             Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + peso*beta
+                          endif
+                       enddo
+                    case("t","T")
+                       Chi(iorb,jorb,:) = Chi(iorb,jorb,:) + peso
+                 end select
+               ! Ignore the negative energy poles and enforce the spectral symmetry by adding
+               ! contributions from de and -de for each positive de
+               elseif(de > 0) then
+                  select case(axis_)
+                     case("m","M")
+                        do i=1,size(zeta)
+                           Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + &
+                              peso*(1d0-exp(-beta*de))*2d0*de/(dimag(zeta(i))**2 + de**2)
+                        enddo
+                     case("r","R")
+                        do i=1,size(zeta)
+                           Chi(iorb,jorb,i) = Chi(iorb,jorb,i) - &
+                              peso*(1d0-exp(-beta*de)) * (1d0/(zeta(i)-de) - 1d0/(zeta(i)+de))
+                        enddo
+                     case("t","T")
+                        do i=1,size(zeta)
+                           Chi(iorb,jorb,i) = Chi(iorb,jorb,i) + &
+                              peso*(exp(-zeta(i)*de) + exp(-(beta-zeta(i))*de))
+                        enddo
+                  end select
+               endif
             enddo
          enddo
       enddo
