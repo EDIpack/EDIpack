@@ -93,28 +93,23 @@ contains
        ksector = getCsector(1,2,isector)
        lsector = getCsector(1,1,isector)
        !
-       if(ksector==0 .AND. lsector==0)then
-          call allocate_GFmatrix(exctChimatrix(1,iorb,jorb),istate,1,Nexc=0)
-          call allocate_GFmatrix(exctChimatrix(1,iorb,jorb),istate,2,Nexc=0)
-       else
-          !
-          ! Lesser
-          call auxiliary_vvinit_manipulation(ksector, &
-                                             lsector, &
-                                             iorb,    &
-                                             jorb,    &  
-                                             1,       & !indx: singlet component        
-                                             1,       & !ichan: lesser
-                                             istate)
-          ! Greater
-          call auxiliary_vvinit_manipulation(ksector, & 
-                                             lsector, &
-                                             iorb,    &
-                                             jorb,    &       
-                                             1,       & !indx: singlet component
-                                             2,       & !ichan: greater
-                                             istate)
-       endif
+       ! Lesser
+       call auxiliary_vvinit_manipulation(ksector, &
+                                          lsector, &
+                                          iorb,    &
+                                          jorb,    &  
+                                          1,       & !indx: singlet component        
+                                          1,       & !ichan: lesser
+                                          istate)
+       ! Greater
+       call auxiliary_vvinit_manipulation(ksector, & 
+                                          lsector, &
+                                          iorb,    &
+                                          jorb,    &       
+                                          1,       & !indx: singlet component
+                                          2,       & !ichan: greater
+                                          istate)
+       ! Cleanup
        if(allocated(v_state))deallocate(v_state)
     enddo
     return
@@ -251,28 +246,23 @@ contains
        ksector = getCsector(1,2,isector)
        lsector = getCsector(1,1,isector)
        !
-       if(ksector==0 .AND. lsector==0)then
-          call allocate_GFmatrix(exctChimatrix(3,iorb,jorb),istate,1,Nexc=0)
-          call allocate_GFmatrix(exctChimatrix(3,iorb,jorb),istate,2,Nexc=0)
-       else
-          !
-          ! Lesser
-          call auxiliary_vvinit_manipulation(ksector,   &
-                                             lsector,   &
-                                             iorb,      &
-                                             jorb,      &  
-                                             3,         & !indx: singlet component        
-                                             1,         & !ichan: lesser
-                                             istate)
-          ! Greater
-          call auxiliary_vvinit_manipulation(ksector,   &
-                                             lsector,   &
-                                             iorb,      &
-                                             jorb,      &  
-                                             3,         & !indx: singlet component        
-                                             2,         & !ichan: lesser
-                                             istate)
-       endif
+       ! Lesser
+       call auxiliary_vvinit_manipulation(ksector,   &
+                                          lsector,   &
+                                          iorb,      &
+                                          jorb,      &  
+                                          3,         & !indx: singlet component        
+                                          1,         & !ichan: lesser
+                                          istate)
+       ! Greater
+       call auxiliary_vvinit_manipulation(ksector,   &
+                                          lsector,   &
+                                          iorb,      &
+                                          jorb,      &  
+                                          3,         & !indx: singlet component        
+                                          2,         & !ichan: lesser
+                                          istate)
+       ! Cleanup                                   
        if(allocated(v_state))deallocate(v_state)
     enddo
     return
@@ -505,65 +495,71 @@ contains
     real(8)                          :: comb_sign
     real(8),dimension(:),allocatable :: vup,vdw,vtmp
     !
-    !startup
-    if(allocated(alfa_))deallocate(alfa_)
-    if(allocated(beta_))deallocate(beta_)
-    if(allocated(vtmp))deallocate(vtmp)
-    if(allocated(vup))deallocate(vup)
-    if(allocated(vdw))deallocate(vdw)
-    !
-    !Set sign of vup+vdw linear combination depending if singlet (+) or triplet_z (-)
-    if (indx==1)then
-      comb_sign = 1.0
-    elseif(indx==3)then
-      comb_sign = -1.0
+    !See if we have to do anythin: if both c operators cannot be applied, exit.
+    if(ksector==0 .AND. lsector==0)then
+       call allocate_GFmatrix(exctChimatrix(indx,iorb,jorb),istate,1,Nexc=0)
+       call allocate_GFmatrix(exctChimatrix(indx,iorb,jorb),istate,2,Nexc=0)
     else
-      STOP "Wrong value of indx: only 1 or 3 are acceptable"
+      !startup
+      if(allocated(alfa_))deallocate(alfa_)
+      if(allocated(beta_))deallocate(beta_)
+      if(allocated(vtmp))deallocate(vtmp)
+      if(allocated(vup))deallocate(vup)
+      if(allocated(vdw))deallocate(vdw)
+      !
+      !Set sign of vup+vdw linear combination depending if singlet (+) or triplet_z (-)
+      if (indx==1)then
+        comb_sign = 1.0
+      elseif(indx==3)then
+        comb_sign = -1.0
+      else
+        STOP "Wrong value of indx: only 1 or 3 are acceptable"
+      endif
+      !
+      !Set isign depending if ichan=1 (lesser -> +) or ichan = 2 (greater-> -)
+      if (ichan==1)then
+        isign = +1
+      elseif(ichan==2)then
+        isign = -1
+      else
+        STOP "Wrong value of ichan: only 1 or 2 are acceptable"
+      endif  
+      !
+      !try apply operators for down spin
+      if(ksector/=0)then
+        !C_b,dw|gs>=|tmp>
+        vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
+        !C^+_a,dw|tmp>=|vvinit>
+        vdw  = apply_op_CDG(vtmp,iorb,2,ksector,isector)
+      endif
+      !
+      !try apply operators for up spin
+      if(lsector/=0)then
+        !C_b,up|gs>=|tmp>
+        vtmp = apply_op_C(v_state,jorb,1,isector,lsector)
+        !C^+_a,up|tmp>=|vvinit>
+        vup  = apply_op_CDG(vtmp,iorb,1,lsector,isector)
+      endif
+      !
+      !tridiagonalize
+      if (allocated(vup) .and. allocated(vdw)) then
+        call tridiag_Hv_sector_normal(isector, vup + comb_sign * vdw ,alfa_, beta_, norm2)
+      elseif (allocated(vup)) then
+        call tridiag_Hv_sector_normal(isector, vup, alfa_, beta_, norm2)
+      elseif (allocated(vdw)) then
+        call tridiag_Hv_sector_normal(isector, vdw, alfa_, beta_, norm2)
+      else
+        STOP "neither vup nor vdw are allocated"
+      endif
+      !
+      !save weights and poles
+      call add_to_lanczos_exctChi(norm2, e_state, alfa_, beta_, isign, iorb, jorb, indx, ichan, istate)
+      !
+      !cleanup
+      deallocate(alfa_,beta_,vtmp)
+      if(allocated(vup))deallocate(vup)
+      if(allocated(vdw))deallocate(vdw)
     endif
-    !
-    !Set isign depending if ichan=1 (lesser -> +) or ichan = 2 (greater-> -)
-    if (ichan==1)then
-      isign = +1
-    elseif(ichan==2)then
-      isign = -1
-    else
-      STOP "Wrong value of ichan: only 1 or 2 are acceptable"
-    endif  
-    !
-    !try apply operators for down spin
-    if(ksector/=0)then
-      !C_b,dw|gs>=|tmp>
-      vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
-      !C^+_a,dw|tmp>=|vvinit>
-      vdw  = apply_op_CDG(vtmp,iorb,2,ksector,isector)
-    endif
-    !
-    !try apply operators for up spin
-    if(lsector/=0)then
-      !C_b,up|gs>=|tmp>
-      vtmp = apply_op_C(v_state,jorb,1,isector,lsector)
-      !C^+_a,up|tmp>=|vvinit>
-      vup  = apply_op_CDG(vtmp,iorb,1,lsector,isector)
-    endif
-    !
-    !tridiagonalize
-    if (allocated(vup) .and. allocated(vdw)) then
-      call tridiag_Hv_sector_normal(isector, vup + comb_sign * vdw ,alfa_, beta_, norm2)
-    elseif (allocated(vup)) then
-      call tridiag_Hv_sector_normal(isector, vup, alfa_, beta_, norm2)
-    elseif (allocated(vdw)) then
-      call tridiag_Hv_sector_normal(isector, vdw, alfa_, beta_, norm2)
-    else
-      STOP "neither vup nor vdw are allocated"
-    endif
-    !
-    !save weights and poles
-    call add_to_lanczos_exctChi(norm2, e_state, alfa_, beta_, isign, iorb, jorb, indx, ichan, istate)
-    !
-    !cleanup
-    deallocate(alfa_,beta_,vtmp)
-    if(allocated(vup))deallocate(vup)
-    if(allocated(vdw))deallocate(vdw)
   end subroutine auxiliary_vvinit_manipulation
 
 
