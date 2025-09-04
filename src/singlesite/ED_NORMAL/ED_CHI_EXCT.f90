@@ -80,7 +80,6 @@ contains
 #endif
     integer                          :: iorb,jorb
     type(sector)                     :: sectorI
-    real(8),dimension(:),allocatable :: vup,vdw,vtmp
     !
     write(LOGfile,"(A)")"Get singlet Chi_exct_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
     !
@@ -94,42 +93,27 @@ contains
        ksector = getCsector(1,2,isector)
        lsector = getCsector(1,1,isector)
        !
-       if(ksector/=0 .AND. lsector/=0)then
-          !
-          ! Lesser
-          !
-          !C_b,dw|gs>=|tmp>
-          vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
-          !C^+_a,dw|tmp>=|vvinit>
-          vdw  = apply_op_CDG(vtmp,iorb,2,ksector,isector)
-          !
-          !C_b,up|gs>=|tmp>
-          vtmp = apply_op_C(v_state,jorb,1,isector,lsector)
-          !C^+_a,up|tmp>=|vvinit>
-          vup  = apply_op_CDG(vtmp,iorb,1,lsector,isector)
-          !
-          call tridiag_Hv_sector_normal(isector,vup+vdw,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,+1,iorb,jorb,1,1,istate)
-          deallocate(alfa_,beta_,vup,vdw,vtmp)
-          !
-          ! Greater
-          !
-          !C_a,dw|tmp>=|vvinit>
-          vtmp  = apply_op_C(v_state,iorb,2,isector,ksector)
-          !C^+_b,dw|gs>=|tmp>
-          vdw = apply_op_CDG(vtmp,jorb,2,ksector,isector)
-          !
-          !C_a,up|tmp>=|vvinit>
-          vtmp  = apply_op_C(v_state,iorb,1,isector,lsector)
-          !C^+_b,up|gs>=|tmp>
-          vup = apply_op_CDG(vtmp,jorb,1,lsector,isector)
-          !
-          call tridiag_Hv_sector_normal(isector,vup+vdw,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,-1,iorb,jorb,1,2,istate)
-          deallocate(alfa_,beta_,vup,vdw,vtmp)
-       else
+       if(ksector==0 .AND. lsector==0)then
           call allocate_GFmatrix(exctChimatrix(1,iorb,jorb),istate,1,Nexc=0)
           call allocate_GFmatrix(exctChimatrix(1,iorb,jorb),istate,2,Nexc=0)
+       else
+          !
+          ! Lesser
+          call auxiliary_vvinit_manipulation(ksector, &
+                                             lsector, &
+                                             iorb,    &
+                                             jorb,    &  
+                                             1,       & !indx: singlet component        
+                                             1,       & !ichan: lesser
+                                             istate)
+          ! Greater
+          call auxiliary_vvinit_manipulation(ksector, & 
+                                             lsector, &
+                                             iorb,    &
+                                             jorb,    &       
+                                             1,       & !indx: singlet component
+                                             2,       & !ichan: greater
+                                             istate)
        endif
        if(allocated(v_state))deallocate(v_state)
     enddo
@@ -252,7 +236,6 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     integer                          :: iorb,jorb
-    real(8),dimension(:),allocatable :: vup,vdw,vtmp
     !
     write(LOGfile,"(A)")"Get triplet Z Chi_exct_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
     !
@@ -268,42 +251,27 @@ contains
        ksector = getCsector(1,2,isector)
        lsector = getCsector(1,1,isector)
        !
-       if(ksector/=0 .AND. lsector/=0)then
-          !
-          ! Lesser
-          !
-          !C_b,dw |gs> =|tmp>
-          vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
-          !C^+_a,dw|tmp>=|vvinit>
-          vdw  = apply_op_CDG(vtmp,iorb,2,ksector,isector)
-          !
-          !C_b,up  |gs> =|tmp>
-          vtmp = apply_op_C(v_state,jorb,1,isector,lsector)
-          !C^+_a,up|tmp>=|vvinit>
-          vup  = apply_op_CDG(vtmp,iorb,1,lsector,isector)
-          !
-          call tridiag_Hv_sector_normal(isector,vup-vdw,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,+1,iorb,jorb,3,1,istate)
-          deallocate(alfa_,beta_,vup,vdw,vtmp)
-          !
-          ! Greater
-          !
-          !C_a,dw |gs> =|tmp>
-          vtmp = apply_op_C(v_state,iorb,2,isector,ksector)
-          !C^+_b,dw|tmp>=|vvinit>
-          vdw  = apply_op_CDG(vtmp,jorb,2,ksector,isector)
-          !
-          !C_a,up  |gs> =|tmp>
-          vtmp = apply_op_C(v_state,iorb,1,isector,lsector)
-          !C^+_b,up|tmp>=|vvinit>
-          vup  = apply_op_CDG(vtmp,jorb,1,lsector,isector)
-          !
-          call tridiag_Hv_sector_normal(isector,vup-vdw,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,-1,iorb,jorb,3,2,istate)
-          deallocate(alfa_,beta_,vup,vdw,vtmp)
-       else
+       if(ksector==0 .AND. lsector==0)then
           call allocate_GFmatrix(exctChimatrix(3,iorb,jorb),istate,1,Nexc=0)
           call allocate_GFmatrix(exctChimatrix(3,iorb,jorb),istate,2,Nexc=0)
+       else
+          !
+          ! Lesser
+          call auxiliary_vvinit_manipulation(ksector,   &
+                                             lsector,   &
+                                             iorb,      &
+                                             jorb,      &  
+                                             3,         & !indx: singlet component        
+                                             1,         & !ichan: lesser
+                                             istate)
+          ! Greater
+          call auxiliary_vvinit_manipulation(ksector,   &
+                                             lsector,   &
+                                             iorb,      &
+                                             jorb,      &  
+                                             3,         & !indx: singlet component        
+                                             2,         & !ichan: lesser
+                                             istate)
        endif
        if(allocated(v_state))deallocate(v_state)
     enddo
@@ -528,6 +496,75 @@ contains
     end subroutine get_Chiab
     !
   end function get_exctChi_normal
+
+
+  subroutine auxiliary_vvinit_manipulation(ksector,lsector,iorb,jorb,indx,ichan,istate)
+    !this subroutine applies, when possible, the operators for the singlet and triplet_Z components
+    !of the excitonic susceptibility
+    integer                          :: iorb,jorb,ksector,lsector,isign,indx,ichan,istate
+    real(8)                          :: comb_sign
+    real(8),dimension(:),allocatable :: vup,vdw,vtmp
+    !
+    !startup
+    if(allocated(alfa_))deallocate(alfa_)
+    if(allocated(beta_))deallocate(beta_)
+    if(allocated(vtmp))deallocate(vtmp)
+    if(allocated(vup))deallocate(vup)
+    if(allocated(vdw))deallocate(vdw)
+    !
+    !Set sign of vup+vdw linear combination depending if singlet (+) or triplet_z (-)
+    if (indx==1)then
+      comb_sign = 1.0
+    elseif(indx==3)then
+      comb_sign = -1.0
+    else
+      STOP "Wrong value of indx: only 1 or 3 are acceptable"
+    endif
+    !
+    !Set isign depending if ichan=1 (lesser -> +) or ichan = 2 (greater-> -)
+    if (ichan==1)then
+      isign = +1
+    elseif(ichan==2)then
+      isign = -1
+    else
+      STOP "Wrong value of ichan: only 1 or 2 are acceptable"
+    endif  
+    !
+    !try apply operators for down spin
+    if(ksector/=0)then
+      !C_b,dw|gs>=|tmp>
+      vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
+      !C^+_a,dw|tmp>=|vvinit>
+      vdw  = apply_op_CDG(vtmp,iorb,2,ksector,isector)
+    endif
+    !
+    !try apply operators for up spin
+    if(lsector/=0)then
+      !C_b,up|gs>=|tmp>
+      vtmp = apply_op_C(v_state,jorb,1,isector,lsector)
+      !C^+_a,up|tmp>=|vvinit>
+      vup  = apply_op_CDG(vtmp,iorb,1,lsector,isector)
+    endif
+    !
+    !tridiagonalize
+    if (allocated(vup) .and. allocated(vdw)) then
+      call tridiag_Hv_sector_normal(isector, vup + comb_sign * vdw ,alfa_, beta_, norm2)
+    elseif (allocated(vup)) then
+      call tridiag_Hv_sector_normal(isector, vup, alfa_, beta_, norm2)
+    elseif (allocated(vdw)) then
+      call tridiag_Hv_sector_normal(isector, vdw, alfa_, beta_, norm2)
+    else
+      STOP "neither vup nor vdw are allocated"
+    endif
+    !
+    !save weights and poles
+    call add_to_lanczos_exctChi(norm2, e_state, alfa_, beta_, isign, iorb, jorb, indx, ichan, istate)
+    !
+    !cleanup
+    deallocate(alfa_,beta_,vtmp)
+    if(allocated(vup))deallocate(vup)
+    if(allocated(vdw))deallocate(vdw)
+  end subroutine auxiliary_vvinit_manipulation
 
 
 
