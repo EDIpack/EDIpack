@@ -97,15 +97,15 @@ contains
        call auxiliary_vvinit_manipulation(ksector, &
                                           lsector, &
                                           iorb,    &
-                                          jorb,    &  
-                                          1,       & !indx: singlet component        
+                                          jorb,    &
+                                          1,       & !indx: singlet component
                                           1,       & !ichan: lesser
                                           istate)
        ! Greater
-       call auxiliary_vvinit_manipulation(ksector, & 
+       call auxiliary_vvinit_manipulation(ksector, &
                                           lsector, &
                                           iorb,    &
-                                          jorb,    &       
+                                          jorb,    &
                                           1,       & !indx: singlet component
                                           2,       & !ichan: greater
                                           istate)
@@ -250,19 +250,19 @@ contains
        call auxiliary_vvinit_manipulation(ksector,   &
                                           lsector,   &
                                           iorb,      &
-                                          jorb,      &  
-                                          3,         & !indx: singlet component        
+                                          jorb,      &
+                                          3,         & !indx: singlet component
                                           1,         & !ichan: lesser
                                           istate)
        ! Greater
        call auxiliary_vvinit_manipulation(ksector,   &
                                           lsector,   &
                                           iorb,      &
-                                          jorb,      &  
-                                          3,         & !indx: singlet component        
+                                          jorb,      &
+                                          3,         & !indx: singlet component
                                           2,         & !ichan: lesser
                                           istate)
-       ! Cleanup                                   
+       ! Cleanup
        if(allocated(v_state))deallocate(v_state)
     enddo
     return
@@ -491,7 +491,7 @@ contains
   subroutine auxiliary_vvinit_manipulation(ksector,lsector,iorb,jorb,indx,ichan,istate)
     !this subroutine applies, when possible, the operators for the singlet and triplet_Z components
     !of the excitonic susceptibility
-    integer                          :: iorb,jorb,ksector,lsector,isign,indx,ichan,istate
+    integer                          :: iorb,jorb,iorb_,jorb_,ksector,lsector,isign,indx,ichan,istate
     real(8)                          :: comb_sign
     real(8),dimension(:),allocatable :: vup,vdw,vtmp
     !
@@ -517,27 +517,31 @@ contains
       !
       !Set isign depending if ichan=1 (lesser -> +) or ichan = 2 (greater-> -)
       if (ichan==1)then
+        iorb_ = iorb
+        jorb_ = jorb
         isign = +1
       elseif(ichan==2)then
+        iorb_ = jorb
+        jorb_ = iorb
         isign = -1
       else
         STOP "Wrong value of ichan: only 1 or 2 are acceptable"
-      endif  
+      endif
       !
       !try apply operators for down spin
       if(ksector/=0)then
         !C_b,dw|gs>=|tmp>
-        vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
+        vtmp = apply_op_C(v_state,jorb_,2,isector,ksector)
         !C^+_a,dw|tmp>=|vvinit>
-        vdw  = apply_op_CDG(vtmp,iorb,2,ksector,isector)
+        vdw  = apply_op_CDG(vtmp,iorb_,2,ksector,isector)
       endif
       !
       !try apply operators for up spin
       if(lsector/=0)then
         !C_b,up|gs>=|tmp>
-        vtmp = apply_op_C(v_state,jorb,1,isector,lsector)
+        vtmp = apply_op_C(v_state,jorb_,1,isector,lsector)
         !C^+_a,up|tmp>=|vvinit>
-        vup  = apply_op_CDG(vtmp,iorb,1,lsector,isector)
+        vup  = apply_op_CDG(vtmp,iorb_,1,lsector,isector)
       endif
       !
       !tridiagonalize
@@ -546,7 +550,7 @@ contains
       elseif (allocated(vup)) then
         call tridiag_Hv_sector_normal(isector, vup, alfa_, beta_, norm2)
       elseif (allocated(vdw)) then
-        call tridiag_Hv_sector_normal(isector, vdw, alfa_, beta_, norm2)
+        call tridiag_Hv_sector_normal(isector, comb_sign * vdw, alfa_, beta_, norm2)
       else
         STOP "neither vup nor vdw are allocated"
       endif
