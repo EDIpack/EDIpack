@@ -36,22 +36,44 @@ In [Quickstart](https://edipack.github.io/EDIpack/quickstart/02_dmft.html) we il
 
 
 ### Reference
-A full overview of EDIpack can be found at [arXiv.2506.01363](https://doi.org/10.48550/arXiv.2506.01363), currently under review in Scipost Physics Codebases  [scipost_202506_00023v1](https://scipost.org/submissions/scipost_202506_00023v1/). The paper source is also available at [EDIpack/EDIpackManuscript](https://github.com/EDIpack/EDIpackManuscript).  
+A full overview of EDIpack can be found in the related publication which can be found at [SciPostPhysCodeb.58](https://scipost.org/10.21468/SciPostPhysCodeb.58). The paper source is also available at [EDIpack/EDIpackManuscript](https://github.com/EDIpack/EDIpackManuscript).  
 
 Useful informations about the distributed memory parallel algorithms underlying the functioning of EDIpack and their benchmarks are presented in [j.cpc.2021.108261](https://doi.org/10.1016/j.cpc.2021.108261) (also freely available in the arXiv).   
 
-**Should you use EDIpack or any of the derived packages, please consider citing both papers**:
+**Should you use EDIpack or any of the derived packages, please consider citing these papers**:
 
 ```
-@misc{Crippa2025arxiv,
-      title={A flexible and interoperable high-performance Lanczos-based solver for generic quantum impurity problems: upgrading EDIpack}, 
-      author={Lorenzo Crippa and Igor Krivenko and Samuele Giuli and Gabriele Bellomia and Alexander Kowalski and Francesco Petocchi and Alberto Scazzola and Markus Wallerberger and Giacomo Mazza and Luca de Medici and Giorgio Sangiovanni and Massimo Capone and Adriano Amaricci},
-      year={2025},
-      eprint={2506.01363},
-      archivePrefix={arXiv},
-      primaryClass={cond-mat.str-el},
-      url={https://arxiv.org/abs/2506.01363}, 
-}
+@article{Crippa2025SPCa,
+	author = {Lorenzo Crippa and Igor Krivenko and Samuele Giuli and Gabriele Bellomia and Alexander Kowalski and Francesco Petocchi and Alberto Scazzola and Markus Wallerberger and Giacomo Mazza and Luca de Medici and Giorgio Sangiovanni and Massimo Capone and Adriano Amaricci},
+	date-added = {2025-09-24 16:21:06 +0200},
+	date-modified = {2025-09-24 16:21:10 +0200},
+	doi = {10.21468/SciPostPhysCodeb.58},
+	journal = {SciPost Phys. Codebases},
+	pages = {58},
+	publisher = {SciPost},
+	title = {{Next-generation EDIpack: A Lanczos-based package for quantum impurity models featuring general broken-symmetry phases, flexible bath topologies and multi-platform interoperability}},
+	url = {https://scipost.org/10.21468/SciPostPhysCodeb.58},
+	year = {2025},
+	bdsk-url-1 = {https://scipost.org/10.21468/SciPostPhysCodeb.58},
+	bdsk-url-2 = {https://doi.org/10.21468/SciPostPhysCodeb.58}}
+
+
+
+
+@article{Crippa2025SPC,
+	author = {Lorenzo Crippa and Igor Krivenko and Samuele Giuli and Gabriele Bellomia and Alexander Kowalski and Francesco Petocchi and Alberto Scazzola and Markus Wallerberger and Giacomo Mazza and Luca de Medici and Giorgio Sangiovanni and Massimo Capone and Adriano Amaricci},
+	date-added = {2025-09-24 16:21:06 +0200},
+	date-modified = {2025-09-24 16:21:10 +0200},
+	doi = {10.21468/SciPostPhysCodeb.58-r5.3},
+	journal = {SciPost Phys. Codebases},
+	pages = {58-r5.3},
+	publisher = {SciPost},
+	title = {{Codebase release 5.3 for EDIpack}},
+	url = {https://scipost.org/10.21468/SciPostPhysCodeb.58-r5.3},
+	year = {2025},
+	bdsk-url-1 = {https://scipost.org/10.21468/SciPostPhysCodeb.58-r5.3},
+	bdsk-url-2 = {https://doi.org/10.21468/SciPostPhysCodeb.58-r5.3}}
+
 ```
 
 and 
