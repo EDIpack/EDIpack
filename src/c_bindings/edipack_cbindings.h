@@ -17,7 +17,7 @@ extern int has_ineq;
 
 /*!
 \rst
-Inverse temperature
+Inverse temperature. 
 Interfaces to :f:var:`beta`.
 \endrst
 */ 
@@ -25,7 +25,39 @@ extern double beta;
 
 /*!
 \rst
-Convergence threshold
+Flag to activate charge susceptibility evaluation.
+Interfaces to :f:var:`chidens_flag`.
+\endrst
+*/ 
+extern bool chidens_flag;
+
+/*!
+\rst
+Flag to activate exciton susceptibility evaluation.
+Interfaces to :f:var:`chiexct_flag`.
+\endrst
+*/ 
+extern bool chiexct_flag;
+
+/*!
+\rst
+Flag to activate pair susceptibility evaluation.
+Interfaces to :f:var:`chipair_flag`.
+\endrst
+*/ 
+extern bool chipair_flag;
+
+/*!
+\rst
+Flag to activate spin susceptibility evaluation.
+Interfaces to :f:var:`chispin_flag`.
+\endrst
+*/ 
+extern bool chispin_flag;
+
+/*!
+\rst
+Convergence threshold. 
 Interfaces to :f:var:`dmft_error`.
 \endrst
 */ 
@@ -33,7 +65,7 @@ extern double dmft_error;
 
 /*!
 \rst
-Twin sector simmetry flag
+Twin sector simmetry flag. 
 Interfaces to :f:var:`ed_twin`.
 \endrst
 */ 
@@ -41,7 +73,7 @@ extern bool ed_twin;
 
 /*!
 \rst
-Flag setting orbital-resolved sectorization of Fock space Hamiltoniaj
+Flag setting orbital-resolved sectorization of Fock space Hamiltonian. 
 Interfaces to :f:var:`ed_total_ud`.
 \endrst
 */ 
@@ -49,7 +81,7 @@ extern bool ed_total_ud;
 
 /*!
 \rst
-Real axis broadening
+Real axis broadening. 
 Interfaces to :f:var:`eps`.
 \endrst
 */ 
@@ -57,7 +89,7 @@ extern double eps;
 
 /*!
 \rst
-Hund's coupling.
+Hund's coupling. 
 Interfaces to :f:var:`Jh`.
 \endrst
 */ 
@@ -65,7 +97,7 @@ extern double Jh;
 
 /*!
 \rst
-Pair-hopping interaction strength.
+Pair-hopping interaction strength. 
 Interfaces to :f:var:`Jp`.
 \endrst
 */ 
@@ -73,7 +105,7 @@ extern double Jp;
 
 /*!
 \rst
-Spin-exchange interaction strength.
+Spin-exchange interaction strength. 
 Interfaces to :f:var:`Jx`.
 \endrst
 */ 
@@ -81,7 +113,7 @@ extern double Jx;
 
 /*!
 \rst
-Number of frequencies used in :math:`\chi^{2}` fit
+Number of frequencies used in :math:`\chi^{2}` fit. 
 Interfaces to :f:var:`Lfit`.
 \endrst
 */ 
@@ -89,7 +121,7 @@ extern int Lfit;
 
 /*!
 \rst
-Number of Matsubara frequencies.
+Number of Matsubara frequencies. 
 Interfaces to :f:var:`Lmats`.
 \endrst
 */ 
@@ -97,7 +129,7 @@ extern int Lmats;
 
 /*!
 \rst
-Number of real frequencies.
+Number of real frequencies. 
 Interfaces to :f:var:`Lreal`.
 \endrst
 */ 
@@ -105,6 +137,7 @@ extern int Lreal;
 
 /*!
 \rst
+Number of points in Probability Distribution Function lattice for phonons. 
 Interfaces to :f:var:`Lpos`.
 \endrst
 */ 
@@ -112,7 +145,7 @@ extern int Lpos;
 
 /*!
 \rst
-Number of imaginary-time points.
+Number of imaginary-time points. 
 Interfaces to :f:var:`Ltau`.
 \endrst
 */ 
@@ -120,7 +153,7 @@ extern int Ltau;
 
 /*!
 \rst
-Number of bath sites
+Number of bath sites. 
 Interfaces to :f:var:`Nbath`.
 \endrst
 */ 
@@ -128,7 +161,7 @@ extern int Nbath;
 
 /*!
 \rst
-Number of DMFT loops
+Number of DMFT loops. 
 Interfaces to :f:var:`Nloop`.
 \endrst
 */ 
@@ -136,7 +169,7 @@ extern int Nloop;
 
 /*!
 \rst
-Number of orbitals
+Number of orbitals. 
 Interfaces to :f:var:`Norb`.
 \endrst
 */ 
@@ -144,7 +177,7 @@ extern int Norb;
 
 /*!
 \rst
-Number of phonons.
+Number of phonons. 
 Interfaces to :f:var:`Nph`.
 \endrst
 */ 
@@ -152,7 +185,7 @@ extern int Nph;
 
 /*!
 \rst
-Occupation value for fixed-density calculations
+Occupation value for fixed-density calculations. 
 Interfaces to :f:var:`nread`.
 \endrst
 */ 
@@ -160,7 +193,7 @@ extern double nread;
 
 /*!
 \rst
-Number of spins
+Number of spins. 
 Interfaces to :f:var:`Nspin`.
 \endrst
 */ 
@@ -168,7 +201,7 @@ extern int Nspin;
 
 /*!
 \rst
-Number of iterations under convergence threshod
+Number of iterations under convergence threshod. 
 Interfaces to :f:var:`Nsuccess`.
 \endrst
 */ 
@@ -176,7 +209,7 @@ extern int Nsuccess;
 
 /*!
 \rst
-Symmetry-breaking field.
+Symmetry-breaking field. 
 Interfaces to :f:var:`sb_field`.
 \endrst
 */ 
@@ -184,7 +217,7 @@ extern double sb_field;
 
 /*!
 \rst
-Hubbard interaction strength.
+Hubbard interaction strength. 
 Interfaces to :f:var:`Uloc`.
 \endrst
 */ 
@@ -192,7 +225,7 @@ extern double Uloc[5];
 
 /*!
 \rst
-Density-density Kanamori interaction strength.
+Density-density Kanamori interaction strength. 
 Interfaces to :f:var:`Ust`.
 \endrst
 */ 
@@ -200,7 +233,7 @@ extern double Ust;
 
 /*!
 \rst
-Upper bound on real axis frequencies
+Upper bound on real axis frequencies. 
 Interfaces to :f:var:`wfin`.
 \endrst
 */ 
@@ -208,7 +241,7 @@ extern double wfin;
 
 /*!
 \rst
-Upper bound on real axis frequencies
+Upper bound on real axis frequencies. 
 Interfaces to :f:var:`wini`.
 \endrst
 */ 
@@ -216,14 +249,16 @@ extern double wini;
 
 /*!
 \rst
-Interfaces to :f:var:`xmax`.
+Maximum of the x-range for the local lattice probability distribution function. 
+Interfaces to :f:var:`xmax`. 
 \endrst
 */ 
 extern double xmax;
 
 /*!
 \rst
-Interfaces to :f:var:`xmin`.
+Minimum of the x-range for the local lattice probability distribution function. 
+Interfaces to :f:var:`xmin`. 
 \endrst
 */ 
 extern double xmin;
@@ -231,7 +266,7 @@ extern double xmin;
 
 /*!
 \rst
-Chemical potential
+Chemical potential. 
 Interfaces to :f:var:`xmu`.
 \endrst
 */ 
@@ -253,7 +288,7 @@ void read_input(char *instr);
 /*!
 \rst
 This function sets the local Hamiltonian.
-Interfaces to :f:func:`f/ed_aux_funx/ed_set_Hloc`.
+Interfaces to :f:func:`ed_aux_funx/ed_set_Hloc`.
 Rank-2 array variant for single-site DMFT
 \endrst
 *
@@ -267,7 +302,7 @@ void ed_set_Hloc_single_N2(std::complex<double> *Hloc,
 /*!
 \rst
 This function sets the local Hamiltonian.
-Interfaces to :f:func:`f/ed_aux_funx/ed_set_Hloc`.
+Interfaces to :f:func:`ed_aux_funx/ed_set_Hloc`.
 Rank-4 array variant for single-site DMFT.
 \endrst
 *
@@ -282,7 +317,7 @@ void ed_set_Hloc_single_N4(std::complex<double> *Hloc,
 /*!
 \rst
 This function sets the local Hamiltonian.
-Interfaces to :f:func:`f/e2i_aux_funx/ed_set_Hloc`.
+Interfaces to :f:func:`e2i_aux_funx/ed_set_Hloc`.
 Rank-2 array variant for real-space DMFT.
 \endrst
 *
@@ -298,7 +333,7 @@ void ed_set_Hloc_lattice_N2(std::complex<double> *Hloc,
 /*!
 \rst
 This function sets the local Hamiltonian.
-Interfaces to :f:func:`f/e2i_aux_funx/ed_set_Hloc`.
+Interfaces to :f:func:`e2i_aux_funx/ed_set_Hloc`.
 Rank-3 array variant for real-space DMFT.
 \endrst
 *
@@ -314,7 +349,7 @@ void ed_set_Hloc_lattice_N3(std::complex<double> *Hloc,
 /*!
 \rst
 This function sets the local Hamiltonian.
-Interfaces to :f:func:`f/e2i_aux_funx/ed_set_Hloc`.
+Interfaces to :f:func:`e2i_aux_funx/ed_set_Hloc`.
 Rank-5 array variant for real-space DMFT.
 \endrst
 *
@@ -371,7 +406,7 @@ void search_variable(double *var,
 /*!
 \rst
 This function sets the replica bath H. 
-Interfaces to :f:func:`f/ed_bath_replica/set_hreplica`.
+Interfaces to :f:func:`ed_bath_replica/set_hreplica`.
 Rank-3 array case for single-site DMFT.
 \endrst
 *
@@ -389,7 +424,7 @@ void init_Hreplica_symmetries_d3(std::complex<double> *Hvec,
 /*!
 \rst
 This function sets the replica bath H. 
-Interfaces to :f:func:`f/ed_bath_replica/set_hreplica`.
+Interfaces to :f:func:`ed_bath_replica/set_hreplica`.
 Rank-5 array case for single-site DMFT.
 \endrst
 *
@@ -407,7 +442,7 @@ void init_Hreplica_symmetries_d5(std::complex<double> *Hvec,
 /*!
 \rst
 This function sets the general bath H. 
-Interfaces to :f:func:`f/ed_bath_replica/set_hgeneral`.
+Interfaces to :f:func:`ed_bath_replica/set_hgeneral`.
 Rank-3 array case for single-site DMFT.
 \endrst
 *
@@ -425,7 +460,7 @@ void init_Hgeneral_symmetries_d3(std::complex<double> *Hvec,
 /*!
 \rst
 This function sets the general bath H. 
-Interfaces to :f:func:`f/ed_bath_replica/set_hgeneral`.
+Interfaces to :f:func:`ed_bath_replica/set_hgeneral`.
 Rank-5 array case for single-site DMFT.
 \endrst
 *
@@ -443,7 +478,7 @@ void init_Hgeneral_symmetries_d5(std::complex<double> *Hvec,
 /*!
 \rst
 This function sets the replica bath H. 
-Interfaces to :f:func:`f/e2i_bath_replica/set_hreplica`.
+Interfaces to :f:func:`e2i_bath_replica/set_hreplica`.
 Rank-3 array case for real-space DMFT.
 \endrst
 *
@@ -461,7 +496,7 @@ void init_Hreplica_symmetries_lattice_d3(std::complex<double> *Hvec,
 /*!
 \rst
 This function sets the replica bath H. 
-Interfaces to :f:func:`f/e2i_bath_replica/set_hreplica`.
+Interfaces to :f:func:`e2i_bath_replica/set_hreplica`.
 Rank-5 array case for real-space DMFT.
 \endrst
 *
@@ -479,7 +514,7 @@ void init_Hreplica_symmetries_lattice_d5(std::complex<double> *Hvec,
 /*!                                         
 \rst
 This function sets the general bath H. 
-Interfaces to :f:func:`f/e2i_bath_replica/set_hgeneral`.
+Interfaces to :f:func:`e2i_bath_replica/set_hgeneral`.
 Rank-3 array case for real-space DMFT.
 \endrst
 *
@@ -498,7 +533,7 @@ void init_Hgeneral_symmetries_lattice_d3(std::complex<double> *Hvec,
 /*!
 \rst
 This function sets the general bath H. 
-Interfaces to :f:func:`f/e2i_bath_replica/set_hgeneral`.
+Interfaces to :f:func:`e2i_bath_replica/set_hgeneral`.
 Rank-5 array case for real-space DMFT.
 \endrst
 *
@@ -516,7 +551,7 @@ void init_Hgeneral_symmetries_lattice_d5(std::complex<double> *Hvec,
 /*!                                         
 \rst
 This function breaks the bath symmetry. 
-Interfaces to :f:func:`f/ed_bath_user/break_symmetry_bath`. 
+Interfaces to :f:func:`ed_bath_user/break_symmetry_bath`. 
 Single-site DMFT variant.
 \endrst
 *
@@ -536,7 +571,7 @@ void break_symmetry_bath_site(double *bath,
 /*!                                         
 \rst
 This function breaks the bath symmetry. 
-Interfaces to :f:func:`f/e2i_bath_user/break_symmetry_bath`. 
+Interfaces to :f:func:`e2i_bath_user/break_symmetry_bath`. 
 Real-space DMFT variant.
 \endrst
 *
@@ -556,7 +591,7 @@ void break_symmetry_bath_ineq(double *bath,
 /*!                                         
 \rst
 This function enforces a paramagnetic bath
-Interfaces to :f:func:`f/ed_bath_user/spin_symmetrize_bath`. 
+Interfaces to :f:func:`ed_bath_user/spin_symmetrize_bath`. 
 Single-site DMFT variant.
 \endrst
 *
@@ -572,7 +607,7 @@ void spin_symmetrize_bath_site(double *bath,
 /*!                                         
 \rst
 This function enforces a paramagnetic bath
-Interfaces to :f:func:`f/e2i_bath_user/spin_symmetrize_bath`. 
+Interfaces to :f:func:`e2i_bath_user/spin_symmetrize_bath`. 
 Real-space DMFT variant.
 \endrst
 *
@@ -588,7 +623,7 @@ void spin_symmetrize_bath_ineq(double *bath,
 /*!                                         
 \rst
 This function enforces an orbital-symmetric bath. 
-Interfaces to :f:func:`f/ed_bath_user/orb_symmetrize_bath`. 
+Interfaces to :f:func:`ed_bath_user/orb_symmetrize_bath`. 
 Single-site DMFT variant.
 \endrst
 *
@@ -608,7 +643,7 @@ void orb_symmetrize_bath_site(double *bath,
 /*!                                         
 \rst
 This function enforces an orbital-symmetric bath. 
-Interfaces to :f:func:`f/e2i_bath_user/orb_symmetrize_bath`. 
+Interfaces to :f:func:`e2i_bath_user/orb_symmetrize_bath`. 
 Real-space DMFT variant.
 \endrst
 *
@@ -628,7 +663,7 @@ void orb_symmetrize_bath_ineq(double *bath,
 /*!                                         
 \rst
 This function enforces an orbita-symmetric bath. 
-Interfaces to :f:func:`f/ed_bath_user/orb_symmetrize_bath`. 
+Interfaces to :f:func:`ed_bath_user/orb_symmetrize_bath`. 
 Single-site DMFT variant.
 \endrst
 *
@@ -646,7 +681,7 @@ void orb_equality_bath_site(double *bath,
 /*!                                         
 \rst
 This function enforces an orbita-symmetric bath. 
-Interfaces to :f:func:`f/e2i_bath_user/orb_symmetrize_bath`. 
+Interfaces to :f:func:`e2i_bath_user/orb_symmetrize_bath`. 
 Real-space DMFT variant.
 \endrst
 *
@@ -664,7 +699,7 @@ void orb_equality_bath_ineq(double *bath,
 /*!                                         
 \rst
 This function enforces a particle-hole symmetric bath.
-Interfaces to :f:func:`f/ed_bath_user/ph_symmetrize_bath`. 
+Interfaces to :f:func:`ed_bath_user/ph_symmetrize_bath`. 
 Single-site DMFT variant.
 \endrst
 *
@@ -680,7 +715,7 @@ void ph_symmetrize_bath_site(double *bath,
 /*!                                         
 \rst
 This function enforces a particle-hole symmetric bath.
-Interfaces to :f:func:`f/e2i_bath_user/ph_symmetrize_bath`. 
+Interfaces to :f:func:`e2i_bath_user/ph_symmetrize_bath`. 
 Real-space DMFT variant.
 \endrst
 *
@@ -696,7 +731,7 @@ void ph_symmetrize_bath_ineq(double *bath,
 /*!                                         
 \rst
 This function saves the bath array in a properly formatted file.
-Interfaces to :f:func:`f/ed_bath_user/save_array_as_bath`. 
+Interfaces to :f:func:`ed_bath_user/save_array_as_bath`. 
 Single-site DMFT variant.
 \endrst
 *
@@ -710,7 +745,7 @@ void save_array_as_bath_site(double *bath,
 /*!                                         
 \rst
 This function saves the bath array in a properly formatted file.
-Interfaces to :f:func:`f/e2i_bath_user/save_array_as_bath`. 
+Interfaces to :f:func:`e2i_bath_user/save_array_as_bath`. 
 Real-space DMFT variant.
 \endrst
 *
@@ -727,7 +762,7 @@ void save_array_as_bath_ineq(double *bath,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/ed_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`ed_bath_fit/ed_chi2_fitgf`. 
 Single-site DMFT variant for :f:var:`ED_MODE` = :code:`NORMAL/NONSU2` and rank-3 arrays.
 \endrst
 *
@@ -751,7 +786,7 @@ void chi2_fitgf_single_normal_n3(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/ed_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`ed_bath_fit/ed_chi2_fitgf`. 
 Single-site DMFT variant for :f:var:`ED_MODE` = :code:`NORMAL/NONSU2` and rank-5 arrays.
 \endrst
 *
@@ -775,7 +810,7 @@ void chi2_fitgf_single_normal_n5(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/ed_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`ed_bath_fit/ed_chi2_fitgf`. 
 Single-site DMFT variant for :f:var:`ED_MODE` = :code:`SUPERC` and rank-3 arrays.
 \endrst
 *
@@ -804,7 +839,7 @@ void chi2_fitgf_single_superc_n3(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/ed_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`ed_bath_fit/ed_chi2_fitgf`. 
 Single-site DMFT variant for :f:var:`ED_MODE` = :code:`SUPERC` and rank-5 arrays.
 \endrst
 *
@@ -832,7 +867,7 @@ void chi2_fitgf_single_superc_n5(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/e2i_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`e2i_bath_fit/ed_chi2_fitgf`. 
 Real-space DMFT variant for :f:var:`ED_MODE` = :code:`NORMAL/NONSU2` and rank-3 arrays.
 \endrst
 *
@@ -852,7 +887,7 @@ void chi2_fitgf_lattice_normal_n3(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/e2i_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`e2i_bath_fit/ed_chi2_fitgf`. 
 Real-space DMFT variant for :f:var:`ED_MODE` = :code:`NORMAL/NONSU2` and rank-4 arrays.
 \endrst
 *
@@ -872,7 +907,7 @@ void chi2_fitgf_lattice_normal_n4(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/e2i_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`e2i_bath_fit/ed_chi2_fitgf`. 
 Real-space DMFT variant for :f:var:`ED_MODE` = :code:`NORMAL/NONSU2` and rank-6 arrays.
 \endrst
 *
@@ -893,7 +928,7 @@ void chi2_fitgf_lattice_normal_n6(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/e2i_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`e2i_bath_fit/ed_chi2_fitgf`. 
 Real-space DMFT variant for :f:var:`ED_MODE` = :code:`SUPERC` and rank-3 arrays.
 \endrst
 *
@@ -917,7 +952,7 @@ void chi2_fitgf_lattice_superc_n3(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/e2i_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`e2i_bath_fit/ed_chi2_fitgf`. 
 Real-space DMFT variant for :f:var:`ED_MODE` = :code:`SUPERC` and rank-4 arrays.
 \endrst
 *
@@ -942,7 +977,7 @@ void chi2_fitgf_lattice_superc_n4(std::complex<double> *g,
 /*!                                         
 \rst
 This function fits the Weiss field or hybridization function.
-Interfaces to :f:func:`f/e2i_bath_fit/ed_chi2_fitgf`. 
+Interfaces to :f:func:`e2i_bath_fit/ed_chi2_fitgf`. 
 Real-space DMFT variant for :f:var:`ED_MODE` = :code:`SUPERC` and rank-6 arrays.
 \endrst
 *
@@ -967,7 +1002,7 @@ void chi2_fitgf_lattice_superc_n6(std::complex<double> *g,
 /*!                                         
 \rst
 This function obtains the density.
-Interfaces to :f:func:`f/ed_io/ed_get_dens`. 
+Interfaces to :f:func:`ed_io/ed_get_dens`. 
 Single-site DMFT version
 \endrst
 *
@@ -978,7 +1013,7 @@ void ed_get_dens_n1(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the density.
-Interfaces to :f:func:`f/e2i_io/ed_get_dens`. 
+Interfaces to :f:func:`e2i_io/ed_get_dens`. 
 Real-space DMFT version
 \endrst
 *
@@ -990,7 +1025,7 @@ void ed_get_dens_n2(std::complex<double> *self, int Nlat);
 /*!                                         
 \rst
 This function obtains the magnetization.
-Interfaces to :f:func:`f/ed_io/ed_get_mag`. 
+Interfaces to :f:func:`ed_io/ed_get_mag`. 
 Single-site DMFT version
 \endrst
 *
@@ -1001,7 +1036,7 @@ void ed_get_mag_n2(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the magnetization.
-Interfaces to :f:func:`f/e2i_io/ed_get_mag`. 
+Interfaces to :f:func:`e2i_io/ed_get_mag`. 
 Real-space DMFT version
 \endrst
 *
@@ -1014,7 +1049,7 @@ void ed_get_mag_n3(std::complex<double> *self, int Nlat);
 /*!                                         
 \rst
 This function obtains the double-occupation.
-Interfaces to :f:func:`f/ed_io/ed_get_docc`. 
+Interfaces to :f:func:`ed_io/ed_get_docc`. 
 Single-site DMFT version
 \endrst
 *
@@ -1025,7 +1060,7 @@ void ed_get_docc_n1(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the double occupation.
-Interfaces to :f:func:`f/e2i_io/ed_get_docc`. 
+Interfaces to :f:func:`e2i_io/ed_get_docc`. 
 Real-space DMFT version
 \endrst
 *
@@ -1037,7 +1072,7 @@ void ed_get_docc_n2(std::complex<double> *self, int Nlat);
 /*!                                         
 \rst
 This function obtains the superconductive order parameter modulus.
-Interfaces to :f:func:`f/ed_io/ed_get_phi`. 
+Interfaces to :f:func:`ed_io/ed_get_phi`. 
 Single-site DMFT version
 \endrst
 *
@@ -1048,7 +1083,7 @@ void ed_get_phisc_n2(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the superconductive order parameter modulus.
-Interfaces to :f:func:`f/e2i_io/ed_get_phi`. 
+Interfaces to :f:func:`e2i_io/ed_get_phi`. 
 Real-space DMFT version
 \endrst
 *
@@ -1062,7 +1097,7 @@ void ed_get_phisc_n3(std::complex<double> *self, int Nlat);
 /*!                                         
 \rst
 This function obtains the superconductive order parameter argument.
-Interfaces to :f:func:`f/ed_io/ed_get_argphi`. 
+Interfaces to :f:func:`ed_io/ed_get_argphi`. 
 Single-site DMFT version
 \endrst
 *
@@ -1073,7 +1108,7 @@ void ed_get_argsc_n2(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the superconductive order parameter argument.
-Interfaces to :f:func:`f/e2i_io/ed_get_argphi`. 
+Interfaces to :f:func:`e2i_io/ed_get_argphi`. 
 Real-space DMFT version
 \endrst
 *
@@ -1087,7 +1122,7 @@ void ed_get_argsc_n3(std::complex<double> *self, int Nlat);
 /*!                                         
 \rst
 This function obtains the local energy.
-Interfaces to :f:func:`f/ed_io/ed_get_eimp`. 
+Interfaces to :f:func:`ed_io/ed_get_eimp`. 
 Single-site DMFT version
 \endrst
 *
@@ -1098,7 +1133,7 @@ void ed_get_eimp_n1(std::complex<double> *self);
 /*!                                         
 \rst
 This function obtains the local energy.
-Interfaces to :f:func:`f/e2i_io/ed_get_eimp`. 
+Interfaces to :f:func:`e2i_io/ed_get_eimp`. 
 Real-space DMFT version
 \endrst
 *
@@ -1111,7 +1146,7 @@ void ed_get_eimp_n2(std::complex<double> *self, int Nlat);
 /*!
 \rst
 This function obtains the self-energy.
-Interfaces to :f:func:`f/ed_io/ed_get_sigma` for a rank-3 array.
+Interfaces to :f:func:`ed_io/ed_get_sigma` for a rank-3 array.
 Single-site DMFT variant.
 \endrst
 * @param self: the self-energy array
@@ -1132,7 +1167,7 @@ void get_sigma_site_n3(std::complex<double> *self,
 /*!
 \rst
 This function obtains the self-energy.
-Interfaces to :f:func:`f/ed_io/ed_get_sigma` for a rank-5 array.
+Interfaces to :f:func:`ed_io/ed_get_sigma` for a rank-5 array.
 Single-site DMFT variant.
 \endrst
 * @param self: the self-energy array
@@ -1153,7 +1188,7 @@ void get_sigma_site_n5(std::complex<double> *self,
 /*!
 \rst
 This function obtains the self-energy.
-Interfaces to :f:func:`f/e2i_io/ed_get_sigma` for a rank-3 array.
+Interfaces to :f:func:`e2i_io/ed_get_sigma` for a rank-3 array.
 Real-space DMFT variant.
 \endrst
 * @param self: the self-energy array
@@ -1176,7 +1211,7 @@ void get_sigma_lattice_n3(std::complex<double> *self,
 /*!
 \rst
 This function obtains the self-energy.
-Interfaces to :f:func:`f/e2i_io/ed_get_sigma` for a rank-4 array.
+Interfaces to :f:func:`e2i_io/ed_get_sigma` for a rank-4 array.
 Real-space DMFT variant.
 \endrst
 * @param self: the self-energy array
@@ -1199,7 +1234,7 @@ void get_sigma_lattice_n4(std::complex<double> *self,
 /*!
 \rst
 This function obtains the self-energy.
-Interfaces to :f:func:`f/e2i_io/ed_get_sigma` for a rank-6 array.
+Interfaces to :f:func:`e2i_io/ed_get_sigma` for a rank-6 array.
 Real-space DMFT variant.
 \endrst
 * @param self: the self-energy array
@@ -1222,7 +1257,7 @@ void get_sigma_lattice_n6(std::complex<double> *self,
 /*!
 \rst
 This function obtains the impurity Green's function.
-Interfaces to :f:func:`f/ed_io/ed_get_gimp` for a rank-3 array.
+Interfaces to :f:func:`ed_io/ed_get_gimp` for a rank-3 array.
 Single-site DMFT variant.
 \endrst
 * @param gimp: the impurity Green's function array
@@ -1244,7 +1279,7 @@ void get_gimp_site_n3(std::complex<double> *gimp,
 /*!
 \rst
 This function obtains the impurity Green's function.
-Interfaces to :f:func:`f/ed_io/ed_get_gimp` for a rank-5 array.
+Interfaces to :f:func:`ed_io/ed_get_gimp` for a rank-5 array.
 Single-site DMFT variant.
 \endrst
 * @param gimp: the impurity Green's function array
@@ -1265,7 +1300,7 @@ void get_gimp_site_n5(std::complex<double> *gimp,
 /*!
 \rst
 This function obtains the impurity Green's function.
-Interfaces to :f:func:`f/e2i_io/ed_get_gimp` for a rank-3 array.
+Interfaces to :f:func:`e2i_io/ed_get_gimp` for a rank-3 array.
 Real-space DMFT variant.
 \endrst
 * @param gimp: the impurity Green's function array
@@ -1288,7 +1323,7 @@ void get_gimp_lattice_n3(std::complex<double> *gimp,
 /*!
 \rst
 This function obtains the impurity Green's function.
-Interfaces to :f:func:`f/e2i_io/ed_get_gimp` for a rank-4 array.
+Interfaces to :f:func:`e2i_io/ed_get_gimp` for a rank-4 array.
 Real-space DMFT variant.
 \endrst
 * @param gimp: the impurity Green's function array
@@ -1311,7 +1346,7 @@ void get_gimp_lattice_n4(std::complex<double> *gimp,
 /*!
 \rst
 This function obtains the impurity Green's function.
-Interfaces to :f:func:`f/e2i_io/ed_get_gimp` for a rank-6 array.
+Interfaces to :f:func:`e2i_io/ed_get_gimp` for a rank-6 array.
 Real-space DMFT variant.
 \endrst
 * @param gimp: the impurity Green's function array
@@ -1335,7 +1370,7 @@ void get_gimp_lattice_n6(std::complex<double> *gimp,
 /*!
 \rst
 This function obtains the Weiss field.
-Interfaces to :f:func:`f/ed_io/ed_get_g0and` for a rank-3 array.
+Interfaces to :f:func:`ed_io/ed_get_g0and` for a rank-3 array.
 Single-site DMFT variant.
 \endrst
 * @param warray: Array of frequencies
@@ -1360,7 +1395,7 @@ void get_g0and_n3(std::complex<double> *warray,
 /*!
 \rst
 This function obtains the Weiss field.
-Interfaces to :f:func:`f/ed_io/ed_get_g0and` for a rank-5 array.
+Interfaces to :f:func:`ed_io/ed_get_g0and` for a rank-5 array.
 Single-site DMFT variant.
 \endrst
 * @param warray: Array of frequencies
@@ -1386,7 +1421,7 @@ void get_g0and_n5(std::complex<double> *warray,
 /*!
 \rst
 This function obtains the hybridization function.
-Interfaces to :f:func:`f/ed_io/ed_get_delta` for a rank-3 array.
+Interfaces to :f:func:`ed_io/ed_get_delta` for a rank-3 array.
 Single-site DMFT variant.
 \endrst
 * @param warray: Array of frequencies
@@ -1412,7 +1447,7 @@ void get_delta_n3(std::complex<double> *warray,
 /*!
 \rst
 This function obtains the hybridization function.
-Interfaces to :f:func:`f/ed_io/ed_get_delta` for a rank-5 array.
+Interfaces to :f:func:`ed_io/ed_get_delta` for a rank-5 array.
 Single-site DMFT variant.
 \endrst
 * @param warray: Array of frequencies
@@ -1439,7 +1474,7 @@ void get_delta_n5(std::complex<double> *warray,
 /*!
 \rst
 This function obtains the spin susceptibility.
-Interfaces to :f:func:`f/ed_io/ed_spinchi` or :f:func:`f/e2i_io/ed_spinchi`.
+Interfaces to :f:func:`ed_io/ed_spinchi` or :f:func:`e2i_io/ed_spinchi`.
 \endrst
 * @param self: susceptibility array
 * @param zeta: frequency array
@@ -1461,7 +1496,7 @@ void ed_get_spinchi(std::complex<double> *self,
 /*!
 \rst
 This function obtains the charge susceptibility.
-Interfaces to :f:func:`f/ed_io/ed_denschi` or :f:func:`f/e2i_io/ed_denschi`.
+Interfaces to :f:func:`ed_io/ed_denschi` or :f:func:`e2i_io/ed_denschi`.
 \endrst
 * @param self: susceptibility array
 * @param zeta: frequency array
@@ -1484,7 +1519,7 @@ void ed_get_denschi(std::complex<double> *self,
 /*!
 \rst
 This function obtains the pairing susceptibility.
-Interfaces to :f:func:`f/ed_io/ed_pairchi` or :f:func:`f/e2i_io/ed_pairchi`.
+Interfaces to :f:func:`ed_io/ed_pairchi` or :f:func:`e2i_io/ed_pairchi`.
 \endrst
 * @param self: susceptibility array
 * @param zeta: frequency array
@@ -1506,7 +1541,7 @@ void ed_get_pairchi(std::complex<double> *self,
 /*!
 \rst
 This function obtains the excitonic susceptibility.
-Interfaces to :f:func:`f/ed_io/ed_exctchi` or :f:func:`f/e2i_io/ed_exctchi`.
+Interfaces to :f:func:`ed_io/ed_exctchi` or :f:func:`e2i_io/ed_exctchi`.
 \endrst
 * @param self: susceptibility array
 * @param zeta: frequency array
@@ -1528,19 +1563,19 @@ void ed_get_exctchi(std::complex<double> *self,
 /*!
 \rst
 This function obtains the impurity reduced density matrix.
-Interfaces to :f:func:`f/ed_io/ed_get_impurity_rdm`.
+Interfaces to :f:func:`ed_io/ed_get_impurity_rdm`.
 \endrst
 * @param rdm: impurity reduced density matrix
 * @param doprint: flag to print to file (`1`) or not (`0`) the RDM
 */                      
-void ed_get_impurity_rdm(std::complex<double> *self, 
+void ed_get_impurity_rdm(std::complex<double> *rdm, 
                     int doprint
                     );             
 
 /*!
 \rst
 This function initializes the solver.
-Interfaces to :f:func:`f/ed_main/ed_init_solver`.
+Interfaces to :f:func:`ed_main/ed_init_solver`.
 Single-site DMFT variant.
 \endrst
 * @param bath: user-accessible bath array
@@ -1551,7 +1586,7 @@ void init_solver_site(double *bath, int64_t *dim_bath);
 /*!
 \rst
 This function initializes the solver for an isolated impurity.
-Interfaces to :f:func:`f/ed_main/ed_init_solver`.
+Interfaces to :f:func:`ed_main/ed_init_solver`.
 Single-site DMFT variant.
 \endrst
 */ 
@@ -1560,7 +1595,7 @@ void init_solver_site_nobath();
 /*!
 \rst
 This function initializes the solver.
-Interfaces to :f:func:`f/ed_main/ed_init_solver`.
+Interfaces to :f:func:`ed_main/ed_init_solver`.
 Real-space DMFT variant.
 \endrst
 * @param bath: user-accessible bath array
@@ -1572,7 +1607,7 @@ void init_solver_ineq(double *bath, int64_t *dim_bath);
 /*!
 \rst
 This function initializes the solver for an isolated impurity.
-Interfaces to :f:func:`f/ed_main/ed_init_solver`.
+Interfaces to :f:func:`ed_main/ed_init_solver`.
 Real-space DMFT variant.
 \endrst
 * @param Nlat: number of inequivalent sites
@@ -1582,7 +1617,7 @@ void init_solver_ineq_nobath(int Nlat);
 /*!
 \rst
 Solves the impurity problem.
-Interfaces to :f:func:`f/ed_main/solve`.
+Interfaces to :f:func:`ed_main/solve`.
 Single-site DMFT variant.
 \endrst
 * @param bath: user-accessible bath array
@@ -1600,7 +1635,7 @@ void solve_site(double *bath,
 \rst
 This function solves the impurity problem for the case of
 an isolated impurity.
-Interfaces to :f:func:`f/ed_main/solve`.
+Interfaces to :f:func:`ed_main/solve`.
 Single-site DMFT variant.
 \endrst
 * @param flag_gf: Green's function calculation flag (`1`=`True`, `0`=`False`)
@@ -1614,7 +1649,7 @@ void solve_site_nobath(
 /*!
 \rst
 This function solves the impurity problem.
-Interfaces to :f:func:`f/e2i_main/solve`.
+Interfaces to :f:func:`e2i_main/solve`.
 Real-space DMFT variant.
 \endrst
 * @param bath: user-accessible bath array
@@ -1632,7 +1667,7 @@ void solve_ineq(double *bath,
 \rst
 This function solves the impurity problem for the case of
 an isolated impuirty.
-Interfaces to :f:func:`f/e2i_main/solve`.
+Interfaces to :f:func:`e2i_main/solve`.
 Real-space DMFT variant.
 \endrst
 * @param Nlat: number of inequivalent sites
@@ -1647,7 +1682,7 @@ void solve_ineq_nobath(int Nlat,
 /*!
 \rst
 This function finalizes the solver.
-Interfaces to :f:func:`f/ed_main/finalize_solver` and :f:func:`f/e2i_main/finalize_solver`.
+Interfaces to :f:func:`ed_main/finalize_solver` and :f:func:`e2i_main/finalize_solver`.
 \endrst
 * @param Nineq: number of inequivalent sites. Set to `0` for single-site DMFT.
 */  
@@ -1656,7 +1691,7 @@ void finalize_solver (int Nineq);
 /*!
 \rst
 This function resets the interaction coefficients and user-provided terms
-Interfaces to :f:func:`f/ed_parse_umatrix/reset_umatrix`.
+Interfaces to :f:func:`ed_parse_umatrix/reset_umatrix`.
 \endrst
 */ 
 void reset_umatrix();
@@ -1664,7 +1699,7 @@ void reset_umatrix();
 /*!
 \rst
 This function sets the a two-body interaction term
-Interfaces to :f:func:`f/ed_parse_umatrix/add_twobody_operator`.
+Interfaces to :f:func:`ed_parse_umatrix/add_twobody_operator`.
 \endrst
 * @param o1: orbital index of first creation operator
 * @param s1: spin index of first creation operator

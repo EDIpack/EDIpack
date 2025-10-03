@@ -7,7 +7,7 @@ function f0and_bath_array_hyrege(x,axis) result(F0and)
   character(len=1)                                    :: axis_
   complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: F0and
   !
-  complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: Delta,Fdelta
+  complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: Delta,Fdelta12,Fdelta21
   integer                                             :: iorb,jorb,ispin,i,L
   complex(8),dimension(2*Nspin*Norb,size(x))          :: z
   complex(8),dimension(:,:),allocatable               :: fgorb,zeta
@@ -20,7 +20,8 @@ function f0and_bath_array_hyrege(x,axis) result(F0and)
   !
   allocate(fgorb(2*Norb,2*Norb),zeta(2*Norb,2*Norb))
   Delta =  delta_bath_array(x,axis_)
-  Fdelta= fdelta_bath_array(x,axis_)
+  Fdelta12 = fdelta_bath_array(x,axis_)
+  Fdelta21 = fdelta_bath_array(conjg(x),axis_)
   z     = zeta_superc(x,xmu,axis_)
   !
   select case(axis_)
@@ -33,8 +34,8 @@ function f0and_bath_array_hyrege(x,axis) result(F0and)
            do iorb=1,Norb
               do jorb=1,Norb
                  fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
                  fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb)) + conjg( Delta(ispin,ispin,iorb,jorb,i) )
               enddo
            enddo
@@ -50,8 +51,8 @@ function f0and_bath_array_hyrege(x,axis) result(F0and)
            do iorb=1,Norb
               do jorb=1,Norb
                  fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
                  fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb))  + conjg( Delta(ispin,ispin,iorb,jorb,L-i+1) )
               enddo
            enddo

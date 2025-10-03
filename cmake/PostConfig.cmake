@@ -22,6 +22,10 @@ IF( (NOT "${BUILD_TYPE}" MATCHES "debug") AND (NOT "${PATH_ID}" MATCHES "custom"
   SET(TMP_VER_MODULE_FILE ${LIB_TMP_ETC}/modules/${VERSION_PATH}/.version)
   CONFIGURE_FILE(${LIB_ENV}/version.in ${TMP_VER_MODULE_FILE}  @ONLY)
   MESSAGE(STATUS "${Red}Version file${ColourReset}: ${TMP_VER_MODULE_FILE}")
+ELSE()
+  if(DEFINED TMP_VER_MODULE_FILE)
+    unset(TMP_VER_MODULE_FILE CACHE)
+  endif() 
 ENDIF()
 
 

@@ -12,7 +12,7 @@ functions as required to perform a full calculation.
 
 At compile time, if :code:`make` or :code:`make edipack_cbindings` is issued,
 a dynamic library called :code:`libedipack_cbindings.so` will be created and
-put in the same folder as the static Fortrna library.
+put in the same folder as the static Fortran library.
 An API to another language will need to interface to this library. 
 
 A Python API called EDIpack2py_ is provided and mantained.

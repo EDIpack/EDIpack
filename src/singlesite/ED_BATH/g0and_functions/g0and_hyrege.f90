@@ -6,7 +6,7 @@ function g0and_bath_array_hyrege(x,axis) result(G0and)
   character(len=*),optional                           :: axis       !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis    
   complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: G0and
   character(len=1)                                    :: axis_
-  complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: Delta,Fdelta
+  complex(8),dimension(Nspin,Nspin,Norb,Norb,size(x)) :: Delta,Fdelta12,Fdelta21
   integer                                             :: iorb,jorb,ispin,jspin,io,jo,Nso,i,L
   real(8),dimension(size(x))                          :: ddet
   complex(8),dimension(size(x))                       :: cdet
@@ -40,7 +40,8 @@ function g0and_bath_array_hyrege(x,axis) result(G0and)
   case ("superc")
      allocate(fgorb(2*Norb,2*Norb),zeta(2*Norb,2*Norb)) !2==Nnambu
      Delta =  delta_bath_array(x,axis_)
-     Fdelta= fdelta_bath_array(x,axis_)
+     Fdelta12 = fdelta_bath_array(x,axis_)
+     Fdelta21 = fdelta_bath_array(conjg(x),axis_)
      z     = zeta_superc(x,xmu,axis_)
      select case(axis_)
      case default;stop "g0and_bath_array_hyrege error: axis_ not supported"
@@ -52,8 +53,8 @@ function g0and_bath_array_hyrege(x,axis) result(G0and)
               do iorb=1,Norb
                  do jorb=1,Norb
                     fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                    fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
-                    fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
+                    fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
+                    fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
                     fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb)) + conjg( Delta(ispin,ispin,iorb,jorb,i) )
                  enddo
               enddo
@@ -69,8 +70,8 @@ function g0and_bath_array_hyrege(x,axis) result(G0and)
               do iorb=1,Norb
                  do jorb=1,Norb
                     fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                    fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
-                    fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - Fdelta(ispin,ispin,iorb,jorb,i)
+                    fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
+                    fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
                     fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb))  + conjg( Delta(ispin,ispin,iorb,jorb,L-i+1) )
                  enddo
               enddo
