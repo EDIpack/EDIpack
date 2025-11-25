@@ -328,13 +328,13 @@ end subroutine get_exctChi_c
 
 subroutine ed_get_impurity_rdm_c(rdm,doprint) bind(c,name='ed_get_impurity_rdm')
   use, intrinsic :: iso_c_binding
-  complex(8),dimension(4**Norb,4**norb),intent(inout) :: rdm
-  integer(c_int),value                                :: doprint
+  complex(c_double_complex),dimension(4**Norb,4**norb),intent(inout) :: rdm
+  integer(c_int),value                                               :: doprint
   !
   if (doprint==0)then
-     rdm = ed_get_impurity_rdm(rdm)
+     call ed_get_impurity_rdm(rdm)
   else
-     rdm = ed_get_impurity_rdm(rdm,.true.)
+     call ed_get_impurity_rdm(rdm,.true.)
   endif
   !
 end subroutine ed_get_impurity_rdm_c
