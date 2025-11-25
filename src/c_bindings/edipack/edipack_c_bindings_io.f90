@@ -39,7 +39,7 @@ end subroutine ed_get_phisc_n2_c
 subroutine ed_get_argsc_n2_c(self) bind(c,name="ed_get_argsc_n2")
   use, intrinsic :: iso_c_binding
   real(c_double)     :: self(Norb,Norb)
-  call ed_get_arg(self)
+  call ed_get_argphi(self)
 end subroutine ed_get_argsc_n2_c
 
 !energy
