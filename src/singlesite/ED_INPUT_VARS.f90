@@ -196,7 +196,8 @@ MODULE ED_INPUT_VARS
   !Magnetic field per orbital coupling to Z-spin component 
   ! :Default spin_field_z:`zero`
   !
-  real(8),allocatable,dimension(:)  :: pair_field       !
+  real(8),allocatable,dimension(:)                             :: pair_field_    !
+  real(c_double),dimension(15),bind(c, name="pair_field")      :: pair_field     !
   !Pair field per orbital coupling to s-wave order parameter component 
   !which explicitly appears in the impurity Hamiltonian 
   ! :Default pair_field:`zero`
@@ -610,17 +611,19 @@ contains
     if(allocated(spin_field_x))deallocate(spin_field_x)
     if(allocated(spin_field_y))deallocate(spin_field_y)
     if(allocated(spin_field_z))deallocate(spin_field_z)
-    if(allocated(pair_field))deallocate(pair_field)
     allocate(spin_field_x(Norb))
     allocate(spin_field_y(Norb))
     allocate(spin_field_z(Norb))
-    allocate(pair_field(Norb))
     call parse_input_variable(spin_field_x,"SPIN_FIELD_X",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="magnetic field per orbital coupling to X-spin component (Norb)")
     call parse_input_variable(spin_field_y,"SPIN_FIELD_Y",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="magnetic field per orbital coupling to Y-spin component (Norb)")
     call parse_input_variable(spin_field_z,"SPIN_FIELD_Z",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="magnetic field per orbital coupling to Z-spin component (Norb)")
-    call parse_input_variable(pair_field,"PAIR_FIELD",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="pair field per orbital coupling to s-wave order parameter component (4)")
     call parse_input_variable(exc_field,"EXC_FIELD",INPUTunit,default=[0d0,0d0,0d0,0d0],comment="external field coupling to exciton order parameters (Norb)")
     !
+    if(allocated(pair_field_))deallocate(pair_field_)
+    allocate(pair_field_(Norb))
+    call parse_input_variable(pair_field_,"PAIR_FIELD",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="pair field per orbital coupling to s-wave order parameter component (Norb)")
+    pair_field=0.d0 
+    pair_field(1:Norb)=pair_field_
     !
     call parse_input_variable(chispin_flag_,"CHISPIN_FLAG",INPUTunit,default=.false.,comment="Flag to activate spin susceptibility calculation.")
     chispin_flag = chispin_flag_
