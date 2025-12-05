@@ -876,7 +876,7 @@ contains
        exc_field=vals
     case ("PAIR_FIELD")
        if(size(vals)/=Norb)stop "WRONG SIZE IN ED_UPDATE_PAIR_FIELD"
-       pair_field=vals
+       pair_field(1:Norb) = vals
     case ("SPIN_FIELD_X")
        if(size(vals)/=Norb)stop "WRONG SIZE IN ED_UPDATE_SPIN_FIELD_X"
        spin_field_x=vals
