@@ -198,8 +198,8 @@ MODULE ED_INPUT_VARS
   !
   real(8),allocatable,dimension(:)                             :: pair_field_    !
   real(c_double),dimension(15),bind(c, name="pair_field")      :: pair_field     !
-  !Pair field per orbital coupling to s-wave order parameter component 
-  !which explicitly appears in the impurity Hamiltonian 
+  !Pair field per orbital (max 15) coupling to s-wave order parameter component 
+  !which explicitly appears in the impurity Hamiltonian.
   ! :Default pair_field:`zero`
   !
   real(8),dimension(4) :: exc_field                     !
