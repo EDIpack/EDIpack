@@ -1207,7 +1207,7 @@ contains
     Delta    = delta_normal_superc(a)
     !
     fg(:)    = xi*Xdelta(:) + xmu - impHloc(ispin,ispin,iorb,iorb) -  Delta(1,:)
-    ff(:)    =                                                     -  Delta(2,:)
+    ff(:)    = -pair_field(1:Norb)                                 -  Delta(2,:)
     det(:)   = abs(fg(:))**2 + ff(:)**2
     G0and(1,:) = conjg(fg(:))/det(:)
     G0and(2,:) = ff(:)/det(:)
@@ -1233,7 +1233,7 @@ contains
     !
     zeta= xi*Xdelta(:) + xmu - impHloc(ispin,ispin,iorb,iorb) 
     g0  = zeta - Delta(1,:)
-    f0  =      - Delta(2,:)
+    f0  = -pair_field(1:Norb) - Delta(2,:)
     Det = abs(g0)**2 + f0**2
     !
     do k=1,size(a)

@@ -27,7 +27,7 @@ function f0and_bath_array_normal(x,axis) result(F0and)
      do ispin=1,Nspin
         do iorb=1,Norb
            fg(:) = x(:) + xmu - impHloc(ispin,ispin,iorb,iorb) -  Delta(ispin,ispin,iorb,iorb,:)
-           ff(:) =                                              - Fdelta(ispin,ispin,iorb,iorb,:)
+           ff(:) = -pair_field(iorb)                           - Fdelta(ispin,ispin,iorb,iorb,:)
            ddet(:)= abs(fg(:))**2 + ff(:)*ff(:)
            F0and(ispin,ispin,iorb,iorb,:) = ff(:)/ddet(:)
         enddo
@@ -36,7 +36,7 @@ function f0and_bath_array_normal(x,axis) result(F0and)
      do ispin=1,Nspin
         do iorb=1,Norb
            fg(:)  =  x(:) + xmu - impHloc(ispin,ispin,iorb,iorb) -  Delta(ispin,ispin,iorb,iorb,:)
-           ff(:)  =                                              - Fdelta(ispin,ispin,iorb,iorb,:)
+           ff(:)  =  -pair_field(iorb)                           - Fdelta(ispin,ispin,iorb,iorb,:)
            cdet(:) =  -fg(:)*conjg(fg(L:1:-1)) - ff(:)*ff(:)
            F0and(ispin,ispin,iorb,iorb,:) = -ff(:)/cdet(:)
         enddo

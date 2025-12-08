@@ -1,6 +1,7 @@
 MODULE ED_FIT_HYBRID
 !:synopsis: Routines for bath fitting, :code:`HYBRID` case
   USE ED_FIT_COMMON
+  USE SF_LINALG, only: diag
 
   implicit none
   private
@@ -1356,8 +1357,8 @@ contains
        zeta(1,:,:) = (xi*Xdelta(i)+xmu)*eye(Norb) - impHloc(ispin,ispin,:,:)
        zeta(2,:,:) = (xi*Xdelta(i)-xmu)*eye(Norb) + impHloc(ispin,ispin,:,:)
        fgorb(1:Norb,1:Norb)                     = zeta(1,:,:) - Delta(1,:,:,i)
-       fgorb(1:Norb,Norb+1:Norb+Norb)           =             - Delta(2,:,:,i)
-       fgorb(Norb+1:Norb+Norb,1:Norb)           =             - Delta(2,:,:,i)
+       fgorb(1:Norb,Norb+1:Norb+Norb)           = -diag(pair_field(1:Norb)) - Delta(2,:,:,i)
+       fgorb(Norb+1:Norb+Norb,1:Norb)           = -diag(pair_field(1:Norb)) - Delta(2,:,:,i)
        fgorb(Norb+1:Norb+Norb,Norb+1:Norb+Norb) = zeta(2,:,:) + conjg( Delta(1,:,:,i) )
        call inv(fgorb)
        G0and(1,:,:,i) = fgorb(1:Norb,1:Norb)

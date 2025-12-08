@@ -1303,8 +1303,8 @@ contains
        iw = xi*Xdelta(i)
        Z = (iw+xmu)*zeye(Nso) - zHloc
        FGorb(      :Norb,      :Norb) = Z -       nn2so_reshape(Delta(1,:,:,:,:,i), Nspin,Norb)
-       FGorb(      :Norb,Norb+1:    ) =   -       nn2so_reshape(Delta(2,:,:,:,:,i), Nspin,Norb)
-       FGorb(Norb+1:    ,      :Norb) =   - conjg(nn2so_reshape(Delta(2,:,:,:,:,i), Nspin,Norb))!technically this is not conjg but being real who cares
+       FGorb(      :Norb,Norb+1:    ) =   -diag(pair_field(1:Norb)) -       nn2so_reshape(Delta(2,:,:,:,:,i), Nspin,Norb)
+       FGorb(Norb+1:    ,      :Norb) =   -diag(pair_field(1:Norb)) - conjg(nn2so_reshape(Delta(2,:,:,:,:,i), Nspin,Norb))!technically this is not conjg but being real who cares
        FGorb(Norb+1:    ,Norb+1:    ) = Z + conjg(nn2so_reshape(Delta(1,:,:,:,:,i), Nspin,Norb))
        call inv(FGorb)
        G0and(1,:,:,:,:,i) = so2nn_reshape(FGorb(1:Norb,     1:Norb  ),Nspin,Norb)
