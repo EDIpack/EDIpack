@@ -486,6 +486,33 @@ contains
                    endif
                 enddo
              enddo
+             ! !> H_imp: anomalous terms (only relevant if pair_field is not zero)
+             do iorb=1,Norb
+                 ! both occupied
+                 Jcondition = &
+                      (pair_field(iorb)/=zero) .AND. &
+                      (ib(iorb+Ns)==1)         .AND. &
+                      (ib(iorb)==1)
+                 if (Jcondition) then
+                    call c(iorb,m,k1,sg1)
+                    call c(iorb+Ns,k1,k2,sg2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j   = j_el + (iph-1)*sectorI%DimEl
+                    ed_Eknot = ed_Eknot + pair_field(iorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+                 endif
+                 ! both empty
+                 Jcondition = &
+                      (pair_field(iorb)/=zero) .AND. &
+                      (ib(iorb+Ns)==0)         .AND. &
+                      (ib(iorb)==0)
+                 if (Jcondition) then
+                    call cdg(iorb+Ns,m,k1,sg1)
+                    call cdg(iorb,k1,k2,sg2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j   = j_el + (iph-1)*sectorI%DimEl
+                    ed_Eknot = ed_Eknot + pair_field(iorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+                 endif
+             enddo
              !
              !DENSITY-DENSITY INTERACTION: SAME ORBITAL, OPPOSITE SPINS
              !Euloc=\sum=i U_i*(n_u*n_d)_i
