@@ -56,6 +56,10 @@ function g0and_bath_array_hyrege(x,axis) result(G0and)
                     fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
                     fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
                     fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb)) + conjg( Delta(ispin,ispin,iorb,jorb,i) )
+                    if (iorb == jorb) then
+                        fgorb(iorb,iorb+Norb)      = fgorb(iorb,iorb+Norb) - pair_field(iorb)
+                        fgorb(iorb+Norb,iorb)      = fgorb(iorb+Norb,iorb) - pair_field(iorb)
+                    endif
                  enddo
               enddo
               call inv(fgorb)
@@ -73,6 +77,10 @@ function g0and_bath_array_hyrege(x,axis) result(G0and)
                     fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
                     fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
                     fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb))  + conjg( Delta(ispin,ispin,iorb,jorb,L-i+1) )
+                    if (iorb == jorb) then
+                        fgorb(iorb,iorb+Norb)      = fgorb(iorb,iorb+Norb) - pair_field(iorb)
+                        fgorb(iorb+Norb,iorb)      = fgorb(iorb+Norb,iorb) - pair_field(iorb)
+                    endif
                  enddo
               enddo
               call inv(fgorb)
