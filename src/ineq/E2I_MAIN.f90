@@ -266,7 +266,11 @@ contains
           lanc_nstates_total = neigen_total_ineq(ilat)
           call ed_set_neigen_sector( neigen_sector_ineq(ilat,:) )
           !
-          call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          if(allocated(Hloc_anomalous_ineq))then
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:),Hloc_anomalous_ineq(ilat,:,:,:,:))
+          else
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          endif
           !
           if(MPI_MASTER)call save_input_file(str(ed_input_file))
           !
@@ -354,7 +358,11 @@ contains
           lanc_nstates_total = neigen_total_ineq(ilat)
           call ed_set_neigen_sector( neigen_sector_ineq(ilat,:) )
           !
-          call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          if(allocated(Hloc_anomalous_ineq))then
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:),Hloc_anomalous_ineq(ilat,:,:,:,:))
+          else
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          endif
           call ed_solve(bath(ilat,:),flag_gf=flag_gf_,flag_mpi=mpi_lanc_)
           !
           neigen_total_ineq(ilat)     = lanc_nstates_total
@@ -409,6 +417,8 @@ contains
     if(allocated(exct_ineq))deallocate(exct_ineq)
     if(allocated(e_ineq))deallocate(e_ineq)
     if(allocated(dd_ineq))deallocate(dd_ineq)
+    if(allocated(Hloc_ineq))deallocate(Hloc_ineq)
+    if(allocated(Hloc_anomalous_ineq))deallocate(Hloc_anomalous_ineq)
 
     if(allocated(single_particle_density_matrix_ineq))deallocate(single_particle_density_matrix_ineq)
     if(allocated(impurity_density_matrix_ineq))deallocate(impurity_density_matrix_ineq)
