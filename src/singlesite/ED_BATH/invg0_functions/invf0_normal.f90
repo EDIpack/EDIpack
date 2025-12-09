@@ -18,7 +18,7 @@ function invf0_bath_array_normal(x,axis) result(F0and)
   Fdelta= fdelta_bath_array(x,axis_)
   do ispin=1,Nspin
      do iorb=1,Norb
-        F0and(ispin,ispin,iorb,iorb,:) = -pair_field(iorb) - Fdelta(ispin,ispin,iorb,iorb,:)
+        F0and(ispin,ispin,iorb,iorb,:) = -impHloc_anomalous(ispin,ispin,iorb,iorb) - Fdelta(ispin,ispin,iorb,iorb,:)
      enddo
   enddo
   !

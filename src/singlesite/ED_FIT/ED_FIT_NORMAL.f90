@@ -1,6 +1,7 @@
 MODULE ED_FIT_NORMAL
 !:synopsis: Routines for bath fitting, :code:`NORMAL` case
   USE ED_FIT_COMMON
+  USE SF_LINALG, only: diagonal
 
   implicit none
   private
@@ -1207,7 +1208,7 @@ contains
     Delta    = delta_normal_superc(a)
     !
     fg(:)    = xi*Xdelta(:) + xmu - impHloc(ispin,ispin,iorb,iorb) -  Delta(1,:)
-    ff(:)    = -pair_field(1:Norb)                                 -  Delta(2,:)
+    ff(:)    = -diagonal(impHloc_anomalous(1,1,:,:))               -  Delta(2,:)
     det(:)   = abs(fg(:))**2 + ff(:)**2
     G0and(1,:) = conjg(fg(:))/det(:)
     G0and(2,:) = ff(:)/det(:)

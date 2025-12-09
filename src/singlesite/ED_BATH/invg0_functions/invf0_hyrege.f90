@@ -18,9 +18,8 @@ function invf0_bath_array_hyrege(x,axis) result(F0and)
   Fdelta= fdelta_bath_array(x,axis_)
   do ispin=1,Nspin
      do iorb=1,Norb
-        F0and(ispin,ispin,iorb,iorb,:) = F0and(ispin,ispin,iorb,iorb,:) - pair_field(iorb)
         do jorb=1,Norb
-           F0and(ispin,ispin,iorb,jorb,:) = F0and(ispin,ispin,iorb,jorb,:) - Fdelta(ispin,ispin,iorb,jorb,:)
+           F0and(ispin,ispin,iorb,jorb,:) = impHloc_anomalous(ispin,ispin,iorb,jorb) - Fdelta(ispin,ispin,iorb,jorb,:)
         enddo
      enddo
   enddo
