@@ -1,7 +1,6 @@
 subroutine ed_set_Hloc_single_N2_c(Hloc,Hloc_anomalous,d) bind(c, name='ed_set_Hloc_single_N2')
   !
   !Sets the local Hamiltonian of the impurity problem.
-  !Superconducting version with optional anomalous impurity terms.
   !The passed input is a rank-2 array with dimension :code:`[d(1),d(2)]`
   !
   use, intrinsic :: iso_c_binding
@@ -18,7 +17,6 @@ end subroutine ed_set_Hloc_single_N2_c
 subroutine ed_set_Hloc_single_N4_c(Hloc,Hloc_anomalous,d) bind(c, name='ed_set_Hloc_single_N4')
   !
   !Sets the local Hamiltonian of the impurity problem.
-  !Superconducting version with optional anomalous impurity terms.
   !The passed input is a rank-4 array with dimension :code:`[d(1),...,d(4)]`
   !
   use, intrinsic :: iso_c_binding
