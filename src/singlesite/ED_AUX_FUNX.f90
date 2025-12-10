@@ -207,6 +207,9 @@ contains
       call assert_shape(Hloc_anomalous,[Nspin*Norb,Nspin*Norb],"ed_set_Hloc","Hloc_anomalous")
       impHloc_anomalous = so2nn_reshape(Hloc_anomalous(1:Nspin*Norb,1:Nspin*Norb),Nspin,Norb)
       if(ed_verbose>2)call print_hloc(impHloc_anomalous)
+      if(any(abs(impHloc_anomalous(1,1,:,:)-transpose(impHloc_anomalous(1,1,:,:)))>1d-10))then
+        STOP "impHloc_anomalous is not symmetric. Only spin-singlet pairing is allowed in SUPERC."
+      endif
     endif
   end subroutine ed_set_Hloc_single_N2
 
@@ -234,6 +237,9 @@ contains
       call assert_shape(Hloc_anomalous,[Nspin,Nspin,Norb,Norb],"ed_set_Hloc","Hloc")
       impHloc_anomalous = Hloc_anomalous
       if(ed_verbose>2)call print_hloc(impHloc_anomalous)
+      if(any(abs(impHloc_anomalous(1,1,:,:)-transpose(impHloc_anomalous(1,1,:,:)))>1d-10))then
+        STOP "impHloc_anomalous is not symmetric. Only spin-singlet pairing is allowed in SUPERC."
+      endif
     endif        
   end subroutine ed_set_Hloc_single_N4
 
