@@ -238,7 +238,7 @@ contains
       impHloc_anomalous = Hloc_anomalous
       if(ed_verbose>2)call print_hloc(impHloc_anomalous)
       if(any(abs(impHloc_anomalous(1,1,:,:)-transpose(impHloc_anomalous(1,1,:,:)))>1d-10))then
-        STOP "impHloc_anomalous is not symmetric. Only spin-singlet pairing is allowed in SUPERC."
+        STOP "impHloc_anomalous is not symmetric. Only spin-singlet s-wave pairing is allowed in SUPERC."
       endif
     endif        
   end subroutine ed_set_Hloc_single_N4

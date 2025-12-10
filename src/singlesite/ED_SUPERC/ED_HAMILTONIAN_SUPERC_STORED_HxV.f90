@@ -128,13 +128,15 @@ contains
     end select
     
     !Check spin-singlet pairing
-    do ibath=1,Nbath
-      do ispin=1,Nnambu*Nspin
-        if(any(abs(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)-transpose(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)))>1d-10))then
-          STOP "anomalous Hbath is not symmetric. Only spin-singlet pairing is allowed in SUPERC."
-        endif
+    if(bath_type=="replica" .or. bath_type=="general")then
+      do ibath=1,Nbath
+        do ispin=1,Nnambu*Nspin
+          if(any(abs(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)-transpose(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)))>1d-10))then
+            STOP "anomalous Hbath is not symmetric. Only spin-singlet s-wave pairing is allowed in SUPERC."
+          endif
+        enddo
       enddo
-    enddo
+    endif
     
     !
 #ifdef _MPI
