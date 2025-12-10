@@ -65,6 +65,7 @@ contains
     !
     if(present(Hmat))call assert_shape(Hmat,[Dim,Dim],"ed_buildh_main","Hmat")
     !
+    Hbath_tmp = zero
     !
     !Get diagonal hybridization, bath energy
     if(allocated(diag_hybr))deallocate(diag_hybr)

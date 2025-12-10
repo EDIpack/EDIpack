@@ -43,6 +43,8 @@ contains
     Dim   = Hsector%Dim
     DimEl = Hsector%DimEl
     !
+    Hbath_tmp = zero
+    !
     if(Nloc/=dim)stop "directMatVec_cc ERROR: Nloc /= dim(isector)"
     !
     !Get diagonal hybridization, bath energy
