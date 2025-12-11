@@ -186,7 +186,7 @@ int main(int argc, char* argv[]) {
     
     // Initialize solver
     
-    ed_set_Hloc_single_N4(Hloc.data(), d);
+    ed_set_Hloc_single_N4(Hloc.data(),Hloc.data(), d); //Anomalous Hloc is zero as normal Hloc
     init_solver_site(Bath.data(), bath_dim);
 
     // DMFT loop

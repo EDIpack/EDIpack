@@ -1,6 +1,6 @@
 function invf0_bath_array_hyrege(x,axis) result(F0and)
 #if __INTEL_COMPILER
-  use ED_INPUT_VARS, only: Nspin,Norb,Nbath
+  use ED_INPUT_VARS, only: Nspin,Norb,Nbath,pair_field
 #endif
   complex(8),dimension(:),intent(in)                  :: x          !complex  array for the frequency
   character(len=*),optional                           :: axis       !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis    
@@ -19,7 +19,7 @@ function invf0_bath_array_hyrege(x,axis) result(F0and)
   do ispin=1,Nspin
      do iorb=1,Norb
         do jorb=1,Norb
-           F0and(ispin,ispin,iorb,jorb,:) = -Fdelta(ispin,ispin,iorb,jorb,:)
+           F0and(ispin,ispin,iorb,jorb,:) = -impHloc_anomalous(ispin,ispin,iorb,jorb) - Fdelta(ispin,ispin,iorb,jorb,:)
         enddo
      enddo
   enddo

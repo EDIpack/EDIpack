@@ -174,6 +174,7 @@ MODULE ED_VARS_GLOBAL
   !local part of the Hamiltonian
   !=========================================================
   complex(8),dimension(:,:,:,:),allocatable          :: impHloc           !local hamiltonian
+  complex(8),dimension(:,:,:,:),allocatable          :: impHloc_anomalous !local hamiltonian (anomalous terms)
   complex(8),dimension(:,:,:,:),allocatable          :: mfHloc            !additional mean-field terms
 
 

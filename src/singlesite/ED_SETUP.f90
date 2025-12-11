@@ -320,37 +320,46 @@ contains
     else
        call assert_shape(impHloc,[Nspin,Nspin,Norb,Norb],"init_ed_structure","impHloc")
     endif
+    !ALLOCATE impHloc anomalous for SC calculations
+    if(ED_MODE=="superc")then
+      if(.not.allocated(impHloc_anomalous))then
+         allocate(impHloc_anomalous(Nspin,Nspin,Norb,Norb))
+         impHloc_anomalous=zero
+      else
+         call assert_shape(impHloc_anomalous,[Nspin,Nspin,Norb,Norb],"init_ed_structure","impHloc_anomalous")
+      endif
+    endif
     !
     !ALLOCATE AND SET interaction coefficient matrices
     if(.not.allocated(Uloc_internal))then
       allocate(Uloc_internal(Norb))
       Uloc_internal = zero
     else
-      call assert_shape(Uloc_internal,[Norb],"init_ed_structure","impHloc")
+      call assert_shape(Uloc_internal,[Norb],"init_ed_structure","Uloc_internal")
     endif
     if(.not.allocated(Ust_internal))then
       allocate(Ust_internal(Norb,Norb))
       Ust_internal = zero
     else
-      call assert_shape(Ust_internal,[Norb,Norb],"init_ed_structure","impHloc")
+      call assert_shape(Ust_internal,[Norb,Norb],"init_ed_structure","Ust_internal")
     endif
     if(.not.allocated(Jh_internal))then
       allocate(Jh_internal(Norb,Norb))
       Jh_internal = zero
     else
-      call assert_shape(Jh_internal,[Norb,Norb],"init_ed_structure","impHloc")
+      call assert_shape(Jh_internal,[Norb,Norb],"init_ed_structure","Jh_internal")
     endif
     if(.not.allocated(Jx_internal))then
       allocate(Jx_internal(Norb,Norb))
       Jx_internal = zero
     else
-      call assert_shape(Jx_internal,[Norb,Norb],"init_ed_structure","impHloc")
+      call assert_shape(Jx_internal,[Norb,Norb],"init_ed_structure","Jx_internal")
     endif
     if(.not.allocated(Jp_internal))then
       allocate(Jp_internal(Norb,Norb))
       Jp_internal = zero
     else
-      call assert_shape(Jp_internal,[Norb,Norb],"init_ed_structure","impHloc")
+      call assert_shape(Jp_internal,[Norb,Norb],"init_ed_structure","Jp_internal")
     endif
     !
     !
@@ -449,6 +458,7 @@ contains
     if(allocated(sectors_mask))deallocate(sectors_mask)
     if(allocated(neigen_sector))deallocate(neigen_sector)
     if(allocated(impHloc))deallocate(impHloc)
+    if(allocated(impHloc_anomalous))deallocate(impHloc_anomalous)
     if(allocated(mfHloc))deallocate(mfHloc)
     if(allocated(Uloc_internal))deallocate(Uloc_internal)
     if(allocated(Ust_internal))deallocate(Ust_internal)

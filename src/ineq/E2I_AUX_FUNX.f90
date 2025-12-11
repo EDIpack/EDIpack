@@ -23,10 +23,15 @@ MODULE E2I_AUX_FUNX
      !   * [|Nlat| , |Nspin| , |Nspin| , |Norb| , |Norb| ]: real-space RDMFT case, rank-5 array.
      !
      !In the case of real-space DMFT, the number of impurities |Nlat| must be provided.
+     !In case :f:var:`ED_MODE`=:code:`SUPERC` a matrix of the same shape containing the
+     !anomalous terms can optionally be passed as second arsgument.
      !
      module procedure :: ed_set_Hloc_lattice_N2
+     module procedure :: ed_set_Hloc_lattice_superc_N2
      module procedure :: ed_set_Hloc_lattice_N3
+     module procedure :: ed_set_Hloc_lattice_superc_N3
      module procedure :: ed_set_Hloc_lattice_N5
+     module procedure :: ed_set_Hloc_lattice_superc_N5
   end interface ed_set_Hloc
 
 
@@ -95,6 +100,27 @@ contains
     call assert_shape(Hloc,[Nlat*Nspin*Norb,Nlat*Nspin*Norb],'ed_set_Hloc','Hloc')
     Hloc_ineq  = lso2nnn_reshape(Hloc(1:Nlat*Nspin*Norb,1:Nlat*Nspin*Norb),Nlat,Nspin,Norb)
   end subroutine ed_set_Hloc_lattice_N2
+  
+  
+  subroutine ed_set_Hloc_lattice_superc_N2(Hloc,Hloc_anomalous,Nlat)
+    complex(8),dimension(:,:),intent(in) :: Hloc,Hloc_anomalous
+    integer                              :: Nlat !Number of impurities for real-space DMFT
+    integer                              :: ilat
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
+#endif
+    !
+    if(allocated(Hloc_ineq))deallocate(Hloc_ineq)
+    if(allocated(Hloc_anomalous_ineq))deallocate(Hloc_anomalous_ineq)
+    allocate(Hloc_ineq(Nlat,Nspin,Nspin,Norb,Norb));Hloc_ineq=zero
+    allocate(Hloc_anomalous_ineq(Nlat,Nspin,Nspin,Norb,Norb));Hloc_anomalous_ineq=zero
+    !
+    call assert_shape(Hloc,[Nlat*Nspin*Norb,Nlat*Nspin*Norb],'ed_set_Hloc','Hloc')
+    call assert_shape(Hloc_anomalous,[Nlat*Nspin*Norb,Nlat*Nspin*Norb],'ed_set_Hloc','Hloc_anomalous')
+    !
+    Hloc_ineq  = lso2nnn_reshape(Hloc(1:Nlat*Nspin*Norb,1:Nlat*Nspin*Norb),Nlat,Nspin,Norb)
+    Hloc_anomalous_ineq  = lso2nnn_reshape(Hloc_anomalous(1:Nlat*Nspin*Norb,1:Nlat*Nspin*Norb),Nlat,Nspin,Norb)
+  end subroutine ed_set_Hloc_lattice_superc_N2
 
 
   subroutine ed_set_Hloc_lattice_N3(Hloc,Nlat)
@@ -113,6 +139,28 @@ contains
     enddo
     !
   end subroutine ed_set_Hloc_lattice_N3
+  
+  subroutine ed_set_Hloc_lattice_superc_N3(Hloc,Hloc_anomalous,Nlat)
+    complex(8),dimension(:,:,:),intent(in) :: Hloc,Hloc_anomalous
+    integer                                :: Nlat,ilat
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
+#endif
+    !
+    if(allocated(Hloc_ineq))deallocate(Hloc_ineq)
+    if(allocated(Hloc_anomalous_ineq))deallocate(Hloc_anomalous_ineq)
+    allocate(Hloc_ineq(Nlat,Nspin,Nspin,Norb,Norb));Hloc_ineq=zero
+    allocate(Hloc_anomalous_ineq(Nlat,Nspin,Nspin,Norb,Norb));Hloc_anomalous_ineq=zero
+    !
+    call assert_shape(Hloc,[Nlat,Nspin*Norb,Nspin*Norb],'ed_set_Hloc','Hloc')
+    call assert_shape(Hloc_anomalous,[Nlat,Nspin*Norb,Nspin*Norb],'ed_set_Hloc','Hloc_anomalous')
+    !
+    do ilat=1,Nlat
+       Hloc_ineq(ilat,:,:,:,:)  = so2nn_reshape(Hloc(ilat,1:Nspin*Norb,1:Nspin*Norb),Nspin,Norb)
+       Hloc_anomalous_ineq(ilat,:,:,:,:)  = so2nn_reshape(Hloc_anomalous(ilat,1:Nspin*Norb,1:Nspin*Norb),Nspin,Norb)
+    enddo
+    !
+  end subroutine ed_set_Hloc_lattice_superc_N3
 
   subroutine ed_set_Hloc_lattice_N5(Hloc,Nlat)
     complex(8),dimension(:,:,:,:,:),intent(in) :: Hloc
@@ -127,15 +175,40 @@ contains
     call assert_shape(Hloc,[Nlat,Nspin,Nspin,Norb,Norb],'ed_set_Hloc','Hloc')
     Hloc_ineq  = Hloc
   end subroutine ed_set_Hloc_lattice_N5
+  
+  
+  subroutine ed_set_Hloc_lattice_superc_N5(Hloc,Hloc_anomalous,Nlat)
+    complex(8),dimension(:,:,:,:,:),intent(in) :: Hloc,Hloc_anomalous
+    integer                                    :: Nlat,ilat
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
+#endif
+    !
+    if(allocated(Hloc_ineq))deallocate(Hloc_ineq)
+    if(allocated(Hloc_anomalous_ineq))deallocate(Hloc_anomalous_ineq)
+    allocate(Hloc_ineq(Nlat,Nspin,Nspin,Norb,Norb));Hloc_ineq=zero
+    allocate(Hloc_anomalous_ineq(Nlat,Nspin,Nspin,Norb,Norb));Hloc_anomalous_ineq=zero
+    !
+    call assert_shape(Hloc,[Nlat,Nspin,Nspin,Norb,Norb],'ed_set_Hloc','Hloc')
+    call assert_shape(Hloc_anomalous,[Nlat,Nspin,Nspin,Norb,Norb],'ed_set_Hloc','Hloc_anomalous')
+    Hloc_ineq  = Hloc
+    Hloc_anomalous_ineq  = Hloc_anomalous
+  end subroutine ed_set_Hloc_lattice_superc_N5
 
 
   subroutine set_impHloc(site)
     integer :: site
-    ! if(allocated(impHloc))deallocate(impHloc)
-    ! allocate(impHloc(Nspin,Nspin,Norb,Norb));impHloc=zero
     if(.not.allocated(Hloc_ineq))stop "set_impHloc error: called with Hloc_ineq not allocated"
-    ! impHloc = Hloc_ineq(site,:,:,:,:)
-    call ed_set_Hloc(Hloc_ineq(site,:,:,:,:))
+    
+    if(ed_mode=="superc")then
+      if(.not.allocated(Hloc_anomalous_ineq))stop "set_impHloc error: called with Hloc_anomalous_ineq not allocated ins SUPERC mode"
+    endif
+    
+    if(ed_mode=="superc")then
+      call ed_set_Hloc(Hloc_ineq(site,:,:,:,:),Hloc_anomalous_ineq(site,:,:,:,:))
+    else
+      call ed_set_Hloc(Hloc_ineq(site,:,:,:,:))  
+    endif
   end subroutine set_impHloc
 
 

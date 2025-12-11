@@ -486,6 +486,37 @@ contains
                    endif
                 enddo
              enddo
+             ! !> H_imp: anomalous terms (only relevant if impHloc_anomalous is not zero)
+             if(any(abs(impHloc_anomalous)/=0d0))then
+               do iorb=1,Norb
+                 do jorb=1,Norb
+                     ! both occupied
+                     Jcondition = &
+                          (impHloc_anomalous(1,1,iorb,jorb)/=zero) .AND. &
+                          (ib(jorb+Ns)==1)         .AND. &
+                          (ib(iorb)==1)
+                     if (Jcondition) then
+                        call c(iorb,m,k1,sg1)
+                        call c(jorb+Ns,k1,k2,sg2)
+                        j_el=binary_search(sectorI%H(1)%map,k2)
+                        j   = j_el + (iph-1)*sectorI%DimEl
+                        ed_Eknot = ed_Eknot + impHloc_anomalous(1,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+                     endif
+                     ! both empty
+                     Jcondition = &
+                          (impHloc_anomalous(1,1,iorb,jorb)/=zero) .AND. &
+                          (ib(jorb+Ns)==0)         .AND. &
+                          (ib(iorb)==0)
+                     if (Jcondition) then
+                        call cdg(jorb+Ns,m,k1,sg1)
+                        call cdg(iorb,k1,k2,sg2)
+                        j_el=binary_search(sectorI%H(1)%map,k2)
+                        j   = j_el + (iph-1)*sectorI%DimEl
+                        ed_Eknot = ed_Eknot + impHloc_anomalous(1,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+                     endif
+                 enddo
+               enddo
+             endif
              !
              !DENSITY-DENSITY INTERACTION: SAME ORBITAL, OPPOSITE SPINS
              !Euloc=\sum=i U_i*(n_u*n_d)_i

@@ -33,10 +33,10 @@ function f0and_bath_array_hyrege(x,axis) result(F0and)
            fgorb= zero
            do iorb=1,Norb
               do jorb=1,Norb
-                 fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
-                 fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb)) + conjg( Delta(ispin,ispin,iorb,jorb,i) )
+                 fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)                  - Delta(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)      - impHloc_anomalous(ispin,ispin,iorb,jorb)        - Fdelta12(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)      - conjg(impHloc_anomalous(ispin,ispin,iorb,jorb)) - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
+                 fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb))           + conjg( Delta(ispin,ispin,iorb,jorb,i) )
               enddo
            enddo
            call inv(fgorb)
@@ -50,10 +50,10 @@ function f0and_bath_array_hyrege(x,axis) result(F0and)
            fgorb= zero
            do iorb=1,Norb
               do jorb=1,Norb
-                 fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)  - Delta(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)                                        - Fdelta12(ispin,ispin,iorb,jorb,i)
-                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)                                        - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
-                 fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb))  + conjg( Delta(ispin,ispin,iorb,jorb,L-i+1) )
+                 fgorb(iorb,jorb)           = zeta(iorb,jorb)           - impHloc(ispin,ispin,iorb,jorb)                   - Delta(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb,jorb+Norb)      = zeta(iorb,jorb+Norb)      - impHloc_anomalous(ispin,ispin,iorb,jorb)         - Fdelta12(ispin,ispin,iorb,jorb,i)
+                 fgorb(iorb+Norb,jorb)      = zeta(iorb+Norb,jorb)      - conjg(impHloc_anomalous(ispin,ispin,iorb,jorb))  - conjg(Fdelta21(ispin,ispin,jorb,iorb,i))
+                 fgorb(iorb+Norb,jorb+Norb) = zeta(iorb+Norb,jorb+Norb) + conjg(impHloc(ispin,ispin,iorb,jorb))            + conjg( Delta(ispin,ispin,iorb,jorb,L-i+1) )
               enddo
            enddo
            call inv(fgorb)

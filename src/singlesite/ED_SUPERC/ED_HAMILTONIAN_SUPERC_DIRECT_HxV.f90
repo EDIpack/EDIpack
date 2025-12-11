@@ -43,6 +43,8 @@ contains
     Dim   = Hsector%Dim
     DimEl = Hsector%DimEl
     !
+    Hbath_tmp = zero
+    !
     if(Nloc/=dim)stop "directMatVec_cc ERROR: Nloc /= dim(isector)"
     !
     !Get diagonal hybridization, bath energy
@@ -104,6 +106,19 @@ contains
           enddo
        enddo
     end select
+
+    !Check spin-singlet pairing
+    if(bath_type=="replica" .or. bath_type=="general")then
+      do ibath=1,Nbath
+        do ispin=1,Nnambu*Nspin
+          if(any(abs(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)-transpose(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)))>1d-10))then
+            STOP "anomalous Hbath is not symmetric. Only spin-singlet s-wave pairing is allowed in SUPERC."
+          endif
+        enddo
+      enddo
+    endif
+      
+  
     !
     Hv=zero
     states: do i=1,Dim
