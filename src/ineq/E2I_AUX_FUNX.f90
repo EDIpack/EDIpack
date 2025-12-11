@@ -198,11 +198,17 @@ contains
 
   subroutine set_impHloc(site)
     integer :: site
-    ! if(allocated(impHloc))deallocate(impHloc)
-    ! allocate(impHloc(Nspin,Nspin,Norb,Norb));impHloc=zero
     if(.not.allocated(Hloc_ineq))stop "set_impHloc error: called with Hloc_ineq not allocated"
-    ! impHloc = Hloc_ineq(site,:,:,:,:)
-    call ed_set_Hloc(Hloc_ineq(site,:,:,:,:))
+    
+    if(ed_mode=="superc")then
+      if(.not.allocated(Hloc_anomalous_ineq))stop "set_impHloc error: called with Hloc_anomalous_ineq not allocated ins SUPERC mode"
+    endif
+    
+    if(ed_mode=="superc")then
+      call ed_set_Hloc(Hloc_ineq(site,:,:,:,:),Hloc_anomalous_ineq(site,:,:,:,:))
+    else
+      call ed_set_Hloc(Hloc_ineq(site,:,:,:,:))  
+    endif
   end subroutine set_impHloc
 
 
