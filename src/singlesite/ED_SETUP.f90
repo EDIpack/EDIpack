@@ -326,7 +326,7 @@ contains
          allocate(impHloc_anomalous(Nspin,Nspin,Norb,Norb))
          impHloc_anomalous=zero
       else
-         call assert_shape(impHloc_anomalous,[Nspin,Nspin,Norb,Norb],"init_ed_structure","impHloc")
+         call assert_shape(impHloc_anomalous,[Nspin,Nspin,Norb,Norb],"init_ed_structure","impHloc_anomalous")
       endif
     endif
     !
