@@ -24,7 +24,7 @@ MODULE E2I_AUX_FUNX
      !
      !In the case of real-space DMFT, the number of impurities |Nlat| must be provided.
      !In case :f:var:`ED_MODE` = :code:`SUPERC` a matrix of the same shape containing the
-     !anomalous terms can optionally be passed as second arsgument.
+     !anomalous terms can optionally be passed as second argument.
      !
      module procedure :: ed_set_Hloc_lattice_N2
      module procedure :: ed_set_Hloc_lattice_superc_N2
