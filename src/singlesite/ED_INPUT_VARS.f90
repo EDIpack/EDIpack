@@ -579,6 +579,8 @@ contains
     call parse_input_variable(Nph,"NPH",INPUTunit,default=0,comment="Max number of phonons allowed (cut off)")
     call parse_input_variable(bath_type,"BATH_TYPE",INPUTunit,default='normal',comment="flag to set bath type: normal (1bath/imp), hybrid(1bath), replica(1replica/imp), general(replica++)")
     !
+    !Set a more general bath if there is no bath. Normal is too restrictive on which elements of G are calculated
+    if (NBATH==0) bath_type = "hybrid"
     !
     !
     allocate(Uloc_(Norb)) !#TODO: put me back!
