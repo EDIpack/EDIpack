@@ -90,7 +90,8 @@ MODULE ED_AUX_FUNX
   public :: read_pairChimatrix
   public :: read_exctChimatrix
 
-
+  !check diagonality of impHloc and impHloc_anomalous
+  public :: check_diag_impHloc
 
   !AUX RESHAPE FUNCTIONS (internal use)
   public :: index_stride_so
@@ -182,6 +183,7 @@ contains
   subroutine ed_set_Hloc_single_N2(Hloc,Hloc_anomalous)
     complex(8),dimension(:,:),intent(in)          :: Hloc !The local Hamiltonian array
     complex(8),dimension(:,:),intent(in),optional :: Hloc_anomalous !The local Hamiltonian array (anomalous terms)
+    logical                                           :: diag_condition
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
 #endif
@@ -211,11 +213,16 @@ contains
         STOP "impHloc_anomalous is not symmetric. Only spin-singlet pairing is allowed in SUPERC."
       endif
     endif
+    !
+    diag_condition = check_diag_impHloc()
+    if (bath_type=="normal" .and. .not. diag_condition) STOP "Normal bath cannot be used if impHloc(_anomalous) are off-diagonal"
+    !
   end subroutine ed_set_Hloc_single_N2
 
   subroutine ed_set_Hloc_single_N4(Hloc,Hloc_anomalous)
     complex(8),dimension(:,:,:,:),intent(in)          :: Hloc
     complex(8),dimension(:,:,:,:),intent(in),optional :: Hloc_anomalous
+    logical                                           :: diag_condition
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
 #endif
@@ -240,7 +247,11 @@ contains
       if(any(abs(impHloc_anomalous(1,1,:,:)-transpose(impHloc_anomalous(1,1,:,:)))>1d-10))then
         STOP "impHloc_anomalous is not symmetric. Only spin-singlet s-wave pairing is allowed in SUPERC."
       endif
-    endif        
+    endif
+    !
+    diag_condition = check_diag_impHloc()
+    if (bath_type=="normal" .and. .not. diag_condition) STOP "Normal bath cannot be used if impHloc(_anomalous) are off-diagonal"
+    !
   end subroutine ed_set_Hloc_single_N4
 
   
@@ -1098,7 +1109,41 @@ contains
 
 
 
+function check_diag_impHloc() result(is_diagonal)
+  !This functions checks the structure of :f:var:`impHloc` and :f:var:`impHloc_anomalous` 
+  !(if present) and returns :code:`TRUE` if they are diagonal in spin/orbital
+  !and :code:`FALSE` otherwise
+#if __INTEL_COMPILER
+   use ED_INPUT_VARS, only: Nspin, Norb
+#endif
+   logical :: is_diagonal
+   integer :: iorb, jorb, ispin, jspin
 
+   is_diagonal = .true.
+
+   do ispin = 1, Nspin
+      do jspin = 1, Nspin
+         do iorb = 1, Norb
+            do jorb = 1, Norb
+               if (iorb /= jorb) then
+                  if (allocated(impHloc)) then
+                     if (impHloc(ispin,jspin,iorb,jorb) /= zero) then
+                        is_diagonal = .false.
+                        return
+                     end if
+                  end if
+                  if (allocated(impHloc_anomalous)) then
+                     if (impHloc_anomalous(ispin,jspin,iorb,jorb) /= zero) then
+                        is_diagonal = .false.
+                        return
+                     end if
+                  end if
+               end if
+            end do
+         end do
+      end do
+   end do
+end function check_diag_impHloc
 
 
 
