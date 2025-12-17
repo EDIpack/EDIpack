@@ -173,9 +173,9 @@ MODULE ED_VARS_GLOBAL
 
   !local part of the Hamiltonian
   !=========================================================
-  complex(8),dimension(:,:,:,:),allocatable          :: impHloc           !local hamiltonian
-  complex(8),dimension(:,:,:,:),allocatable          :: impHloc_anomalous !local hamiltonian (anomalous terms)
-  complex(8),dimension(:,:,:,:),allocatable          :: mfHloc            !additional mean-field terms
+  complex(8),dimension(:,:,:,:),allocatable          :: impHloc           !Internal copy of the local hamiltonian, normal terms. Complex array of shape [ :f:var:`Nspin`, :f:var:`Nspin`, :f:var:`Norb`, :f:var:`Norb` ]
+  complex(8),dimension(:,:,:,:),allocatable          :: impHloc_anomalous !Internal copy of the local hamiltonian, anomalous terms for :f:var:`ED_MODE` = :code:`SUPERC`. Same type and shape as :f:var:`impHloc`.
+  complex(8),dimension(:,:,:,:),allocatable          :: mfHloc            !Internal collection of mean-field terms coming from anticommutators. Complex array of shape [ :f:var:`Nspin`, :f:var:`Nspin`, :f:var:`Norb`, :f:var:`Norb` ]
 
 
 
@@ -208,11 +208,11 @@ MODULE ED_VARS_GLOBAL
 
   !Interaction coefficients used internally
   !=========================================================
-  real(8),allocatable,dimension(:)                     :: Uloc_internal ! Internal copy of the Hubbard :math:`U` terms, read from input parameters or umatrix file :code:`[Norb]`
-  real(8),allocatable,dimension(:,:)                   :: Ust_internal  ! Internal copy of the :math:`U'` terms, read from input parameters or umatrix file :code:`[Norb,Norb]`
-  real(8),allocatable,dimension(:,:)                   :: Jh_internal   ! Internal copy of the :math:`J_{H}` terms, read from input parameters or umatrix file :code:`[Norb,Norb]`
-  real(8),allocatable,dimension(:,:)                   :: Jx_internal   ! Internal copy of the :math:`J_{X}` terms, read from input parameters or umatrix file :code:`[Norb,Norb]`
-  real(8),allocatable,dimension(:,:)                   :: Jp_internal   ! Internal copy of the :math:`J_{P}` terms, read from input parameters or umatrix file :code:`[Norb,Norb]`
+  real(8),allocatable,dimension(:)                     :: Uloc_internal ! Internal copy of the Hubbard :math:`U` terms, read from input parameters or umatrix file. Real array of shape [ :f:var:`Norb` ]
+  real(8),allocatable,dimension(:,:)                   :: Ust_internal  ! Internal copy of the Hubbard-Kanamori :math:`U'` terms, read from input parameters or umatrix file. Real array of shape [ :f:var:`Norb`, :f:var:`Norb` ]
+  real(8),allocatable,dimension(:,:)                   :: Jh_internal   ! Internal copy of the Hubbard-Kanamori :math:`J_{H}` terms, read from input parameters or umatrix file. Real array of shape [ :f:var:`Norb`, :f:var:`Norb` ]
+  real(8),allocatable,dimension(:,:)                   :: Jx_internal   ! Internal copy of the Hubbard-Kanamori :math:`J_{X}` terms, read from input parameters or umatrix file. Real array of shape [ :f:var:`Norb`, :f:var:`Norb` ]
+  real(8),allocatable,dimension(:,:)                   :: Jp_internal   ! Internal copy of the Hubbard-Kanamori :math:`J_{P}` terms, read from input parameters or umatrix file. Real array of shape [ :f:var:`Norb`, :f:var:`Norb` ]
 
 
   !Green's functions
