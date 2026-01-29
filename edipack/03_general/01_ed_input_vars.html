@@ -1,0 +1,2373 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Input Variables &mdash; EDIpack 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=5c5534e0" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Global Variables" href="02_ed_vars_global.html" />
+    <link rel="prev" title="Impurity Problem Solver Routines" href="../02_main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            EDIpack
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-source">From source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#building">Building</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../installation.html#gnu-make">GNU Make</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#installing">Installing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-anaconda">From Anaconda</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart/01_anderson.html">Solving a Single Impurity Anderson model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/01_anderson.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/01_anderson.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart/02_dmft.html">Solving Dynamical Mean-Field Theory with <cite>EDIpack</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/02_dmft.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/02_dmft.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Further examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/01_bhz.html">Interacting BHZ model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/01_bhz.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/01_bhz.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/02_ahm.html">Attractive Hubbard model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/02_ahm.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/02_ahm.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/03_excBHZ.html">In-plane spin excitons in QSHI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/03_excBHZ.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/03_excBHZ.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../structure.html">Library structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../structure.html#edipack-edipack"><strong>EDIpack</strong>: <span class="xref std std-ref">edipack</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structure.html#edipack2ineq-edipack2ineq"><strong>EDIpack2ineq</strong>: <span class="xref std std-ref">edipack2ineq</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structure.html#edipack-c-bindings-edipack-cbindings"><strong>EDIpack C-bindings</strong>: <span class="xref std std-ref">edipack_cbindings</span></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../edipack.html">The EDIpack Fortran Library</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../01_edipackmodule.html">EDIpack Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../02_main.html">Impurity Problem Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../edipack.html#general-environment">General Environment</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Input Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_ed_aux_funx.html">Auxiliary Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_ed_setup.html">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ed_parse_umatrix.html">Parse Umatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../04_classes/01_ed_sparse_matrix.html">Sparse Matrices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../04_classes/02_ed_eigenspace.html">EigenSpace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../04_classes/03_ed_gfmatrix.html">GFmatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#symmetry-sectors"><span class="xref std std-ref">Symmetry Sectors</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../05_sectors.html">Quantum Numbers Sectors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html">Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-auxiliary">Bath Auxiliary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/00_ed_vars_global.html">Bath class definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/01_ed_bath_aux.html">Bath auxiliary routines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/02_ed_bath_dim.html">Bath dimensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/04_ed_bath_replica.html">Replica bath setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-dmft"><span class="xref std std-ref">Bath DMFT</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/05_ed_bath_dmft.html">Bath class implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-functions"><span class="xref std std-ref">Bath Functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/06_ed_bath_functions.html">Bath  dynamical functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#hamiltonian"><span class="xref std std-ref">Hamiltonian</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html#normal-mode">Normal mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian_common.html">MPI all-2-all transposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html#superconductive-mode">Superconductive mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../superc/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../superc/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html#non-su-2-mode">Non-SU(2) mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#exact-diagonalization"><span class="xref std std-ref">Exact Diagonalization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html"><span class="xref std std-ref">Impurity Diagonalization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../08_diag/impurity_diag.html">Impurity diagonalization interface</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/01_diag.html">Exact Diagonalization: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/01_diag.html">Exact Diagonalization: Superconductive</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/01_diag.html">Exact Diagonalization: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#green-s-functions"><span class="xref std std-ref">Green's Functions</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html"><span class="xref std std-ref">Impurity Green's functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../09_greensfunctions/impurity_greensfunctions.html">Impurity Green's functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/03_greensfunctions.html">Green's Function calculation: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/03_greensfunctions.html">Green's Function calculation: Superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/03_greensfunctions.html">Green's Function calculation: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#susceptibilities"><span class="xref std std-ref">Susceptibilities</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html"><span class="xref std std-ref">Impurity Susceptibilities</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../10_chifunctions/impurity_chifunctions.html">Impurity dynamical response functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#spin-channel"><span class="xref std std-ref">Spin channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_spin.html">Spin Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#charge-channel"><span class="xref std std-ref">Charge channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_dens.html">Charge Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#pair-channel"><span class="xref std std-ref">Pair channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_pair.html">Pair Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#exciton-channel"><span class="xref std std-ref">Exciton channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_exct.html">Exciton Susceptibility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#observables"><span class="xref std std-ref">Observables</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html"><span class="xref std std-ref">Impurity Observables</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../11_observables/impurity_observables.html">Impurity Observables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/05_observables.html">Observables: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/05_observables.html">Observables: superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/05_observables.html">Observables: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#reduced-density-matrix"><span class="xref std std-ref">Reduced Density Matrix</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html"><span class="xref std std-ref">Impurity Reduced Density Matrix</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../12_rdm/impurity_rdm.html">Impurity RDM</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/06_rdm.html">Reduced Density Matrix: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/06_rdm.html">Reduced Density Matrix: superconductivity</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/06_rdm.html">Reduced Density Matrix: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../13_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../14_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack2ineq</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../edipack2ineq.html">EDIpack for inequivalent impurities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/01_edipack2ineqmodule.html">EDIpack2ineq Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/02_main.html">Inequivalent Impurities Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#general-environment">General Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/03_general/02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/03_general/03_ed_aux_funx.html">Auxiliary Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/04_bath.html">Inequivalent Impurities Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/04_bath.html#bath-user"><span class="xref std std-ref">Bath User</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../edipack2ineq/04_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/04_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../edipack2ineq/04_bath/04_ed_bath_replica.html">Bath Replica</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/05_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/06_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack C-bindings</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../edipack_cbindings.html">EDIpack Fortran-C interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../c_bindings/01_vars.html">EDIpack Fortran-C interface: Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv48has_ineq"><code class="docutils literal notranslate"><span class="pre">has_ineq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44beta"><code class="docutils literal notranslate"><span class="pre">beta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chidens_flag"><code class="docutils literal notranslate"><span class="pre">chidens_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chiexct_flag"><code class="docutils literal notranslate"><span class="pre">chiexct_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chipair_flag"><code class="docutils literal notranslate"><span class="pre">chipair_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chispin_flag"><code class="docutils literal notranslate"><span class="pre">chispin_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv410dmft_error"><code class="docutils literal notranslate"><span class="pre">dmft_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv47ed_twin"><code class="docutils literal notranslate"><span class="pre">ed_twin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv411ed_total_ud"><code class="docutils literal notranslate"><span class="pre">ed_total_ud</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43eps"><code class="docutils literal notranslate"><span class="pre">eps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv42Jh"><code class="docutils literal notranslate"><span class="pre">Jh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv42Jp"><code class="docutils literal notranslate"><span class="pre">Jp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv42Jx"><code class="docutils literal notranslate"><span class="pre">Jx</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Lfit"><code class="docutils literal notranslate"><span class="pre">Lfit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Lmats"><code class="docutils literal notranslate"><span class="pre">Lmats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Lreal"><code class="docutils literal notranslate"><span class="pre">Lreal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Lpos"><code class="docutils literal notranslate"><span class="pre">Lpos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Ltau"><code class="docutils literal notranslate"><span class="pre">Ltau</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Nbath"><code class="docutils literal notranslate"><span class="pre">Nbath</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Nloop"><code class="docutils literal notranslate"><span class="pre">Nloop</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Norb"><code class="docutils literal notranslate"><span class="pre">Norb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43Nph"><code class="docutils literal notranslate"><span class="pre">Nph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45nread"><code class="docutils literal notranslate"><span class="pre">nread</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Nspin"><code class="docutils literal notranslate"><span class="pre">Nspin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv48Nsuccess"><code class="docutils literal notranslate"><span class="pre">Nsuccess</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv48sb_field"><code class="docutils literal notranslate"><span class="pre">sb_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Uloc"><code class="docutils literal notranslate"><span class="pre">Uloc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43Ust"><code class="docutils literal notranslate"><span class="pre">Ust</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44wfin"><code class="docutils literal notranslate"><span class="pre">wfin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44wini"><code class="docutils literal notranslate"><span class="pre">wini</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44xmax"><code class="docutils literal notranslate"><span class="pre">xmax</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44xmin"><code class="docutils literal notranslate"><span class="pre">xmin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43xmu"><code class="docutils literal notranslate"><span class="pre">xmu</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../c_bindings/02_funcs.html">EDIpack Fortran-C interface: Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv410read_inputPc"><code class="docutils literal notranslate"><span class="pre">read_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N4PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N3PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N5PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv425get_bath_dimension_directv"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_direct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv429get_bath_dimension_symmetriesi"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_symmetries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415search_variablePdPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">search_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_sitePdP7int64_tddi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_ineqPdP7int64_tdPdi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_sitePdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_ineqPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n5PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n5PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n4PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n6PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n4PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n6PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_g0and_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_g0and_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_delta_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_delta_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_spinchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_spinchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_denschiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_denschi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_pairchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_pairchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_exctchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_exctchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419ed_get_impurity_rdmPNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_impurity_rdm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416init_solver_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423init_solver_site_nobathv"><code class="docutils literal notranslate"><span class="pre">init_solver_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416init_solver_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423init_solver_ineq_nobathi"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv410solve_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417solve_site_nobathii"><code class="docutils literal notranslate"><span class="pre">solve_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv410solve_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417solve_ineq_nobathiii"><code class="docutils literal notranslate"><span class="pre">solve_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415finalize_solveri"><code class="docutils literal notranslate"><span class="pre">finalize_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv413reset_umatrixv"><code class="docutils literal notranslate"><span class="pre">reset_umatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420add_twobody_operatoriiiiiiiid"><code class="docutils literal notranslate"><span class="pre">add_twobody_operator()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python projects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../edipack_python.html">Python projects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Browse code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../browsecode.html">Browse code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_aux_funx.html">E2I_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath.html">E2I_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath_fit.html">E2I_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath_replica.html">E2I_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath_user.html">E2I_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_io.html">E2I_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_main.html">E2I_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_vars_global.html">E2I_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_aux_funx.html">ED_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath.html">ED_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_aux.html">ED_BATH_AUX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_dim.html">ED_BATH_DIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_dmft.html">ED_BATH_DMFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_fit.html">ED_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_functions.html">ED_BATH_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_replica.html">ED_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_user.html">ED_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_dens.html">ED_CHI_DENS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_exct.html">ED_CHI_EXCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_functions.html">ED_CHI_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_pair.html">ED_CHI_PAIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_spin.html">ED_CHI_SPIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag.html">ED_DIAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag_nonsu2.html">ED_DIAG_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag_normal.html">ED_DIAG_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag_superc.html">ED_DIAG_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_eigenspace.html">ED_EIGENSPACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_common.html">ED_FIT_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_general.html">ED_FIT_GENERAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_hybrid.html">ED_FIT_HYBRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_normal.html">ED_FIT_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_replica.html">ED_FIT_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gf_nonsu2.html">ED_GF_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gf_normal.html">ED_GF_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gf_superc.html">ED_GF_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gfmatrix.html">ED_GFMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_greens_functions.html">ED_GREENS_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian.html">ED_HAMILTONIAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2.html">ED_HAMILTONIAN_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2_common.html">ED_HAMILTONIAN_NONSU2_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2_direct_hxv.html">ED_HAMILTONIAN_NONSU2_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2_stored_hxv.html">ED_HAMILTONIAN_NONSU2_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal.html">ED_HAMILTONIAN_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal_common.html">ED_HAMILTONIAN_NORMAL_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal_direct_hxv.html">ED_HAMILTONIAN_NORMAL_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal_stored_hxv.html">ED_HAMILTONIAN_NORMAL_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc.html">ED_HAMILTONIAN_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc_common.html">ED_HAMILTONIAN_SUPERC_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc_direct_hxv.html">ED_HAMILTONIAN_SUPERC_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc_stored_hxv.html">ED_HAMILTONIAN_SUPERC_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_input_vars.html">ED_INPUT_VARS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_io.html">ED_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_main.html">ED_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables.html">ED_OBSERVABLES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables_nonsu2.html">ED_OBSERVABLES_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables_normal.html">ED_OBSERVABLES_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables_superc.html">ED_OBSERVABLES_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_parse_umatrix.html">ED_PARSE_UMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm.html">ED_RDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm_nonsu2.html">ED_RDM_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm_normal.html">ED_RDM_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm_superc.html">ED_RDM_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_sector.html">ED_SECTOR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_setup.html">ED_SETUP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_sparse_map.html">ED_SPARSE_MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_sparse_matrix.html">ED_SPARSE_MATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_vars_global.html">ED_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_version.html">ED_VERSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack.html">EDIPACK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack2ineq.html">EDIPACK2INEQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack_c.html">EDIPACK_C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack_c_common.html">EDIPACK_C_COMMON</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack">EDIpack on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack2py">EDIpack2py on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/krivenko/edipack2triqs">EDIpack2Triqs on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/SciFortran/SciFortran">SciFortran on GitHub</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EDIpack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../edipack.html">The EDIpack Fortran Library</a></li>
+      <li class="breadcrumb-item active">Input Variables</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/edipack/03_general/01_ed_input_vars.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="../02_main.html" class="btn btn-neutral float-left" title="Impurity Problem Solver Routines" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="02_ed_vars_global.html" class="btn btn-neutral float-right" title="Global Variables" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="input-variables">
+<h1>Input Variables<a class="headerlink" href="#input-variables" title="Link to this heading"></a></h1>
+<p class="rubric" id="f/ed_input_vars">Description</p>
+<p>Contains all global input variables which can be set by the user through the input file. A specific preocedure <a class="reference internal" href="#f/ed_input_vars/ed_read_input" title="f/ed_input_vars/ed_read_input"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_read_input()</span></code></a> should be called to read the input file using <a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_PARSE_INPUT.html#f/sf_parse_input/parse_input_variable" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">parse_input_variable()</span></code></a> procedure from SciFortran. All variables are automatically set to a default, looked for and updated by reading into the file and, sequentially looked for and updated from command line (std.input) using the notation <cite>variable_name=variable_value(s)</cite> (case independent).</p>
+<p class="rubric">Quick access</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#f/ed_input_vars/a_ph" title="f/ed_input_vars/a_ph"><code class="xref f f-var docutils literal notranslate"><span class="pre">a_ph</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/beta" title="f/ed_input_vars/beta"><code class="xref f f-var docutils literal notranslate"><span class="pre">beta</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/bfile" title="f/ed_input_vars/bfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">bfile</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_ftol" title="f/ed_input_vars/cg_ftol"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_ftol</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_grad" title="f/ed_input_vars/cg_grad"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_grad</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_method" title="f/ed_input_vars/cg_method"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_method</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_minimize_hh" title="f/ed_input_vars/cg_minimize_hh"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_minimize_hh</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_minimize_ver" title="f/ed_input_vars/cg_minimize_ver"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_minimize_ver</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_niter" title="f/ed_input_vars/cg_niter"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_niter</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_norm" title="f/ed_input_vars/cg_norm"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_norm</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_pow" title="f/ed_input_vars/cg_pow"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_pow</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_scheme" title="f/ed_input_vars/cg_scheme"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_scheme</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_stop" title="f/ed_input_vars/cg_stop"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_stop</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cg_weight" title="f/ed_input_vars/cg_weight"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_weight</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/chidens_flag" title="f/ed_input_vars/chidens_flag"><code class="xref f f-var docutils literal notranslate"><span class="pre">chidens_flag</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/chiexct_flag" title="f/ed_input_vars/chiexct_flag"><code class="xref f f-var docutils literal notranslate"><span class="pre">chiexct_flag</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/chipair_flag" title="f/ed_input_vars/chipair_flag"><code class="xref f f-var docutils literal notranslate"><span class="pre">chipair_flag</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/chispin_flag" title="f/ed_input_vars/chispin_flag"><code class="xref f f-var docutils literal notranslate"><span class="pre">chispin_flag</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/cutoff" title="f/ed_input_vars/cutoff"><code class="xref f f-var docutils literal notranslate"><span class="pre">cutoff</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/deltasc" title="f/ed_input_vars/deltasc"><code class="xref f f-var docutils literal notranslate"><span class="pre">deltasc</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/dmft_error" title="f/ed_input_vars/dmft_error"><code class="xref f f-var docutils literal notranslate"><span class="pre">dmft_error</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_all_g" title="f/ed_input_vars/ed_all_g"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_all_g</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_finite_temp" title="f/ed_input_vars/ed_finite_temp"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_finite_temp</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_hw_bath" title="f/ed_input_vars/ed_hw_bath"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_hw_bath</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_input_file" title="f/ed_input_vars/ed_input_file"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_input_file</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_obs_all" title="f/ed_input_vars/ed_obs_all"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_obs_all</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_offset_bath" title="f/ed_input_vars/ed_offset_bath"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_offset_bath</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_chidens" title="f/ed_input_vars/ed_print_chidens"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_chidens</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_chiexct" title="f/ed_input_vars/ed_print_chiexct"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_chiexct</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_chipair" title="f/ed_input_vars/ed_print_chipair"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_chipair</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_chispin" title="f/ed_input_vars/ed_print_chispin"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_chispin</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_g" title="f/ed_input_vars/ed_print_g"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_g</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_g0" title="f/ed_input_vars/ed_print_g0"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_g0</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_print_sigma" title="f/ed_input_vars/ed_print_sigma"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_print_sigma</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_read_umatrix" title="f/ed_input_vars/ed_read_umatrix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_read_umatrix</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_sectors" title="f/ed_input_vars/ed_sectors"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_sectors</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_sectors_shift" title="f/ed_input_vars/ed_sectors_shift"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_sectors_shift</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_solve_offdiag_gf" title="f/ed_input_vars/ed_solve_offdiag_gf"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_solve_offdiag_gf</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_sparse_h" title="f/ed_input_vars/ed_sparse_h"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_sparse_h</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_total_ud" title="f/ed_input_vars/ed_total_ud"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_total_ud</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_twin" title="f/ed_input_vars/ed_twin"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_twin</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_use_kanamori" title="f/ed_input_vars/ed_use_kanamori"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_use_kanamori</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_verbose" title="f/ed_input_vars/ed_verbose"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_verbose</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/eps" title="f/ed_input_vars/eps"><code class="xref f f-var docutils literal notranslate"><span class="pre">eps</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/exc_field" title="f/ed_input_vars/exc_field"><code class="xref f f-var docutils literal notranslate"><span class="pre">exc_field</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/g_ph" title="f/ed_input_vars/g_ph"><code class="xref f f-var docutils literal notranslate"><span class="pre">g_ph</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/g_ph_diag" title="f/ed_input_vars/g_ph_diag"><code class="xref f f-var docutils literal notranslate"><span class="pre">g_ph_diag</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/gphfile" title="f/ed_input_vars/gphfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">gphfile</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/gs_threshold" title="f/ed_input_vars/gs_threshold"><code class="xref f f-var docutils literal notranslate"><span class="pre">gs_threshold</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/hfile" title="f/ed_input_vars/hfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">hfile</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/hfmode" title="f/ed_input_vars/hfmode"><code class="xref f f-var docutils literal notranslate"><span class="pre">hfmode</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/hlocfile" title="f/ed_input_vars/hlocfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">hlocfile</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jh" title="f/ed_input_vars/jh"><code class="xref f f-var docutils literal notranslate"><span class="pre">jh</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jp" title="f/ed_input_vars/jp"><code class="xref f f-var docutils literal notranslate"><span class="pre">jp</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jx" title="f/ed_input_vars/jx"><code class="xref f f-var docutils literal notranslate"><span class="pre">jx</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jz_basis" title="f/ed_input_vars/jz_basis"><code class="xref f f-var docutils literal notranslate"><span class="pre">jz_basis</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jz_max" title="f/ed_input_vars/jz_max"><code class="xref f f-var docutils literal notranslate"><span class="pre">jz_max</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jz_max_value" title="f/ed_input_vars/jz_max_value"><code class="xref f f-var docutils literal notranslate"><span class="pre">jz_max_value</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_dim_threshold" title="f/ed_input_vars/lanc_dim_threshold"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_dim_threshold</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_method" title="f/ed_input_vars/lanc_method"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_method</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_ncv_add" title="f/ed_input_vars/lanc_ncv_add"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_ncv_add</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_ncv_factor" title="f/ed_input_vars/lanc_ncv_factor"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_ncv_factor</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_ngfiter" title="f/ed_input_vars/lanc_ngfiter"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_ngfiter</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_niter" title="f/ed_input_vars/lanc_niter"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_niter</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_nstates_sector" title="f/ed_input_vars/lanc_nstates_sector"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_nstates_sector</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_nstates_step" title="f/ed_input_vars/lanc_nstates_step"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_nstates_step</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_nstates_total" title="f/ed_input_vars/lanc_nstates_total"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_nstates_total</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_tolerance" title="f/ed_input_vars/lanc_tolerance"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_tolerance</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lfit" title="f/ed_input_vars/lfit"><code class="xref f f-var docutils literal notranslate"><span class="pre">lfit</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/logfile" title="f/ed_input_vars/logfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">logfile</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lpos" title="f/ed_input_vars/lpos"><code class="xref f f-var docutils literal notranslate"><span class="pre">lpos</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ltau" title="f/ed_input_vars/ltau"><code class="xref f f-var docutils literal notranslate"><span class="pre">ltau</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nbath" title="f/ed_input_vars/nbath"><code class="xref f f-var docutils literal notranslate"><span class="pre">nbath</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ncoeff" title="f/ed_input_vars/ncoeff"><code class="xref f f-var docutils literal notranslate"><span class="pre">ncoeff</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ndelta" title="f/ed_input_vars/ndelta"><code class="xref f f-var docutils literal notranslate"><span class="pre">ndelta</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nerr" title="f/ed_input_vars/nerr"><code class="xref f f-var docutils literal notranslate"><span class="pre">nerr</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nloop" title="f/ed_input_vars/nloop"><code class="xref f f-var docutils literal notranslate"><span class="pre">nloop</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nph" title="f/ed_input_vars/nph"><code class="xref f f-var docutils literal notranslate"><span class="pre">nph</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nread" title="f/ed_input_vars/nread"><code class="xref f f-var docutils literal notranslate"><span class="pre">nread</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/nsuccess" title="f/ed_input_vars/nsuccess"><code class="xref f f-var docutils literal notranslate"><span class="pre">nsuccess</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/pair_field" title="f/ed_input_vars/pair_field"><code class="xref f f-var docutils literal notranslate"><span class="pre">pair_field</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ph_type" title="f/ed_input_vars/ph_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">ph_type</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/print_input_vars" title="f/ed_input_vars/print_input_vars"><code class="xref f f-var docutils literal notranslate"><span class="pre">print_input_vars</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/print_sector_eigenvalues" title="f/ed_input_vars/print_sector_eigenvalues"><code class="xref f f-var docutils literal notranslate"><span class="pre">print_sector_eigenvalues</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/rdm_flag" title="f/ed_input_vars/rdm_flag"><code class="xref f f-var docutils literal notranslate"><span class="pre">rdm_flag</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/sb_field" title="f/ed_input_vars/sb_field"><code class="xref f f-var docutils literal notranslate"><span class="pre">sb_field</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/sectorfile" title="f/ed_input_vars/sectorfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">sectorfile</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/spin_field_x" title="f/ed_input_vars/spin_field_x"><code class="xref f f-var docutils literal notranslate"><span class="pre">spin_field_x</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/spin_field_y" title="f/ed_input_vars/spin_field_y"><code class="xref f f-var docutils literal notranslate"><span class="pre">spin_field_y</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/spin_field_z" title="f/ed_input_vars/spin_field_z"><code class="xref f f-var docutils literal notranslate"><span class="pre">spin_field_z</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/uloc" title="f/ed_input_vars/uloc"><code class="xref f f-var docutils literal notranslate"><span class="pre">uloc</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/umatrix_file" title="f/ed_input_vars/umatrix_file"><code class="xref f f-var docutils literal notranslate"><span class="pre">umatrix_file</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ust" title="f/ed_input_vars/ust"><code class="xref f f-var docutils literal notranslate"><span class="pre">ust</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/w0_ph" title="f/ed_input_vars/w0_ph"><code class="xref f f-var docutils literal notranslate"><span class="pre">w0_ph</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/wfin" title="f/ed_input_vars/wfin"><code class="xref f f-var docutils literal notranslate"><span class="pre">wfin</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/wini" title="f/ed_input_vars/wini"><code class="xref f f-var docutils literal notranslate"><span class="pre">wini</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/xmax" title="f/ed_input_vars/xmax"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmax</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/xmin" title="f/ed_input_vars/xmin"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmin</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a></p>
+</dd>
+<dt class="field-even">Routines<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#f/ed_input_vars/ed_read_input" title="f/ed_input_vars/ed_read_input"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_read_input()</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ed_update_input" title="f/ed_input_vars/ed_update_input"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_update_input()</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Used modules</p>
+<ul class="simple">
+<li><p><code class="xref f f-mod docutils literal notranslate"><span class="pre">ed_version</span></code>: Contains the EDIpack version (git commit hash)</p></li>
+</ul>
+<p class="rubric">External modules</p>
+<ul>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_VERSION.html#f/sf_version" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_version</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_PARSE_INPUT.html#f/sf_parse_input" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_parse_input</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/sf_iotools" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_iotools</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/str" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">str()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/free_unit" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">free_unit()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/to_upper" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">to_upper()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/to_lower" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">to_lower()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="xref f f-mod docutils literal notranslate"><span class="pre">iso_c_binding</span></code></p></li>
+</ul>
+<p class="rubric">Variables</p>
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/a_ph">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">a_ph</span></span><a class="headerlink" href="#f/ed_input_vars/a_ph" title="Link to this definition"></a></dt>
+<dd><p>Phonon forcing field coupled to displacement operator (constant)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/bath_type">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">bath_type</span></span><a class="headerlink" href="#f/ed_input_vars/bath_type" title="Link to this definition"></a></dt>
+<dd><p>Flag to select the bath geometry</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">normal</span></code>  : each impurity orbital has a set of bath levels in a star geometry</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">hybrid</span></code>  : all impurity orbitals communicate with the same set of bath levels in a star geometry</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">replica</span></code> : the impurity communicates with clusters of the same form via an hybridization term <span class="math notranslate nohighlight">\(V\mathbb{I}\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">general</span></code> : extends <code class="code docutils literal notranslate"><span class="pre">replica</span></code> so that each orbital has a different hybridization strength</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=8)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>normal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/beta">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">beta</span></span><a class="headerlink" href="#f/ed_input_vars/beta" title="Link to this definition"></a></dt>
+<dd><p>Inverse temperature, at zero temperature it is used as a IR cut-off.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>beta</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1000d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/bfile">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">bfile</span></span><a class="headerlink" href="#f/ed_input_vars/bfile" title="Link to this definition"></a></dt>
+<dd><p>File where to retrieve/store the bath parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=100)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>hbasis[.used/restart]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_ftol">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_ftol</span></span><a class="headerlink" href="#f/ed_input_vars/cg_ftol" title="Link to this definition"></a></dt>
+<dd><p>Tolerance in the conjugate-gradient fitting procedure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_grad">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_grad</span></span><a class="headerlink" href="#f/ed_input_vars/cg_grad" title="Link to this definition"></a></dt>
+<dd><p>Flag to set the type of gradient evaluation (if <a class="reference internal" href="#f/ed_input_vars/cg_method" title="f/ed_input_vars/cg_method"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_method</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">0</span></code> )</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">0</span></code> : analytic</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1</span></code> : numeric</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_method">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_method</span></span><a class="headerlink" href="#f/ed_input_vars/cg_method" title="Link to this definition"></a></dt>
+<dd><p>Conjugate-gradient fitting routine to be used:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">0</span></code> : Numerical Recipes</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1</span></code> :minimize (FORTRAN77 code)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_minimize_hh">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_minimize_hh</span></span><a class="headerlink" href="#f/ed_input_vars/cg_minimize_hh" title="Link to this definition"></a></dt>
+<dd><p>Unknown parameter used in the CG minimize procedure ( for <a class="reference internal" href="#f/ed_input_vars/cg_grad" title="f/ed_input_vars/cg_grad"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_grad</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">1</span></code> )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-4</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_minimize_ver">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_minimize_ver</span></span><a class="headerlink" href="#f/ed_input_vars/cg_minimize_ver" title="Link to this definition"></a></dt>
+<dd><p>If <a class="reference internal" href="#f/ed_input_vars/cg_grad" title="f/ed_input_vars/cg_grad"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_grad</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">1</span></code> , select which version of <code class="code docutils literal notranslate"><span class="pre">minimize.f</span></code> to use</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">T</span></code> : Lichtenstein (newer)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">F</span></code> : Krauth (older)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_niter">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_niter</span></span><a class="headerlink" href="#f/ed_input_vars/cg_niter" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of iterations in the bath fitting procedure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>500</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_norm">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_norm</span></span><a class="headerlink" href="#f/ed_input_vars/cg_norm" title="Link to this definition"></a></dt>
+<dd><p>Which norm to use in the evaluation of the <span class="math notranslate nohighlight">\(\chi^{2}\)</span> for matrix quantities.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">ELEMENTAL</span></code> : <span class="math notranslate nohighlight">\(\chi^{2}\)</span> is the sum of each component's <span class="math notranslate nohighlight">\(\chi^{2}\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">FROBENIUS</span></code> : <span class="math notranslate nohighlight">\(\chi^{2}\)</span> is calculated on the Frobenius norm (Matrix distance)</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Frobenius norm is currently implemented only for <a class="reference internal" href="../06_bath.html#f/ed_bath" title="f/ed_bath: Routines for bath creation and manipulation"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_bath</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">replica,</span> <span class="pre">general</span></code>.    Also, for <a class="reference internal" href="#f/ed_input_vars/cg_pow" title="f/ed_input_vars/cg_pow"><code class="xref f f-var docutils literal notranslate"><span class="pre">cg_pow</span></code></a> <span class="math notranslate nohighlight">\(\neq 2\)</span>  the Frobenius norm is ill-defined, at least with respect    to its usual mathematical meaning. The behavior of <code class="code docutils literal notranslate"><span class="pre">cg_norm=frobenius</span></code> might be changed or    removed in future versions of the code, breaking back-compatibility.</p>
+</div>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=12)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>ELEMENTAL</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_pow">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_pow</span></span><a class="headerlink" href="#f/ed_input_vars/cg_pow" title="Link to this definition"></a></dt>
+<dd><p>Power exponent in the <span class="math notranslate nohighlight">\(\chi^{2}\)</span> , according to  <span class="math notranslate nohighlight">\(\vert \mathcal{G}_{0}(i\omega_{n}) - G_{0}^{\mathrm{And}}(i\omega_{n}) \vert ^{\mathrm{cg\_pow}}\)</span> or  <span class="math notranslate nohighlight">\(\vert \Delta(i\omega_{n})- \Delta^{\mathrm{And}}(i\omega_{n}) \vert ^{\mathrm{cg\_pow}}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_scheme">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_scheme</span></span><a class="headerlink" href="#f/ed_input_vars/cg_scheme" title="Link to this definition"></a></dt>
+<dd><p>Which quantity to use in the bath fitting routine:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">WEISS</span></code> : the lattice Weiss field Green's function <span class="math notranslate nohighlight">\(\mathcal{G}_{0}(i\omega_{n})\)</span> is fitted</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">DELTA</span></code> : the lattice Hybridization function <span class="math notranslate nohighlight">\(\Delta(i\omega_{n})\)</span> is fitted</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=6)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>Weiss</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_stop">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_stop</span></span><a class="headerlink" href="#f/ed_input_vars/cg_stop" title="Link to this definition"></a></dt>
+<dd><p>Conjugate-gradient stopping condition</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">0</span></code> : <code class="code docutils literal notranslate"><span class="pre">1</span> <span class="pre">.and.</span> <span class="pre">2</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1</span></code> : <span class="math notranslate nohighlight">\(\vert F_{n-1} -F_{n} \vert &lt; \mathrm{tol} \cdot (1+F_{n})\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">2</span></code> : <span class="math notranslate nohighlight">\(\vert\vert x_{n-1} -x_{n} \vert\vert &lt;\mathrm{tol} \cdot (1+ \vert\vert x_{n} \vert\vert\)</span>)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cg_weight">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cg_weight</span></span><a class="headerlink" href="#f/ed_input_vars/cg_weight" title="Link to this definition"></a></dt>
+<dd><p>Weight assigned to the imaginary frequency data points in the calculation of the <span class="math notranslate nohighlight">\(\chi^{2}\)</span></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">0</span></code> : <span class="math notranslate nohighlight">\(1\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1</span></code> : <span class="math notranslate nohighlight">\(\frac{1}{n}\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">2</span></code> : <span class="math notranslate nohighlight">\(\frac{1}{\omega_{n}}\)</span></p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/chidens_flag">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">chidens_flag</span></span><a class="headerlink" href="#f/ed_input_vars/chidens_flag" title="Link to this definition"></a></dt>
+<dd><p>Flag to activate charge susceptibility evaluation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>chidens_flag</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/chiexct_flag">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">chiexct_flag</span></span><a class="headerlink" href="#f/ed_input_vars/chiexct_flag" title="Link to this definition"></a></dt>
+<dd><p>Flag to activate excitonic susceptibility evaluation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>chiexct_flag</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/chipair_flag">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">chipair_flag</span></span><a class="headerlink" href="#f/ed_input_vars/chipair_flag" title="Link to this definition"></a></dt>
+<dd><p>Flag to activate pairing susceptibility evaluation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>chipair_flag</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/chispin_flag">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">chispin_flag</span></span><a class="headerlink" href="#f/ed_input_vars/chispin_flag" title="Link to this definition"></a></dt>
+<dd><p>Flag to activate spin susceptibility evaluation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>chispin_flag</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/cutoff">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">cutoff</span></span><a class="headerlink" href="#f/ed_input_vars/cutoff" title="Link to this definition"></a></dt>
+<dd><p>Spectrum cut-off, used to determine the number states to be retained</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-9</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/deltasc">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">deltasc</span></span><a class="headerlink" href="#f/ed_input_vars/deltasc" title="Link to this definition"></a></dt>
+<dd><p>Value of the SC symmetry breaking term (only used if <a class="reference internal" href="#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">superc</span></code> )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>2d-2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/dmft_error">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">dmft_error</span></span><a class="headerlink" href="#f/ed_input_vars/dmft_error" title="Link to this definition"></a></dt>
+<dd><p>Error threshold for DMFT convergence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>dmft_error</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1d-5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_all_g">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_all_g</span></span><a class="headerlink" href="#f/ed_input_vars/ed_all_g" title="Link to this definition"></a></dt>
+<dd><p>Flag to evaluate all the components of the impurity Green`s functions irrespective of the symmetries</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_finite_temp">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_finite_temp</span></span><a class="headerlink" href="#f/ed_input_vars/ed_finite_temp" title="Link to this definition"></a></dt>
+<dd><p>Flag to set whether the problem is at finite temperature.If <code class="code docutils literal notranslate"><span class="pre">T</span></code> then <a class="reference internal" href="#f/ed_input_vars/lanc_nstates_total" title="f/ed_input_vars/lanc_nstates_total"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_nstates_total</span></code></a> must be greater than 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_hw_bath">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_hw_bath</span></span><a class="headerlink" href="#f/ed_input_vars/ed_hw_bath" title="Link to this definition"></a></dt>
+<dd><p>Half-bandwidth for bath level initialization if <a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">normal,</span> <span class="pre">hybrid</span></code> . The levels will be equispaced in the range  <code class="code docutils literal notranslate"><span class="pre">[-hw,hw]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>2d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_input_file">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_input_file</span></span><a class="headerlink" href="#f/ed_input_vars/ed_input_file" title="Link to this definition"></a></dt>
+<dd><p>Name of input file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=200)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_mode">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_mode</span></span><a class="headerlink" href="#f/ed_input_vars/ed_mode" title="Link to this definition"></a></dt>
+<dd><p>Flag to set the ED mode</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">normal</span></code> : normal</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">superc</span></code> : s-wave superconductive (singlet pairing)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nonsu2</span></code> : broken SU(2) symmetry</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=7)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>normal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_obs_all">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_obs_all</span></span><a class="headerlink" href="#f/ed_input_vars/ed_obs_all" title="Link to this definition"></a></dt>
+<dd><p>Flag to print observables for every loop</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_offset_bath">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_offset_bath</span></span><a class="headerlink" href="#f/ed_input_vars/ed_offset_bath" title="Link to this definition"></a></dt>
+<dd><p>Offset for the initialization of diagonal terms if <a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">replica,</span> <span class="pre">general</span></code> . The replicas will be equally spaced in the range <code class="code docutils literal notranslate"><span class="pre">[-offset,offset]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_chidens">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_chidens</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_chidens" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity dens susceptibility, if calculated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_chiexct">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_chiexct</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_chiexct" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity exct susceptibility, if calculated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_chipair">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_chipair</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_chipair" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity pair susceptibility, if calculated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_chispin">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_chispin</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_chispin" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity spin susceptibility, if calculated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_g">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_g</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_g" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity Green`s functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_g0">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_g0</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_g0" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity non-interacting Green`s functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_print_sigma">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_print_sigma</span></span><a class="headerlink" href="#f/ed_input_vars/ed_print_sigma" title="Link to this definition"></a></dt>
+<dd><p>Flag to print impurity Self-energies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_read_umatrix">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_read_umatrix</span></span><a class="headerlink" href="#f/ed_input_vars/ed_read_umatrix" title="Link to this definition"></a></dt>
+<dd><p>Flag to enable ( <code class="code docutils literal notranslate"><span class="pre">T</span></code> ) or not (<code class="code docutils literal notranslate"><span class="pre">F</span></code> ) reading the two-body terms from an external filedefined by <a class="reference internal" href="#f/ed_input_vars/umatrix_file" title="f/ed_input_vars/umatrix_file"><code class="xref f f-var docutils literal notranslate"><span class="pre">umatrix_file</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>ed_read_umatrix</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_sectors">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_sectors</span></span><a class="headerlink" href="#f/ed_input_vars/ed_sectors" title="Link to this definition"></a></dt>
+<dd><p>Flag to reduce sector scan for the spectrum to specific sectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_sectors_shift">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_sectors_shift</span></span><a class="headerlink" href="#f/ed_input_vars/ed_sectors_shift" title="Link to this definition"></a></dt>
+<dd><p>Additional sectors to be evaluated if <a class="reference internal" href="#f/ed_input_vars/ed_sectors" title="f/ed_input_vars/ed_sectors"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_sectors</span></code></a> is set. These are sectors with all the quantum numbers varying of at most by <a class="reference internal" href="#f/ed_input_vars/ed_sectors_shift" title="f/ed_input_vars/ed_sectors_shift"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_sectors_shift</span></code></a> around the sectors listed in <a class="reference internal" href="#f/ed_input_vars/sectorfile" title="f/ed_input_vars/sectorfile"><code class="xref f f-var docutils literal notranslate"><span class="pre">sectorfile</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_solve_offdiag_gf">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_solve_offdiag_gf</span></span><a class="headerlink" href="#f/ed_input_vars/ed_solve_offdiag_gf" title="Link to this definition"></a></dt>
+<dd><p>Flag to select the calculation of the off-diagonal impurity GF. Set to <code class="code docutils literal notranslate"><span class="pre">T</span></code> by default if <a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a> is not <code class="code docutils literal notranslate"><span class="pre">normal</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_sparse_h">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_sparse_h</span></span><a class="headerlink" href="#f/ed_input_vars/ed_sparse_h" title="Link to this definition"></a></dt>
+<dd><p>Flag to select  storage of the Fock space Hamiltonian as a sparse matrix</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">T</span></code> : <span class="math notranslate nohighlight">\(H\)</span> is stored. CPU intensive</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">F</span></code> : on-the-fly <span class="math notranslate nohighlight">\(H \cdot v\)</span> product is stored. Memory intensive</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_total_ud">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_total_ud</span></span><a class="headerlink" href="#f/ed_input_vars/ed_total_ud" title="Link to this definition"></a></dt>
+<dd><p>Flag to select which type of quantum numbers have to be considered (if <a class="reference internal" href="#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">normal</span></code>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">T</span></code> : blocks have different total <span class="math notranslate nohighlight">\(N_{\uparrow}\)</span> and <span class="math notranslate nohighlight">\(N_{\downarrow}\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">F</span></code> : blocks have different total <span class="math notranslate nohighlight">\(N^{\alpha}_{\uparrow}\)</span> and <span class="math notranslate nohighlight">\(N^{\alpha}_{\downarrow}\)</span></p></li>
+</ul>
+</div></blockquote>
+<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> is the orbital index. Speeds up calculation in the case where orbitals are not hybridized</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>ed_total_ud</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_twin">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_twin</span></span><a class="headerlink" href="#f/ed_input_vars/ed_twin" title="Link to this definition"></a></dt>
+<dd><p>Flag to reduce ( <code class="code docutils literal notranslate"><span class="pre">T</span></code> ) or not (<code class="code docutils literal notranslate"><span class="pre">F</span></code> ) the number of visited sector using twin symmetry</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>ed_twin</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_use_kanamori">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_use_kanamori</span></span><a class="headerlink" href="#f/ed_input_vars/ed_use_kanamori" title="Link to this definition"></a></dt>
+<dd><p>Flag to enable ( <code class="code docutils literal notranslate"><span class="pre">T</span></code> ) or not (<code class="code docutils literal notranslate"><span class="pre">F</span></code> ) the use of the input variables <a class="reference internal" href="#f/ed_input_vars/uloc" title="f/ed_input_vars/uloc"><code class="xref f f-var docutils literal notranslate"><span class="pre">ULOC</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/ust" title="f/ed_input_vars/ust"><code class="xref f f-var docutils literal notranslate"><span class="pre">UST</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jh" title="f/ed_input_vars/jh"><code class="xref f f-var docutils literal notranslate"><span class="pre">JH</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jx" title="f/ed_input_vars/jx"><code class="xref f f-var docutils literal notranslate"><span class="pre">JX</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/jp" title="f/ed_input_vars/jp"><code class="xref f f-var docutils literal notranslate"><span class="pre">JP</span></code></a> for Hubbard-Kanamori coefficients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>ed_use_kanamori</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_verbose">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_verbose</span></span><a class="headerlink" href="#f/ed_input_vars/ed_verbose" title="Link to this definition"></a></dt>
+<dd><p>Verbosity level:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">0</span></code> : almost nothing</p></li>
+<li><p>…</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">3</span></code> : most of the verbose output</p></li>
+<li><p>…</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">5</span></code> : everything. Really, everything</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>3</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/eps">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">eps</span></span><a class="headerlink" href="#f/ed_input_vars/eps" title="Link to this definition"></a></dt>
+<dd><p>Broadening on the real frequency axis for Green's function and Susceptibility calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>eps</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1d-2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/exc_field">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">exc_field</span></span><a class="headerlink" href="#f/ed_input_vars/exc_field" title="Link to this definition"></a></dt>
+<dd><p>External field coupling to exciton order parameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(4)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/g_ph">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">g_ph</span></span><a class="headerlink" href="#f/ed_input_vars/g_ph" title="Link to this definition"></a></dt>
+<dd><p>Electron-phonon coupling constant all</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>complex(•, •)</p>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><p>allocatable</p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/g_ph_diag">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">g_ph_diag</span></span><a class="headerlink" href="#f/ed_input_vars/g_ph_diag" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(•)</p>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><p>allocatable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/gphfile">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">gphfile</span></span><a class="headerlink" href="#f/ed_input_vars/gphfile" title="Link to this definition"></a></dt>
+<dd><p>File of Phonon couplings. Set to NONE to use only density couplings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=100)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>NONE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/gs_threshold">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">gs_threshold</span></span><a class="headerlink" href="#f/ed_input_vars/gs_threshold" title="Link to this definition"></a></dt>
+<dd><p>Energy threshold for ground state degeneracy loop up</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-9</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/hfile">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">hfile</span></span><a class="headerlink" href="#f/ed_input_vars/hfile" title="Link to this definition"></a></dt>
+<dd><p>File where to retrieve/store the bath parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=100)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>hamiltonian[.used/restart]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/hfmode">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">hfmode</span></span><a class="headerlink" href="#f/ed_input_vars/hfmode" title="Link to this definition"></a></dt>
+<dd><p>Flag to set the form of the Hubbard-Kanamori interaction</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">T</span></code> : <span class="math notranslate nohighlight">\(U(n_{\uparrow}-\frac{1}{2})(n_{\downarrow}-\frac{1}{2})\)</span></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">F</span></code> : <span class="math notranslate nohighlight">\(Un_{\uparrow}n_{\downarrow}\)</span></p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/hlocfile">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">hlocfile</span></span><a class="headerlink" href="#f/ed_input_vars/hlocfile" title="Link to this definition"></a></dt>
+<dd><p>File to read the input local H from</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=100)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>inputHLOC.in</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/jh">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">jh</span></span><a class="headerlink" href="#f/ed_input_vars/jh" title="Link to this definition"></a></dt>
+<dd><p>Hund's coupling constant</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>jh</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0.d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/jp">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">jp</span></span><a class="headerlink" href="#f/ed_input_vars/jp" title="Link to this definition"></a></dt>
+<dd><p>Coupling constant for the Pair-hopping interaction term</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>jp</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0.d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/jx">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">jx</span></span><a class="headerlink" href="#f/ed_input_vars/jx" title="Link to this definition"></a></dt>
+<dd><p>Coupling constant for the spin-eXchange interaction term</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>jx</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0.d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/jz_basis">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">jz_basis</span></span><a class="headerlink" href="#f/ed_input_vars/jz_basis" title="Link to this definition"></a></dt>
+<dd><p>Flag to enable the <span class="math notranslate nohighlight">\(J_{z}\)</span> basis in SOC calculations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/jz_max">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">jz_max</span></span><a class="headerlink" href="#f/ed_input_vars/jz_max" title="Link to this definition"></a></dt>
+<dd><p>Flag to enable a maximum value for <span class="math notranslate nohighlight">\(J_{z}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/jz_max_value">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">jz_max_value</span></span><a class="headerlink" href="#f/ed_input_vars/jz_max_value" title="Link to this definition"></a></dt>
+<dd><p>Maximum value for Jz</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1000d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_dim_threshold">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_dim_threshold</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_dim_threshold" title="Link to this definition"></a></dt>
+<dd><p>Minimal sector dimension for Lanczos diagonalization. Smaller sectors will be solved with Exact Diagonalization  provided by Lapack</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1024</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_method">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_method</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_method" title="Link to this definition"></a></dt>
+<dd><p>Flag to select the Lanczos method to be used in the determination of the spectrum.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">ARPACK</span></code> : uses the Arnoldi algorithm</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">LANCZOS</span></code>: uses an in-house Lanczos algorithm (limited to zero temperature)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=12)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>ARPACK</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_ncv_add">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_ncv_add</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_ncv_add" title="Link to this definition"></a></dt>
+<dd><p>Offset to add to the size of the block to prevent it to become too small according to <span class="math notranslate nohighlight">\(N_{cv}=\mathrm{lanc\_ncv\_factor} \cdot \mathrm{Neigen} + \mathrm{lanc\_ncv\_add}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_ncv_factor">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_ncv_factor</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_ncv_factor" title="Link to this definition"></a></dt>
+<dd><p>Size of the block used in Lanczos-Arpack by multiplying the required <code class="code docutils literal notranslate"><span class="pre">Neigen</span></code> according to  <span class="math notranslate nohighlight">\(N_{cv}=\mathrm{lanc\_ncv\_factor} \cdot \mathrm{Neigen} + \mathrm{lanc\_ncv\_add}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>10</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_ngfiter">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_ngfiter</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_ngfiter" title="Link to this definition"></a></dt>
+<dd><p>Number of Lanczos iteration in GF determination. Number of moments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>200</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_niter">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_niter</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_niter" title="Link to this definition"></a></dt>
+<dd><p>Max number of Lanczos iterations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>512</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_nstates_sector">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_nstates_sector</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_nstates_sector" title="Link to this definition"></a></dt>
+<dd><p>Max number of required eigenvalues per sector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_nstates_step">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_nstates_step</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_nstates_step" title="Link to this definition"></a></dt>
+<dd><p>Number of states added at each step for finite-temperature calculations: if the latest state included in thepartition function has a Boltzmann weight higher than <a class="reference internal" href="#f/ed_input_vars/cutoff" title="f/ed_input_vars/cutoff"><code class="xref f f-var docutils literal notranslate"><span class="pre">cutoff</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/lanc_nstates_total" title="f/ed_input_vars/lanc_nstates_total"><code class="xref f f-var docutils literal notranslate"><span class="pre">lanc_nstates_total</span></code></a> will be increased by this amount at the next DMFT iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_nstates_total">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_nstates_total</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_nstates_total" title="Link to this definition"></a></dt>
+<dd><p>Max number of states contributing to the partition function for finite-temperature calculations.It must be set to <code class="code docutils literal notranslate"><span class="pre">1</span></code> for zero-temperature calculations, and to a greater value for finite-temperature calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lanc_tolerance">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lanc_tolerance</span></span><a class="headerlink" href="#f/ed_input_vars/lanc_tolerance" title="Link to this definition"></a></dt>
+<dd><p>Tolerance for the Lanczos iterations as used in Arpack and plain Lanczos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-18</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lfit">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lfit</span></span><a class="headerlink" href="#f/ed_input_vars/lfit" title="Link to this definition"></a></dt>
+<dd><p>Number of frequencies for bath fitting</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>lfit</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1000</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lmats">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lmats</span></span><a class="headerlink" href="#f/ed_input_vars/lmats" title="Link to this definition"></a></dt>
+<dd><p>Number of Matsubara frequencies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>lmats</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>4096</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/logfile">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">logfile</span></span><a class="headerlink" href="#f/ed_input_vars/logfile" title="Link to this definition"></a></dt>
+<dd><p>Logfile unit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><p>save</p>
+</dd>
+<dt class="field-odd">Bindings<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Language = <strong>c</strong>, Name = <strong>logfile</strong></p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>6</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lpos">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lpos</span></span><a class="headerlink" href="#f/ed_input_vars/lpos" title="Link to this definition"></a></dt>
+<dd><p>Number of points in Probability Distribution Function lattice for phonons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>lpos</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>100</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/lreal">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">lreal</span></span><a class="headerlink" href="#f/ed_input_vars/lreal" title="Link to this definition"></a></dt>
+<dd><p>Number of real-axis frequencies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>lreal</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>5000</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ltau">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ltau</span></span><a class="headerlink" href="#f/ed_input_vars/ltau" title="Link to this definition"></a></dt>
+<dd><p>Number of imaginary time points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>ltau</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1024</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nbath">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nbath</span></span><a class="headerlink" href="#f/ed_input_vars/nbath" title="Link to this definition"></a></dt>
+<dd><p>Number of bath sites:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">normal</span></code> : number of bath sites per orbital</p></li>
+<li><p><a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">hybrid</span></code> : total number of bath sites</p></li>
+<li><p><a class="reference internal" href="#f/ed_input_vars/bath_type" title="f/ed_input_vars/bath_type"><code class="xref f f-var docutils literal notranslate"><span class="pre">bath_type</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">replica/general</span></code> : number of replicas</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>nbath</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>6</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ncoeff">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ncoeff</span></span><a class="headerlink" href="#f/ed_input_vars/ncoeff" title="Link to this definition"></a></dt>
+<dd><p>Multiplier for the <code class="code docutils literal notranslate"><span class="pre">ndelta</span></code> value if <a class="reference internal" href="#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> and its error are read from a file ( <span class="math notranslate nohighlight">\(\mathrm{ndelta} \rightarrow \mathrm{ndelta} \cdot \mathrm{ncoeff}\)</span> )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ndelta">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ndelta</span></span><a class="headerlink" href="#f/ed_input_vars/ndelta" title="Link to this definition"></a></dt>
+<dd><p>Initial chemical potential variation for fixed-density calculations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nerr">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nerr</span></span><a class="headerlink" href="#f/ed_input_vars/nerr" title="Link to this definition"></a></dt>
+<dd><p>Error threshold for fixed-density calculations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1d-4</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nloop">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nloop</span></span><a class="headerlink" href="#f/ed_input_vars/nloop" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of DMFT loops</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>nloop</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>100</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/norb">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">norb</span></span><a class="headerlink" href="#f/ed_input_vars/norb" title="Link to this definition"></a></dt>
+<dd><p>Number of impurity orbitals (max <code class="code docutils literal notranslate"><span class="pre">5</span></code> )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>norb</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nph">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nph</span></span><a class="headerlink" href="#f/ed_input_vars/nph" title="Link to this definition"></a></dt>
+<dd><p>Max number of phonons allowed (cut off)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>nph</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nread">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nread</span></span><a class="headerlink" href="#f/ed_input_vars/nread" title="Link to this definition"></a></dt>
+<dd><p>Target occupation value for fixed-density calculations. If set to <code class="code docutils literal notranslate"><span class="pre">0.0</span></code> the calculation is assumed to be at fixed <a class="reference internal" href="#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>nread</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nspin">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nspin</span></span><a class="headerlink" href="#f/ed_input_vars/nspin" title="Link to this definition"></a></dt>
+<dd><p>If <code class="code docutils literal notranslate"><span class="pre">1</span></code>, assume <span class="math notranslate nohighlight">\(H_{\downarrow}\)</span> = <span class="math notranslate nohighlight">\(H_{\uparrow}\)</span> . If <code class="code docutils literal notranslate"><span class="pre">2</span></code> , the Hamiltonian needs to explicitly include spin-up and spin-down blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>nspin</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/nsuccess">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">nsuccess</span></span><a class="headerlink" href="#f/ed_input_vars/nsuccess" title="Link to this definition"></a></dt>
+<dd><p>Number of repeated success to fall below convergence threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>nsuccess</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/pair_field">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">pair_field</span></span><a class="headerlink" href="#f/ed_input_vars/pair_field" title="Link to this definition"></a></dt>
+<dd><p>Pair field per orbital (max 15) coupling to s-wave order parameter component which explicitly appears in the impurity Hamiltonian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(15)</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>pair_field</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ph_type">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ph_type</span></span><a class="headerlink" href="#f/ed_input_vars/ph_type" title="Link to this definition"></a></dt>
+<dd><p>Shape of the e part of the e-ph interaction:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">1</span></code> = orbital occupation</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">2</span></code> = orbital hybridization</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/print_input_vars">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">print_input_vars</span></span><a class="headerlink" href="#f/ed_input_vars/print_input_vars" title="Link to this definition"></a></dt>
+<dd><p>Flag to toggle the printing on the terminal output of a list of input variables and their values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/print_sector_eigenvalues">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">print_sector_eigenvalues</span></span><a class="headerlink" href="#f/ed_input_vars/print_sector_eigenvalues" title="Link to this definition"></a></dt>
+<dd><p>Flag to toggle the printing of the eigenvalues of each sectors to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/rdm_flag">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">rdm_flag</span></span><a class="headerlink" href="#f/ed_input_vars/rdm_flag" title="Link to this definition"></a></dt>
+<dd><p>Flag to activate Reduced Density Matrix evaluation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>F</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/sb_field">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">sb_field</span></span><a class="headerlink" href="#f/ed_input_vars/sb_field" title="Link to this definition"></a></dt>
+<dd><p>Value of a symmetry breaking field for magnetic solutions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>sb_field</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1d-1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/sectorfile">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">sectorfile</span></span><a class="headerlink" href="#f/ed_input_vars/sectorfile" title="Link to this definition"></a></dt>
+<dd><p>File where to retrieve/store the sectors contributing to the spectrum</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=100)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>sectors[.used/restart]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/spin_field_x">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">spin_field_x</span></span><a class="headerlink" href="#f/ed_input_vars/spin_field_x" title="Link to this definition"></a></dt>
+<dd><p>Magnetic field per orbital coupling to X-spin component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(•)</p>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><p>allocatable</p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/spin_field_y">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">spin_field_y</span></span><a class="headerlink" href="#f/ed_input_vars/spin_field_y" title="Link to this definition"></a></dt>
+<dd><p>Magnetic field per orbital coupling to Y-spin component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(•)</p>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><p>allocatable</p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/spin_field_z">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">spin_field_z</span></span><a class="headerlink" href="#f/ed_input_vars/spin_field_z" title="Link to this definition"></a></dt>
+<dd><p>Magnetic field per orbital coupling to Z-spin component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(•)</p>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><p>allocatable</p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>zero</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/uloc">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">uloc</span></span><a class="headerlink" href="#f/ed_input_vars/uloc" title="Link to this definition"></a></dt>
+<dd><p>Values of the local interaction per orbital (max <code class="code docutils literal notranslate"><span class="pre">5</span></code> )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real(5)</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>uloc</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(/( 2d0,i=1,Norb )/)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/umatrix_file">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">umatrix_file</span></span><a class="headerlink" href="#f/ed_input_vars/umatrix_file" title="Link to this definition"></a></dt>
+<dd><p>File containing the list of two-body operators</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>character(len=100)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>umatrix[.used/restart]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/ust">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ust</span></span><a class="headerlink" href="#f/ed_input_vars/ust" title="Link to this definition"></a></dt>
+<dd><p>Value of the inter-orbital interaction term</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>ust</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/w0_ph">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">w0_ph</span></span><a class="headerlink" href="#f/ed_input_vars/w0_ph" title="Link to this definition"></a></dt>
+<dd><p>Phonon frequency</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/wfin">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">wfin</span></span><a class="headerlink" href="#f/ed_input_vars/wfin" title="Link to this definition"></a></dt>
+<dd><p>Maximum value of the real frequency range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>wfin</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>5d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/wini">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">wini</span></span><a class="headerlink" href="#f/ed_input_vars/wini" title="Link to this definition"></a></dt>
+<dd><p>Minimum value of the real frequency range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>wini</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>-5d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/xmax">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">xmax</span></span><a class="headerlink" href="#f/ed_input_vars/xmax" title="Link to this definition"></a></dt>
+<dd><p>Maximum of the x-range for the local lattice probability distribution function (phonons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>xmax</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>3d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/xmin">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">xmin</span></span><a class="headerlink" href="#f/ed_input_vars/xmin" title="Link to this definition"></a></dt>
+<dd><p>Minimum of the x-range for the local lattice  probability distribution function (phonons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>xmin</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>-3d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="f variable">
+<dt class="sig sig-object f" id="f/ed_input_vars/xmu">
+<span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">xmu</span></span><a class="headerlink" href="#f/ed_input_vars/xmu" title="Link to this definition"></a></dt>
+<dd><p>Chemical potential. If <a class="reference internal" href="#f/ed_input_vars/hfmode" title="f/ed_input_vars/hfmode"><code class="xref f f-var docutils literal notranslate"><span class="pre">HFMODE</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">T</span></code>, <a class="reference internal" href="#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">0.d0</span></code> indicates half-filling condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>real</p>
+</dd>
+<dt class="field-even">Bindings<span class="colon">:</span></dt>
+<dd class="field-even"><p>Language = <strong>c</strong>, Name = <strong>xmu</strong></p>
+</dd>
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0d0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Subroutines and functions</p>
+<dl>
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_read_input">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_read_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputunit</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_input_vars/ed_read_input" title="Link to this definition"></a></dt>
+<dd><p>This functions reads the input file provided by <code class="code docutils literal notranslate"><span class="pre">INPUTunit</span></code> and sets the global variables accordingly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputunit</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+<dt class="field-even">Use <span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref f f-mod docutils literal notranslate"><span class="pre">mpi</span></code>, <a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_MPI.html#f/sf_mpi" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_mpi</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_input_vars/ed_update_input">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_input_vars/</span></span><span class="sig-name descname"><span class="pre">ed_update_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">vals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_input_vars/ed_update_input" title="Link to this definition"></a></dt>
+<dd><p>This functions updates some variables in the input file, namely</p>
+<p><a class="reference internal" href="#f/ed_input_vars/exc_field" title="f/ed_input_vars/exc_field"><code class="xref f f-var docutils literal notranslate"><span class="pre">exc_field</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/pair_field" title="f/ed_input_vars/pair_field"><code class="xref f f-var docutils literal notranslate"><span class="pre">pair_field</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/exc_field" title="f/ed_input_vars/exc_field"><code class="xref f f-var docutils literal notranslate"><span class="pre">exc_field</span></code></a>,</p>
+<p><a class="reference internal" href="#f/ed_input_vars/spin_field_x" title="f/ed_input_vars/spin_field_x"><code class="xref f f-var docutils literal notranslate"><span class="pre">spin_field_x</span></code></a>, <a class="reference internal" href="#f/ed_input_vars/spin_field_y" title="f/ed_input_vars/spin_field_y"><code class="xref f f-var docutils literal notranslate"><span class="pre">spin_field_y</span></code></a>, and <a class="reference internal" href="#f/ed_input_vars/spin_field_z" title="f/ed_input_vars/spin_field_z"><code class="xref f f-var docutils literal notranslate"><span class="pre">spin_field_z</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong><em> [</em><em>character(len=*)</em><em>]</em> – the name of the variable to update</p></li>
+<li><p><strong>vals</strong> (•)<em> [</em><em>real</em><em>]</em> – the new value of the variable</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../02_main.html" class="btn btn-neutral float-left" title="Impurity Problem Solver Routines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="02_ed_vars_global.html" class="btn btn-neutral float-right" title="Global Variables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Lorenzo Crippa and Adriano Amaricci.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

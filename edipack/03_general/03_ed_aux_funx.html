@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auxiliary Functions &mdash; EDIpack 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=5c5534e0" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ce74c6a2"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Setup" href="04_ed_setup.html" />
+    <link rel="prev" title="Global Variables" href="02_ed_vars_global.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            EDIpack
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-source">From source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#building">Building</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../installation.html#gnu-make">GNU Make</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#installing">Installing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-anaconda">From Anaconda</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart/01_anderson.html">Solving a Single Impurity Anderson model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/01_anderson.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/01_anderson.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart/02_dmft.html">Solving Dynamical Mean-Field Theory with <cite>EDIpack</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/02_dmft.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../quickstart/02_dmft.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Further examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/01_bhz.html">Interacting BHZ model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/01_bhz.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/01_bhz.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/02_ahm.html">Attractive Hubbard model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/02_ahm.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/02_ahm.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/03_excBHZ.html">In-plane spin excitons in QSHI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/03_excBHZ.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/03_excBHZ.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../structure.html">Library structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../structure.html#edipack-edipack"><strong>EDIpack</strong>: <span class="xref std std-ref">edipack</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structure.html#edipack2ineq-edipack2ineq"><strong>EDIpack2ineq</strong>: <span class="xref std std-ref">edipack2ineq</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structure.html#edipack-c-bindings-edipack-cbindings"><strong>EDIpack C-bindings</strong>: <span class="xref std std-ref">edipack_cbindings</span></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../edipack.html">The EDIpack Fortran Library</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../01_edipackmodule.html">EDIpack Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../02_main.html">Impurity Problem Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../edipack.html#general-environment">General Environment</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_ed_input_vars.html">Input Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Auxiliary Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_ed_setup.html">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ed_parse_umatrix.html">Parse Umatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../04_classes/01_ed_sparse_matrix.html">Sparse Matrices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../04_classes/02_ed_eigenspace.html">EigenSpace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../04_classes/03_ed_gfmatrix.html">GFmatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#symmetry-sectors"><span class="xref std std-ref">Symmetry Sectors</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../05_sectors.html">Quantum Numbers Sectors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html">Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-auxiliary">Bath Auxiliary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/00_ed_vars_global.html">Bath class definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/01_ed_bath_aux.html">Bath auxiliary routines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/02_ed_bath_dim.html">Bath dimensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/04_ed_bath_replica.html">Replica bath setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-dmft"><span class="xref std std-ref">Bath DMFT</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/05_ed_bath_dmft.html">Bath class implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../06_bath.html#bath-functions"><span class="xref std std-ref">Bath Functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../06_bath/06_ed_bath_functions.html">Bath  dynamical functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#hamiltonian"><span class="xref std std-ref">Hamiltonian</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html#normal-mode">Normal mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian_common.html">MPI all-2-all transposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../normal/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html#superconductive-mode">Superconductive mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../superc/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../superc/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../07_hamiltonian.html#non-su-2-mode">Non-SU(2) mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#exact-diagonalization"><span class="xref std std-ref">Exact Diagonalization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html"><span class="xref std std-ref">Impurity Diagonalization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../08_diag/impurity_diag.html">Impurity diagonalization interface</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/01_diag.html">Exact Diagonalization: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/01_diag.html">Exact Diagonalization: Superconductive</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../08_diag.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/01_diag.html">Exact Diagonalization: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#green-s-functions"><span class="xref std std-ref">Green's Functions</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html"><span class="xref std std-ref">Impurity Green's functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../09_greensfunctions/impurity_greensfunctions.html">Impurity Green's functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/03_greensfunctions.html">Green's Function calculation: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/03_greensfunctions.html">Green's Function calculation: Superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../09_greensfunctions.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/03_greensfunctions.html">Green's Function calculation: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#susceptibilities"><span class="xref std std-ref">Susceptibilities</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html"><span class="xref std std-ref">Impurity Susceptibilities</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../10_chifunctions/impurity_chifunctions.html">Impurity dynamical response functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#spin-channel"><span class="xref std std-ref">Spin channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_spin.html">Spin Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#charge-channel"><span class="xref std std-ref">Charge channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_dens.html">Charge Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#pair-channel"><span class="xref std std-ref">Pair channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_pair.html">Pair Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../10_chifunctions.html#exciton-channel"><span class="xref std std-ref">Exciton channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/04_chi_exct.html">Exciton Susceptibility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#observables"><span class="xref std std-ref">Observables</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html"><span class="xref std std-ref">Impurity Observables</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../11_observables/impurity_observables.html">Impurity Observables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/05_observables.html">Observables: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/05_observables.html">Observables: superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../11_observables.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/05_observables.html">Observables: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#reduced-density-matrix"><span class="xref std std-ref">Reduced Density Matrix</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html"><span class="xref std std-ref">Impurity Reduced Density Matrix</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../12_rdm/impurity_rdm.html">Impurity RDM</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../normal/06_rdm.html">Reduced Density Matrix: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../superc/06_rdm.html">Reduced Density Matrix: superconductivity</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../12_rdm.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../nonsu2/06_rdm.html">Reduced Density Matrix: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../13_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../14_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack2ineq</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../edipack2ineq.html">EDIpack for inequivalent impurities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/01_edipack2ineqmodule.html">EDIpack2ineq Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/02_main.html">Inequivalent Impurities Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#general-environment">General Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/03_general/02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/03_general/03_ed_aux_funx.html">Auxiliary Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/04_bath.html">Inequivalent Impurities Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/04_bath.html#bath-user"><span class="xref std std-ref">Bath User</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../edipack2ineq/04_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/04_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../edipack2ineq/04_bath/04_ed_bath_replica.html">Bath Replica</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/05_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../edipack2ineq.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../edipack2ineq/06_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack C-bindings</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../edipack_cbindings.html">EDIpack Fortran-C interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../c_bindings/01_vars.html">EDIpack Fortran-C interface: Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv48has_ineq"><code class="docutils literal notranslate"><span class="pre">has_ineq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44beta"><code class="docutils literal notranslate"><span class="pre">beta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chidens_flag"><code class="docutils literal notranslate"><span class="pre">chidens_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chiexct_flag"><code class="docutils literal notranslate"><span class="pre">chiexct_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chipair_flag"><code class="docutils literal notranslate"><span class="pre">chipair_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv412chispin_flag"><code class="docutils literal notranslate"><span class="pre">chispin_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv410dmft_error"><code class="docutils literal notranslate"><span class="pre">dmft_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv47ed_twin"><code class="docutils literal notranslate"><span class="pre">ed_twin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv411ed_total_ud"><code class="docutils literal notranslate"><span class="pre">ed_total_ud</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43eps"><code class="docutils literal notranslate"><span class="pre">eps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv42Jh"><code class="docutils literal notranslate"><span class="pre">Jh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv42Jp"><code class="docutils literal notranslate"><span class="pre">Jp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv42Jx"><code class="docutils literal notranslate"><span class="pre">Jx</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Lfit"><code class="docutils literal notranslate"><span class="pre">Lfit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Lmats"><code class="docutils literal notranslate"><span class="pre">Lmats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Lreal"><code class="docutils literal notranslate"><span class="pre">Lreal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Lpos"><code class="docutils literal notranslate"><span class="pre">Lpos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Ltau"><code class="docutils literal notranslate"><span class="pre">Ltau</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Nbath"><code class="docutils literal notranslate"><span class="pre">Nbath</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Nloop"><code class="docutils literal notranslate"><span class="pre">Nloop</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Norb"><code class="docutils literal notranslate"><span class="pre">Norb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43Nph"><code class="docutils literal notranslate"><span class="pre">Nph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45nread"><code class="docutils literal notranslate"><span class="pre">nread</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv45Nspin"><code class="docutils literal notranslate"><span class="pre">Nspin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv48Nsuccess"><code class="docutils literal notranslate"><span class="pre">Nsuccess</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv48sb_field"><code class="docutils literal notranslate"><span class="pre">sb_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44Uloc"><code class="docutils literal notranslate"><span class="pre">Uloc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43Ust"><code class="docutils literal notranslate"><span class="pre">Ust</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44wfin"><code class="docutils literal notranslate"><span class="pre">wfin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44wini"><code class="docutils literal notranslate"><span class="pre">wini</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44xmax"><code class="docutils literal notranslate"><span class="pre">xmax</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv44xmin"><code class="docutils literal notranslate"><span class="pre">xmin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/01_vars.html#_CPPv43xmu"><code class="docutils literal notranslate"><span class="pre">xmu</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../c_bindings/02_funcs.html">EDIpack Fortran-C interface: Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv410read_inputPc"><code class="docutils literal notranslate"><span class="pre">read_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N4PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N3PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N5PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv425get_bath_dimension_directv"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_direct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv429get_bath_dimension_symmetriesi"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_symmetries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415search_variablePdPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">search_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_sitePdP7int64_tddi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_ineqPdP7int64_tdPdi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_sitePdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_ineqPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n5PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n5PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n4PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n6PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n4PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n6PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_g0and_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_g0and_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_delta_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv412get_delta_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_spinchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_spinchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_denschiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_denschi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_pairchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_pairchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv414ed_get_exctchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_exctchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv419ed_get_impurity_rdmPNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_impurity_rdm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416init_solver_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423init_solver_site_nobathv"><code class="docutils literal notranslate"><span class="pre">init_solver_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv416init_solver_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv423init_solver_ineq_nobathi"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv410solve_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417solve_site_nobathii"><code class="docutils literal notranslate"><span class="pre">solve_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv410solve_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv417solve_ineq_nobathiii"><code class="docutils literal notranslate"><span class="pre">solve_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv415finalize_solveri"><code class="docutils literal notranslate"><span class="pre">finalize_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv413reset_umatrixv"><code class="docutils literal notranslate"><span class="pre">reset_umatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../c_bindings/02_funcs.html#_CPPv420add_twobody_operatoriiiiiiiid"><code class="docutils literal notranslate"><span class="pre">add_twobody_operator()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python projects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../edipack_python.html">Python projects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Browse code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../browsecode.html">Browse code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_aux_funx.html">E2I_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath.html">E2I_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath_fit.html">E2I_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath_replica.html">E2I_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_bath_user.html">E2I_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_io.html">E2I_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_main.html">E2I_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/e2i_vars_global.html">E2I_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_aux_funx.html">ED_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath.html">ED_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_aux.html">ED_BATH_AUX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_dim.html">ED_BATH_DIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_dmft.html">ED_BATH_DMFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_fit.html">ED_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_functions.html">ED_BATH_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_replica.html">ED_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_bath_user.html">ED_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_dens.html">ED_CHI_DENS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_exct.html">ED_CHI_EXCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_functions.html">ED_CHI_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_pair.html">ED_CHI_PAIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_chi_spin.html">ED_CHI_SPIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag.html">ED_DIAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag_nonsu2.html">ED_DIAG_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag_normal.html">ED_DIAG_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_diag_superc.html">ED_DIAG_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_eigenspace.html">ED_EIGENSPACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_common.html">ED_FIT_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_general.html">ED_FIT_GENERAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_hybrid.html">ED_FIT_HYBRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_normal.html">ED_FIT_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_fit_replica.html">ED_FIT_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gf_nonsu2.html">ED_GF_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gf_normal.html">ED_GF_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gf_superc.html">ED_GF_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_gfmatrix.html">ED_GFMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_greens_functions.html">ED_GREENS_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian.html">ED_HAMILTONIAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2.html">ED_HAMILTONIAN_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2_common.html">ED_HAMILTONIAN_NONSU2_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2_direct_hxv.html">ED_HAMILTONIAN_NONSU2_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_nonsu2_stored_hxv.html">ED_HAMILTONIAN_NONSU2_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal.html">ED_HAMILTONIAN_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal_common.html">ED_HAMILTONIAN_NORMAL_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal_direct_hxv.html">ED_HAMILTONIAN_NORMAL_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_normal_stored_hxv.html">ED_HAMILTONIAN_NORMAL_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc.html">ED_HAMILTONIAN_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc_common.html">ED_HAMILTONIAN_SUPERC_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc_direct_hxv.html">ED_HAMILTONIAN_SUPERC_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_hamiltonian_superc_stored_hxv.html">ED_HAMILTONIAN_SUPERC_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_input_vars.html">ED_INPUT_VARS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_io.html">ED_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_main.html">ED_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables.html">ED_OBSERVABLES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables_nonsu2.html">ED_OBSERVABLES_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables_normal.html">ED_OBSERVABLES_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_observables_superc.html">ED_OBSERVABLES_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_parse_umatrix.html">ED_PARSE_UMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm.html">ED_RDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm_nonsu2.html">ED_RDM_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm_normal.html">ED_RDM_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_rdm_superc.html">ED_RDM_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_sector.html">ED_SECTOR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_setup.html">ED_SETUP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_sparse_map.html">ED_SPARSE_MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_sparse_matrix.html">ED_SPARSE_MATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_vars_global.html">ED_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/ed_version.html">ED_VERSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack.html">EDIPACK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack2ineq.html">EDIPACK2INEQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack_c.html">EDIPACK_C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../browsesource/module/edipack_c_common.html">EDIPACK_C_COMMON</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack">EDIpack on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack2py">EDIpack2py on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/krivenko/edipack2triqs">EDIpack2Triqs on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/SciFortran/SciFortran">SciFortran on GitHub</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EDIpack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../edipack.html">The EDIpack Fortran Library</a></li>
+      <li class="breadcrumb-item active">Auxiliary Functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/edipack/03_general/03_ed_aux_funx.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="02_ed_vars_global.html" class="btn btn-neutral float-left" title="Global Variables" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="04_ed_setup.html" class="btn btn-neutral float-right" title="Setup" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="auxiliary-functions">
+<h1>Auxiliary Functions<a class="headerlink" href="#auxiliary-functions" title="Link to this heading"></a></h1>
+<p class="rubric" id="f/ed_aux_funx">Description</p>
+<p>Hosts a number of auxiliary procedures required in different parts of the code.
+Specifically, it implements: creation/annihilation fermionic operators, binary decomposition of integer representation of Fock states and setup the local impurity Hamiltonian</p>
+<p class="rubric">Quick access</p>
+<dl class="field-list simple">
+<dt class="field-odd">Routines<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#f/ed_aux_funx/allgather_vector_mpi" title="f/ed_aux_funx/allgather_vector_mpi"><code class="xref f f-func docutils literal notranslate"><span class="pre">allgather_vector_mpi()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/bdecomp" title="f/ed_aux_funx/bdecomp"><code class="xref f f-func docutils literal notranslate"><span class="pre">bdecomp()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/c" title="f/ed_aux_funx/c"><code class="xref f f-func docutils literal notranslate"><span class="pre">c()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/cdg" title="f/ed_aux_funx/cdg"><code class="xref f f-func docutils literal notranslate"><span class="pre">cdg()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/check_diag_imphloc" title="f/ed_aux_funx/check_diag_imphloc"><code class="xref f f-func docutils literal notranslate"><span class="pre">check_diag_imphloc()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/ed_reset_suffix" title="f/ed_aux_funx/ed_reset_suffix"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_reset_suffix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/ed_search_variable" title="f/ed_aux_funx/ed_search_variable"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_search_variable()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/ed_set_hloc" title="f/ed_aux_funx/ed_set_hloc"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_set_hloc()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/ed_set_suffix" title="f/ed_aux_funx/ed_set_suffix"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_set_suffix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/read_denschimatrix" title="f/ed_aux_funx/read_denschimatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_denschimatrix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/read_exctchimatrix" title="f/ed_aux_funx/read_exctchimatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_exctchimatrix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/read_impdmatrix" title="f/ed_aux_funx/read_impdmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_impdmatrix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/read_impgmatrix" title="f/ed_aux_funx/read_impgmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_impgmatrix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/read_pairchimatrix" title="f/ed_aux_funx/read_pairchimatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_pairchimatrix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/read_spinchimatrix" title="f/ed_aux_funx/read_spinchimatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_spinchimatrix()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/scatter_vector_mpi" title="f/ed_aux_funx/scatter_vector_mpi"><code class="xref f f-func docutils literal notranslate"><span class="pre">scatter_vector_mpi()</span></code></a>, <a class="reference internal" href="#f/ed_aux_funx/search_chemical_potential" title="f/ed_aux_funx/search_chemical_potential"><code class="xref f f-func docutils literal notranslate"><span class="pre">search_chemical_potential()</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Used modules</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars" title="f/ed_input_vars: User-accessible input variables"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ed_input_vars</span></code></a>: User-accessible input variables</p></li>
+<li><p><a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global" title="f/ed_vars_global: Global variable accessible throughout the code"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ed_vars_global</span></code></a>: Global variable accessible throughout the code</p></li>
+</ul>
+<p class="rubric">External modules</p>
+<ul>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_TIMER.html#f/sf_timer" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_timer</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_LINALG.html#f/sf_linalg" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_linalg</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_LINALG.html#f/sf_linalg/eye" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">eye()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_SPIN.html#f/sf_spin" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_spin</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_MISC.html#f/sf_misc" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_misc</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_MISC.html#f/sf_misc/assert_shape" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">assert_shape()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/sf_iotools" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_iotools</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/free_unit" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">free_unit()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/reg" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">reg()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/txtfy" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">txtfy()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_ARRAYS.html#f/sf_arrays" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_arrays</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_ARRAYS.html#f/sf_arrays/arange" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">arange()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_ARRAYS.html#f/sf_arrays/linspace" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">linspace()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p class="rubric">Subroutines and functions</p>
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/ed_set_hloc">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">ed_set_hloc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">hloc</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">hloc_anomalous</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/ed_set_hloc" title="Link to this definition"></a></dt>
+<dd><p>This subroutine sets the local Hamiltonian of the impurity problem.
+The local hamiltonian can have different shapes:
+If <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode`==:code:`SUPERC</span></code>, a matrix of the same shape containing
+anomalous one-body terms can optionally be passed.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> . <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a> , <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> . <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a> ]: single-impurity case, rank-2 array</p></li>
+<li><p>[<a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> , <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> , <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a> , <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a> ]: single-impurity case, rank-4 array</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hloc</strong> (various shapes)<em> [</em><em>complex</em><em>, </em><em>in</em><em>]</em> – The local Hamiltonian array</p>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>hloc_anomalous</strong> (various shapes)<em> [</em><em>complex</em><em>, </em><em>in</em><em>]</em> – The local Hamiltonian array (anomalous terms)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/ed_set_suffix">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">ed_set_suffix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">indx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/ed_set_suffix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine sets a suffix for the output files generated by the library as stored in the global
+variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a>. The suffix can be of type:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">integer</span></code>: will be converted to string and padded with zeros</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">real</span></code>: will be converted to string</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">character[len=*]</span></code></p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>indx</strong><em> [</em><em>integer/real/character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/scatter_vector_mpi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">scatter_vector_mpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mpicomm</span></em>, <em class="sig-param"><span class="pre">v</span></em>, <em class="sig-param"><span class="pre">vloc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/scatter_vector_mpi" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Scatter the vector <span class="math notranslate nohighlight">\(\vec{V}\)</span> into the smaller parts <span class="math notranslate nohighlight">\(\vec{V}_{t}\)</span> on each thread such that <span class="math notranslate nohighlight">\(\sum_{t}{\rm size}(\vec{V}_t) = {\rm size}(\vec{V})\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mpicomm</strong><em> [</em><em>integer</em><em>]</em></p></li>
+<li><p><strong>v</strong> (•)<em> [</em><em>real/complex</em><em>]</em> – = Mpi_Allreduce(Nloc)&quot;</p></li>
+<li><p><strong>vloc</strong> (•)<em> [</em><em>real/complex</em><em>]</em> – size[Nloc]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/allgather_vector_mpi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">allgather_vector_mpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mpicomm</span></em>, <em class="sig-param"><span class="pre">vloc</span></em>, <em class="sig-param"><span class="pre">v</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/allgather_vector_mpi" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>All threads gather the other portions <span class="math notranslate nohighlight">\(\vec{V}_{t}\)</span> of the vector <span class="math notranslate nohighlight">\(\vec{V}\)</span> and reduce it into a local copy.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mpicomm</strong><em> [</em><em>integer</em><em>]</em></p></li>
+<li><p><strong>vloc</strong> (•)<em> [</em><em>real/complex</em><em>]</em> – size[Nloc]</p></li>
+<li><p><strong>v</strong> (•)<em> [</em><em>real/complex</em><em>]</em> – = Mpi_Allreduce(Nloc)&quot;</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/ed_reset_suffix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">ed_reset_suffix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/ed_reset_suffix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine resets the suffix set by <a class="reference internal" href="#f/ed_aux_funx/ed_set_suffix" title="f/ed_aux_funx/ed_set_suffix"><code class="xref f f-subr docutils literal notranslate"><span class="pre">ed_set_suffix()</span></code></a> to an empty string</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/c">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pos</span></em>, <em class="sig-param"><span class="pre">in</span></em>, <em class="sig-param"><span class="pre">out</span></em>, <em class="sig-param"><span class="pre">fsgn</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">ierr</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/c" title="Link to this definition"></a></dt>
+<dd><p>Fermionic destruction operator, used in the construction of the sector Hamiltonian. The <a class="reference internal" href="#f/ed_aux_funx/c" title="f/ed_aux_funx/c"><code class="xref f f-func docutils literal notranslate"><span class="pre">c()</span></code></a> operator set the bit at position <code class="xref f f-var docutils literal notranslate"><span class="pre">pos</span></code> to 0 in the bit representation of the integer <code class="xref f f-var docutils literal notranslate"><span class="pre">in</span></code>. Further it evaluates the corresponding fermionic sign <code class="xref f f-var docutils literal notranslate"><span class="pre">fsign</span></code> as <span class="math notranslate nohighlight">\(\sum_{i&lt;pos}(-1)^{i}\)</span>. The obtained bitset identifies a new integer <code class="xref f f-var docutils literal notranslate"><span class="pre">Out</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Position to be set to <code class="code docutils literal notranslate"><span class="pre">0</span></code></p></li>
+<li><p><strong>in</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Input index</p></li>
+<li><p><strong>out</strong><em> [</em><em>integer</em><em>, </em><em>inout</em><em>]</em> – Output index</p></li>
+<li><p><strong>fsgn</strong><em> [</em><em>real</em><em>, </em><em>inout</em><em>]</em> – Accrued sign</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ierr</strong><em> [</em><em>logical</em><em>]</em> – Error flag: if present, the operator cannot be applied on the state, it is set to <code class="code docutils literal notranslate"><span class="pre">.false.</span></code>. Else, execution stops.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/cdg">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">cdg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pos</span></em>, <em class="sig-param"><span class="pre">in</span></em>, <em class="sig-param"><span class="pre">out</span></em>, <em class="sig-param"><span class="pre">fsgn</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">ierr</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/cdg" title="Link to this definition"></a></dt>
+<dd><p>Fermionic creation operator, used in the construction of the sector Hamiltonian. The <a class="reference internal" href="#f/ed_aux_funx/cdg" title="f/ed_aux_funx/cdg"><code class="xref f f-func docutils literal notranslate"><span class="pre">cdg()</span></code></a> operator set the bit at position <code class="xref f f-var docutils literal notranslate"><span class="pre">pos</span></code> to 1 in the bit representation of the integer <code class="xref f f-var docutils literal notranslate"><span class="pre">in</span></code>. Further it evaluates the corresponding fermionic sign <code class="xref f f-var docutils literal notranslate"><span class="pre">fsign</span></code> as <span class="math notranslate nohighlight">\(\sum_{i&lt;pos}(-1)^{i}\)</span>. The obtained bitset identifies a new integer <code class="xref f f-var docutils literal notranslate"><span class="pre">Out</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Position to be set to <code class="code docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><strong>in</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Input index</p></li>
+<li><p><strong>out</strong><em> [</em><em>integer</em><em>, </em><em>inout</em><em>]</em> – Output index</p></li>
+<li><p><strong>fsgn</strong><em> [</em><em>real</em><em>, </em><em>inout</em><em>]</em> – Accrued sign</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ierr</strong><em> [</em><em>logical</em><em>]</em> – Error flag: if present, the operator cannot be applied on the state, it is set to <code class="code docutils literal notranslate"><span class="pre">.false.</span></code>. Else, execution stops.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/bdecomp">
+<span class="property"><span class="pre">function</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">bdecomp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">i</span></em>, <em class="sig-param"><span class="pre">ntot</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/bdecomp" title="Link to this definition"></a></dt>
+<dd><p>Binary decomposition of the integer <code class="xref f f-var docutils literal notranslate"><span class="pre">i</span></code> with  <code class="xref f f-var docutils literal notranslate"><span class="pre">ntot</span></code> bits. The input integers represents a Fock state <span class="math notranslate nohighlight">\(|i-1\rangle\)</span> with <span class="math notranslate nohighlight">\(i=1,\dots,2^{2N_s}\)</span>. The resulting vector <code class="xref f f-var docutils literal notranslate"><span class="pre">ivec</span></code> describes the state <span class="math notranslate nohighlight">\(|n_1,n_2,\dots,n_{N_{tot}}\rangle\)</span> with <span class="math notranslate nohighlight">\(n_i=0,1\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong><em> [</em><em>integer</em><em>]</em></p></li>
+<li><p><strong>ntot</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Result<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ivec</strong> (ntot)<em> [</em><em>integer</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/read_impgmatrix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">read_impgmatrix</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">file</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/read_impgmatrix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine reads weights and poles of the impurity Green's function by calling <a class="reference internal" href="../04_classes/03_ed_gfmatrix.html#f/ed_gfmatrix/read_gfmatrix" title="f/ed_gfmatrix/read_gfmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_GFmatrix()</span></code></a>. These are read
+from a file named <code class="code docutils literal notranslate"><span class="pre">&quot;file&quot;//str(ed_file_suffix)//.restart&quot;</span></code> taking into account the value of the global variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a> ,
+which is <code class="code docutils literal notranslate"><span class="pre">&quot;_ineq_Nineq&quot;</span></code> padded with 4 zeros in the case of inequivalent sites, as per documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/read_impdmatrix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">read_impdmatrix</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">file</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/read_impdmatrix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine reads weights and poles of the phonons Green's function by calling <a class="reference internal" href="../04_classes/03_ed_gfmatrix.html#f/ed_gfmatrix/read_gfmatrix" title="f/ed_gfmatrix/read_gfmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_GFmatrix()</span></code></a>. These are read
+from a file named <code class="code docutils literal notranslate"><span class="pre">&quot;file&quot;//str(ed_file_suffix)//.restart&quot;</span></code> taking into account the value of the global variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a> ,
+which is <code class="code docutils literal notranslate"><span class="pre">&quot;_ineq_Nineq&quot;</span></code> padded with 4 zeros in the case of inequivalent sites, as per documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/read_spinchimatrix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">read_spinchimatrix</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">file</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/read_spinchimatrix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine reads weights and poles of the impurity spin susceptibility function by calling <a class="reference internal" href="../04_classes/03_ed_gfmatrix.html#f/ed_gfmatrix/read_gfmatrix" title="f/ed_gfmatrix/read_gfmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_GFmatrix()</span></code></a>. These are read
+from a file named <code class="code docutils literal notranslate"><span class="pre">&quot;file&quot;//str(ed_file_suffix)//.restart&quot;</span></code> taking into account the value of the global variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a> ,
+which is <code class="code docutils literal notranslate"><span class="pre">&quot;_ineq_Nineq&quot;</span></code> padded with 4 zeros in the case of inequivalent sites, as per documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/read_denschimatrix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">read_denschimatrix</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">file</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/read_denschimatrix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine reads weights and poles of the impurity charge density susceptibility function by calling <a class="reference internal" href="../04_classes/03_ed_gfmatrix.html#f/ed_gfmatrix/read_gfmatrix" title="f/ed_gfmatrix/read_gfmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_GFmatrix()</span></code></a>. These are read
+from a file named <code class="code docutils literal notranslate"><span class="pre">&quot;file&quot;//str(ed_file_suffix)//.restart&quot;</span></code> taking into account the value of the global variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a> ,
+which is <code class="code docutils literal notranslate"><span class="pre">&quot;_ineq_Nineq&quot;</span></code> padded with 4 zeros in the case of inequivalent sites, as per documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/read_pairchimatrix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">read_pairchimatrix</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">file</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/read_pairchimatrix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine reads weights and poles of the impurity pair susceptibility function by calling <a class="reference internal" href="../04_classes/03_ed_gfmatrix.html#f/ed_gfmatrix/read_gfmatrix" title="f/ed_gfmatrix/read_gfmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_GFmatrix()</span></code></a>. These are read
+from a file named <code class="code docutils literal notranslate"><span class="pre">&quot;file&quot;//str(ed_file_suffix)//.restart&quot;</span></code> taking into account the value of the global variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a> ,
+which is <code class="code docutils literal notranslate"><span class="pre">&quot;_ineq_Nineq&quot;</span></code> padded with 4 zeros in the case of inequivalent sites, as per documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/read_exctchimatrix">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">read_exctchimatrix</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">file</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/read_exctchimatrix" title="Link to this definition"></a></dt>
+<dd><p>This subroutine reads weights and poles of the impurity exciton susceptibilities calling <a class="reference internal" href="../04_classes/03_ed_gfmatrix.html#f/ed_gfmatrix/read_gfmatrix" title="f/ed_gfmatrix/read_gfmatrix"><code class="xref f f-func docutils literal notranslate"><span class="pre">read_GFmatrix()</span></code></a>. These are read
+from a file named <code class="code docutils literal notranslate"><span class="pre">&quot;file&quot;//str(ed_file_suffix)//.restart&quot;</span></code> taking into account the value of the global variable <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/ed_file_suffix" title="f/ed_vars_global/ed_file_suffix"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_file_suffix</span></code></a> ,
+which is <code class="code docutils literal notranslate"><span class="pre">&quot;_ineq_Nineq&quot;</span></code> padded with 4 zeros in the case of inequivalent sites, as per documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong><em> [</em><em>character(len=*)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/check_diag_imphloc">
+<span class="property"><span class="pre">function</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">check_diag_imphloc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/check_diag_imphloc" title="Link to this definition"></a></dt>
+<dd><p>This functions checks the structure of <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/imphloc" title="f/ed_vars_global/imphloc"><code class="xref f f-var docutils literal notranslate"><span class="pre">impHloc</span></code></a> and <a class="reference internal" href="02_ed_vars_global.html#f/ed_vars_global/imphloc_anomalous" title="f/ed_vars_global/imphloc_anomalous"><code class="xref f f-var docutils literal notranslate"><span class="pre">impHloc_anomalous</span></code></a>
+(if present) and returns <code class="code docutils literal notranslate"><span class="pre">TRUE</span></code> if they are diagonal in spin/orbital
+and <code class="code docutils literal notranslate"><span class="pre">FALSE</span></code> otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Result<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_diagonal</strong><em> [</em><em>logical</em><em>]</em></p>
+</dd>
+<dt class="field-even">Use <span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars" title="f/ed_input_vars: User-accessible input variables"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ed_input_vars</span></code></a> (<a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/ed_search_variable">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">ed_search_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">var</span></em>, <em class="sig-param"><span class="pre">ntmp</span></em>, <em class="sig-param"><span class="pre">converged</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/ed_search_variable" title="Link to this definition"></a></dt>
+<dd><p>This function checks the value of the read density <code class="xref f f-var docutils literal notranslate"><span class="pre">ntmp</span></code> against the desired value
+<a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nread" title="f/ed_input_vars/nread"><code class="xref f f-var docutils literal notranslate"><span class="pre">nread</span></code></a> (if different from zero) and adjusts <code class="xref f f-var docutils literal notranslate"><span class="pre">var</span></code> accordingly (in a monotonous way).</p>
+<p>The updated <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> is saved in <code class="xref f f-var docutils literal notranslate"><span class="pre">search_variable_iteration&quot;//reg(ed_file_suffix)//&quot;.ed</span></code></p>
+<p>The converged <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> is saved in <code class="xref f f-var docutils literal notranslate"><span class="pre">var_compressibility.restart</span></code></p>
+<p>If a file <code class="xref f f-var docutils literal notranslate"><span class="pre">var_compressibility.used</span></code> is present, its value is read</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong><em> [</em><em>real</em><em>, </em><em>inout</em><em>]</em> – the variable to be adjusted</p></li>
+<li><p><strong>ntmp</strong><em> [</em><em>real</em><em>, </em><em>in</em><em>]</em> – the density value at the given iteration</p></li>
+<li><p><strong>converged</strong><em> [</em><em>logical</em><em>, </em><em>inout</em><em>]</em> – whether the DMFT loop has achieved a sufficiently small error independently on the density</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ed_aux_funx/search_chemical_potential">
+<span class="property"><span class="pre">subroutine</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">ed_aux_funx/</span></span><span class="sig-name descname"><span class="pre">search_chemical_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">var</span></em>, <em class="sig-param"><span class="pre">ntmp</span></em>, <em class="sig-param"><span class="pre">converged</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/ed_aux_funx/search_chemical_potential" title="Link to this definition"></a></dt>
+<dd><p>This function checks the value of the read density <code class="xref f f-var docutils literal notranslate"><span class="pre">ntmp</span></code> against the desired value
+<a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/nread" title="f/ed_input_vars/nread"><code class="xref f f-var docutils literal notranslate"><span class="pre">nread</span></code></a> (if different from zero) and adjusts <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> accordingly (in a monotonous way).</p>
+<p>The updated <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> is saved in <code class="code docutils literal notranslate"><span class="pre">search_mu_iteration&quot;//reg(ed_file_suffix)//&quot;.ed</span></code></p>
+<p>The converged <a class="reference internal" href="01_ed_input_vars.html#f/ed_input_vars/xmu" title="f/ed_input_vars/xmu"><code class="xref f f-var docutils literal notranslate"><span class="pre">xmu</span></code></a> is saved in <code class="code docutils literal notranslate"><span class="pre">xmu.restart</span></code></p>
+<p>If a file <code class="code docutils literal notranslate"><span class="pre">var_compressibility.used</span></code> is present, its value is read</p>
+<p><strong>NOTE:</strong> this function is accessible to the user as <code class="xref f f-func docutils literal notranslate"><span class="pre">edipack/ed_search_chemical_potential()</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong><em> [</em><em>real</em><em>, </em><em>inout</em><em>]</em> – the chemical potential</p></li>
+<li><p><strong>ntmp</strong><em> [</em><em>real</em><em>, </em><em>in</em><em>]</em> – the density value at the given iteration</p></li>
+<li><p><strong>converged</strong><em> [</em><em>logical</em><em>, </em><em>inout</em><em>]</em> – whether the DMFT loop has achieved a sufficiently small error independently on the density</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="02_ed_vars_global.html" class="btn btn-neutral float-left" title="Global Variables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="04_ed_setup.html" class="btn btn-neutral float-right" title="Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Lorenzo Crippa and Adriano Amaricci.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

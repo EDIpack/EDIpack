@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interacting BHZ model &mdash; EDIpack 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=5c5534e0" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ce74c6a2"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Attractive Hubbard model" href="02_ahm.html" />
+    <link rel="prev" title="Further examples" href="../examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            EDIpack
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-source">From source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#building">Building</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../installation.html#gnu-make">GNU Make</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#installing">Installing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-anaconda">From Anaconda</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/01_anderson.html">Solving a Single Impurity Anderson model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/01_anderson.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/01_anderson.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/02_dmft.html">Solving Dynamical Mean-Field Theory with <cite>EDIpack</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/02_dmft.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/02_dmft.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Further examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Interacting BHZ model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="02_ahm.html">Attractive Hubbard model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="02_ahm.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_ahm.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="03_excBHZ.html">In-plane spin excitons in QSHI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="03_excBHZ.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_excBHZ.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Library structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structure.html#edipack-edipack"><strong>EDIpack</strong>: <span class="xref std std-ref">edipack</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structure.html#edipack2ineq-edipack2ineq"><strong>EDIpack2ineq</strong>: <span class="xref std std-ref">edipack2ineq</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structure.html#edipack-c-bindings-edipack-cbindings"><strong>EDIpack C-bindings</strong>: <span class="xref std std-ref">edipack_cbindings</span></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack.html">The EDIpack Fortran Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/01_edipackmodule.html">EDIpack Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/02_main.html">Impurity Problem Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#general-environment">General Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html">Input Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/03_ed_aux_funx.html">Auxiliary Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/04_ed_setup.html">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/05_ed_parse_umatrix.html">Parse Umatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/04_classes/01_ed_sparse_matrix.html">Sparse Matrices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/04_classes/02_ed_eigenspace.html">EigenSpace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/04_classes/03_ed_gfmatrix.html">GFmatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#symmetry-sectors"><span class="xref std std-ref">Symmetry Sectors</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/05_sectors.html">Quantum Numbers Sectors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html">Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-auxiliary">Bath Auxiliary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/00_ed_vars_global.html">Bath class definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/01_ed_bath_aux.html">Bath auxiliary routines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/02_ed_bath_dim.html">Bath dimensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/04_ed_bath_replica.html">Replica bath setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-dmft"><span class="xref std std-ref">Bath DMFT</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/05_ed_bath_dmft.html">Bath class implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-functions"><span class="xref std std-ref">Bath Functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/06_ed_bath_functions.html">Bath  dynamical functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#hamiltonian"><span class="xref std std-ref">Hamiltonian</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html#normal-mode">Normal mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian_common.html">MPI all-2-all transposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html#superconductive-mode">Superconductive mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html#non-su-2-mode">Non-SU(2) mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#exact-diagonalization"><span class="xref std std-ref">Exact Diagonalization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html"><span class="xref std std-ref">Impurity Diagonalization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/08_diag/impurity_diag.html">Impurity diagonalization interface</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/01_diag.html">Exact Diagonalization: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/01_diag.html">Exact Diagonalization: Superconductive</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/01_diag.html">Exact Diagonalization: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#green-s-functions"><span class="xref std std-ref">Green's Functions</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html"><span class="xref std std-ref">Impurity Green's functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/09_greensfunctions/impurity_greensfunctions.html">Impurity Green's functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/03_greensfunctions.html">Green's Function calculation: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/03_greensfunctions.html">Green's Function calculation: Superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/03_greensfunctions.html">Green's Function calculation: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#susceptibilities"><span class="xref std std-ref">Susceptibilities</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html"><span class="xref std std-ref">Impurity Susceptibilities</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/10_chifunctions/impurity_chifunctions.html">Impurity dynamical response functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#spin-channel"><span class="xref std std-ref">Spin channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_spin.html">Spin Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#charge-channel"><span class="xref std std-ref">Charge channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_dens.html">Charge Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#pair-channel"><span class="xref std std-ref">Pair channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_pair.html">Pair Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#exciton-channel"><span class="xref std std-ref">Exciton channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_exct.html">Exciton Susceptibility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#observables"><span class="xref std std-ref">Observables</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html"><span class="xref std std-ref">Impurity Observables</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/11_observables/impurity_observables.html">Impurity Observables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/05_observables.html">Observables: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/05_observables.html">Observables: superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/05_observables.html">Observables: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#reduced-density-matrix"><span class="xref std std-ref">Reduced Density Matrix</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html"><span class="xref std std-ref">Impurity Reduced Density Matrix</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/12_rdm/impurity_rdm.html">Impurity RDM</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/06_rdm.html">Reduced Density Matrix: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/06_rdm.html">Reduced Density Matrix: superconductivity</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/06_rdm.html">Reduced Density Matrix: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/13_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/14_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack2ineq</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack2ineq.html">EDIpack for inequivalent impurities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/01_edipack2ineqmodule.html">EDIpack2ineq Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/02_main.html">Inequivalent Impurities Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#general-environment">General Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/03_general/02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/03_general/03_ed_aux_funx.html">Auxiliary Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/04_bath.html">Inequivalent Impurities Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/04_bath.html#bath-user"><span class="xref std std-ref">Bath User</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack2ineq/04_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/04_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack2ineq/04_bath/04_ed_bath_replica.html">Bath Replica</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/05_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack2ineq/06_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack C-bindings</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack_cbindings.html">EDIpack Fortran-C interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c_bindings/01_vars.html">EDIpack Fortran-C interface: Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv48has_ineq"><code class="docutils literal notranslate"><span class="pre">has_ineq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44beta"><code class="docutils literal notranslate"><span class="pre">beta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chidens_flag"><code class="docutils literal notranslate"><span class="pre">chidens_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chiexct_flag"><code class="docutils literal notranslate"><span class="pre">chiexct_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chipair_flag"><code class="docutils literal notranslate"><span class="pre">chipair_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chispin_flag"><code class="docutils literal notranslate"><span class="pre">chispin_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv410dmft_error"><code class="docutils literal notranslate"><span class="pre">dmft_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv47ed_twin"><code class="docutils literal notranslate"><span class="pre">ed_twin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv411ed_total_ud"><code class="docutils literal notranslate"><span class="pre">ed_total_ud</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43eps"><code class="docutils literal notranslate"><span class="pre">eps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv42Jh"><code class="docutils literal notranslate"><span class="pre">Jh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv42Jp"><code class="docutils literal notranslate"><span class="pre">Jp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv42Jx"><code class="docutils literal notranslate"><span class="pre">Jx</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Lfit"><code class="docutils literal notranslate"><span class="pre">Lfit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Lmats"><code class="docutils literal notranslate"><span class="pre">Lmats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Lreal"><code class="docutils literal notranslate"><span class="pre">Lreal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Lpos"><code class="docutils literal notranslate"><span class="pre">Lpos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Ltau"><code class="docutils literal notranslate"><span class="pre">Ltau</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Nbath"><code class="docutils literal notranslate"><span class="pre">Nbath</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Nloop"><code class="docutils literal notranslate"><span class="pre">Nloop</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Norb"><code class="docutils literal notranslate"><span class="pre">Norb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43Nph"><code class="docutils literal notranslate"><span class="pre">Nph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45nread"><code class="docutils literal notranslate"><span class="pre">nread</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Nspin"><code class="docutils literal notranslate"><span class="pre">Nspin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv48Nsuccess"><code class="docutils literal notranslate"><span class="pre">Nsuccess</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv48sb_field"><code class="docutils literal notranslate"><span class="pre">sb_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Uloc"><code class="docutils literal notranslate"><span class="pre">Uloc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43Ust"><code class="docutils literal notranslate"><span class="pre">Ust</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44wfin"><code class="docutils literal notranslate"><span class="pre">wfin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44wini"><code class="docutils literal notranslate"><span class="pre">wini</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44xmax"><code class="docutils literal notranslate"><span class="pre">xmax</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44xmin"><code class="docutils literal notranslate"><span class="pre">xmin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43xmu"><code class="docutils literal notranslate"><span class="pre">xmu</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../c_bindings/02_funcs.html">EDIpack Fortran-C interface: Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv410read_inputPc"><code class="docutils literal notranslate"><span class="pre">read_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N4PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N3PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N5PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv425get_bath_dimension_directv"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_direct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv429get_bath_dimension_symmetriesi"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_symmetries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415search_variablePdPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">search_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_sitePdP7int64_tddi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_ineqPdP7int64_tdPdi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_sitePdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_ineqPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n5PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n5PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n4PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n6PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n4PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n6PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_g0and_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_g0and_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_delta_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_delta_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_spinchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_spinchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_denschiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_denschi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_pairchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_pairchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_exctchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_exctchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419ed_get_impurity_rdmPNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_impurity_rdm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416init_solver_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423init_solver_site_nobathv"><code class="docutils literal notranslate"><span class="pre">init_solver_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416init_solver_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423init_solver_ineq_nobathi"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv410solve_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417solve_site_nobathii"><code class="docutils literal notranslate"><span class="pre">solve_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv410solve_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417solve_ineq_nobathiii"><code class="docutils literal notranslate"><span class="pre">solve_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415finalize_solveri"><code class="docutils literal notranslate"><span class="pre">finalize_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv413reset_umatrixv"><code class="docutils literal notranslate"><span class="pre">reset_umatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420add_twobody_operatoriiiiiiiid"><code class="docutils literal notranslate"><span class="pre">add_twobody_operator()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python projects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack_python.html">Python projects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Browse code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../browsecode.html">Browse code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_aux_funx.html">E2I_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath.html">E2I_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath_fit.html">E2I_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath_replica.html">E2I_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath_user.html">E2I_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_io.html">E2I_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_main.html">E2I_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_vars_global.html">E2I_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_aux_funx.html">ED_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath.html">ED_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_aux.html">ED_BATH_AUX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_dim.html">ED_BATH_DIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_dmft.html">ED_BATH_DMFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_fit.html">ED_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_functions.html">ED_BATH_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_replica.html">ED_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_user.html">ED_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_dens.html">ED_CHI_DENS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_exct.html">ED_CHI_EXCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_functions.html">ED_CHI_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_pair.html">ED_CHI_PAIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_spin.html">ED_CHI_SPIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag.html">ED_DIAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag_nonsu2.html">ED_DIAG_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag_normal.html">ED_DIAG_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag_superc.html">ED_DIAG_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_eigenspace.html">ED_EIGENSPACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_common.html">ED_FIT_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_general.html">ED_FIT_GENERAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_hybrid.html">ED_FIT_HYBRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_normal.html">ED_FIT_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_replica.html">ED_FIT_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gf_nonsu2.html">ED_GF_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gf_normal.html">ED_GF_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gf_superc.html">ED_GF_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gfmatrix.html">ED_GFMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_greens_functions.html">ED_GREENS_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian.html">ED_HAMILTONIAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2.html">ED_HAMILTONIAN_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2_common.html">ED_HAMILTONIAN_NONSU2_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2_direct_hxv.html">ED_HAMILTONIAN_NONSU2_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2_stored_hxv.html">ED_HAMILTONIAN_NONSU2_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal.html">ED_HAMILTONIAN_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal_common.html">ED_HAMILTONIAN_NORMAL_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal_direct_hxv.html">ED_HAMILTONIAN_NORMAL_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal_stored_hxv.html">ED_HAMILTONIAN_NORMAL_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc.html">ED_HAMILTONIAN_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc_common.html">ED_HAMILTONIAN_SUPERC_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc_direct_hxv.html">ED_HAMILTONIAN_SUPERC_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc_stored_hxv.html">ED_HAMILTONIAN_SUPERC_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_input_vars.html">ED_INPUT_VARS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_io.html">ED_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_main.html">ED_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables.html">ED_OBSERVABLES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables_nonsu2.html">ED_OBSERVABLES_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables_normal.html">ED_OBSERVABLES_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables_superc.html">ED_OBSERVABLES_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_parse_umatrix.html">ED_PARSE_UMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm.html">ED_RDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm_nonsu2.html">ED_RDM_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm_normal.html">ED_RDM_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm_superc.html">ED_RDM_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_sector.html">ED_SECTOR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_setup.html">ED_SETUP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_sparse_map.html">ED_SPARSE_MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_sparse_matrix.html">ED_SPARSE_MATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_vars_global.html">ED_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_version.html">ED_VERSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack.html">EDIPACK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack2ineq.html">EDIPACK2INEQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack_c.html">EDIPACK_C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack_c_common.html">EDIPACK_C_COMMON</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack">EDIpack on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack2py">EDIpack2py on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/krivenko/edipack2triqs">EDIpack2Triqs on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/SciFortran/SciFortran">SciFortran on GitHub</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EDIpack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../examples.html">Further examples</a></li>
+      <li class="breadcrumb-item active">Interacting BHZ model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/01_bhz.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Further examples" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="02_ahm.html" class="btn btn-neutral float-right" title="Attractive Hubbard model" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interacting-bhz-model">
+<span id="bhz"></span><h1>Interacting BHZ model<a class="headerlink" href="#interacting-bhz-model" title="Link to this heading"></a></h1>
+<p>In this section we discuss a thorough example , using the
+<cite>EDIpack</cite> ED algorithm as a solver for DMFT for  <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a> =
+<strong>normal</strong>.  We focus on a paradigmatic multi-orbital model of interacting electrons.</p>
+<p>This is a Fermi-Hubbard model describing two-orbital electrons on a
+square lattice describing  an interacting quantum spin Hall insulator
+(QSHI).
+The model is an extension of the Bernevig-Hughes-Zhang model
+supplemented with Hubbard-Kanamori interaction.</p>
+<p>We first introduce a suitable basis of Dirac matrices
+<span class="math notranslate nohighlight">\(\Gamma_{a\alpha}=\sigma_a\otimes \tau_\alpha\)</span>, where <span class="math notranslate nohighlight">\(\sigma_a\)</span> and
+<span class="math notranslate nohighlight">\(\tau_\alpha\)</span> are Pauli matrices, respectively, in the spin and
+orbital pseudo-spin space.</p>
+<p>In terms of these matrices the model Hamiltonian reads
+<span class="math notranslate nohighlight">\(H=\sum_{k}\psi_{k}^\dagger H(k)\psi_{k} + H_{\rm int}\)</span>, where the
+spinor <span class="math notranslate nohighlight">\(\psi_{k}=[c_{1\uparrow k}, c_{2\uparrow k},
+c_{1\downarrow k}, c_{2\downarrow k} ]\)</span> collect the two orbital and
+two spins second quantization annihilation operators. We have then:</p>
+<div class="math notranslate nohighlight">
+\[H(k) = \left[M-2t(\cos{k_x}+\cos{k_y}) \right]\Gamma_{03} +
+\lambda\sin{k_x}\Gamma_{31} -   \lambda\sin{k_y}\Gamma_{02}\]</div>
+<p>where <span class="math notranslate nohighlight">\(M\)</span> is the mass term, which plays the role of a crystal
+field splitting among the orbitals. The presence of this term breaks
+the symmetry in the orbital pseudo-spin channel.</p>
+<p>The  interaction term describes the density-density part of the
+Kanamori interaction. We neglect the pair-hopping and spin-flip purely
+for numerical reasons in this context.</p>
+<div class="math notranslate nohighlight">
+\[H_{\rm int} = (U-J)\frac{N(N-1)}{2} - J\left( \frac{1}{4}N^2 +
+S_z^2 - 2 T_z^2\right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(N=\tfrac{1}{2}\psi_i^\dagger \Gamma_{00}\psi_i\)</span> is the
+total density operator,
+<span class="math notranslate nohighlight">\(S_z=\tfrac{1}{2}\psi_i^\dagger \Gamma_{30}\psi_i\)</span> is the total
+spin polarization operator and <span class="math notranslate nohighlight">\(T_z=\tfrac{1}{2}\psi_i^\dagger
+\Gamma_{03}\psi_i\)</span> is the orbital pseudo-spin polarization operator.</p>
+<p>We are now ready to start discussing the solution of this model,
+starting from the non-interacting regime <span class="math notranslate nohighlight">\(U=J=0\)</span>.
+In this regime the model describes a quantum spin Hall insulating
+phase for <span class="math notranslate nohighlight">\(M&lt;4t\)</span> and a trivial band insulator for
+<span class="math notranslate nohighlight">\(M&gt;4t\)</span>. As expected a gapless Dirac state is realized at the
+transition point <span class="math notranslate nohighlight">\(M=4t\)</span>.</p>
+<section id="source-code">
+<h2>Source code<a class="headerlink" href="#source-code" title="Link to this heading"></a></h2>
+<p>In presence of interaction we can solve the model using DMFT. We
+review here the setup of the program using <cite>EDIpack</cite>.</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">program </span><span class="n">ed_bhz</span>
+<span class="linenos"> 2</span><span class="w">   </span><span class="k">USE </span><span class="n">EDIPACK</span>
+<span class="linenos"> 3</span><span class="w">   </span><span class="k">USE </span><span class="n">SCIFOR</span>
+<span class="linenos"> 4</span><span class="w">   </span><span class="k">USE </span><span class="n">DMFT_TOOLS</span>
+<span class="linenos"> 5</span><span class="w">   </span><span class="k">USE </span><span class="n">MPI</span>
+<span class="linenos"> 6</span><span class="w">   </span><span class="k">implicit none</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="w">   </span><span class="p">...</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="w">   </span><span class="k">call </span><span class="n">init_MPI</span><span class="p">()</span>
+<span class="linenos">11</span><span class="w">   </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span>
+<span class="linenos">12</span><span class="w">   </span><span class="k">call </span><span class="n">StartMsg_MPI</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<span class="linenos">13</span><span class="w">   </span><span class="n">rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_Rank_MPI</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<span class="linenos">14</span><span class="w">   </span><span class="n">master</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_Master_MPI</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="w">   </span><span class="c">!Parse additional variables &amp;&amp; read Input &amp;&amp; read H(k)^4x4</span>
+<span class="linenos">18</span><span class="w">   </span><span class="k">call </span><span class="n">parse_cmd_variable</span><span class="p">(</span><span class="n">finput</span><span class="p">,</span><span class="s2">&quot;FINPUT&quot;</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;inputED_BHZ.in&#39;</span><span class="p">)</span>
+<span class="linenos">19</span><span class="w">   </span><span class="k">call </span><span class="n">parse_input_variable</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="s2">&quot;NX&quot;</span><span class="p">,</span><span class="n">finput</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="linenos">20</span><span class="w">   </span><span class="k">call </span><span class="n">parse_input_variable</span><span class="p">(</span><span class="n">nkpath</span><span class="p">,</span><span class="s2">&quot;NKPATH&quot;</span><span class="p">,</span><span class="n">finput</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="linenos">21</span><span class="w">   </span><span class="k">call </span><span class="n">parse_input_variable</span><span class="p">(</span><span class="n">mh</span><span class="p">,</span><span class="s2">&quot;MH&quot;</span><span class="p">,</span><span class="n">finput</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mf">0.d0</span><span class="p">)</span>
+<span class="linenos">22</span><span class="w">   </span><span class="k">call </span><span class="n">parse_input_variable</span><span class="p">(</span><span class="n">lambda</span><span class="p">,</span><span class="s2">&quot;LAMBDA&quot;</span><span class="p">,</span><span class="n">finput</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mf">0.d0</span><span class="p">)</span>
+<span class="linenos">23</span><span class="w">   </span><span class="k">call </span><span class="n">parse_input_variable</span><span class="p">(</span><span class="n">wmixing</span><span class="p">,</span><span class="s2">&quot;WMIXING&quot;</span><span class="p">,</span><span class="n">finput</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mf">0.75d0</span><span class="p">)</span>
+<span class="linenos">24</span><span class="w">   </span><span class="c">!</span>
+<span class="linenos">25</span><span class="w">   </span><span class="k">call </span><span class="n">ed_read_input</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">finput</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>As now clear from reading the quickstart guide, the preamble define
+all the required local variables of the program. Here we
+also load MPI module and <a class="reference external" href="https://github.com/aamaricci/DMFTtools">DMFT_TOOLS</a> library to perform some tasks
+related to DMFT implementation or tight-binding model setup.
+We init the MPI universe using <a class="reference external" href="https://github.com/SciFortran/SciFortran">SciFortran</a> MPI interface in
+<a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_MPI.html#f/sf_mpi" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_mpi</span></code></a>. Finally we read the input file using <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/ed_read_input" title="f/ed_input_vars/ed_read_input"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_read_input()</span></code></a>.</p>
+<p>Next we construct the model Hamiltonian <span class="math notranslate nohighlight">\(H(k)\)</span>. In the following of the
+code we will need to construct the <em>renormalized</em> topological Hamiltonian as well,
+defined as <span class="math notranslate nohighlight">\(H_{top} = \sqrt{Z}[H(k) + \Re\Sigma(w=0)]\sqrt{Z}\)</span>,
+where <span class="math notranslate nohighlight">\(\Sigma\)</span> is the self-energy function obtained from DMFT
+calculation. To implement the construction of the two using the same
+function and use a flag to include the required correction.</p>
+<p>The corresponding implementation is given by the following two
+functions, included at the end of the code.
+The first  returns the <span class="math notranslate nohighlight">\(H(k)\)</span> Hamiltonian for any given
+<span class="math notranslate nohighlight">\(\vec{k}\)</span> point in the BZ zone.</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="k">function </span><span class="n">hk_bhz</span><span class="p">(</span><span class="n">kvec</span><span class="p">,</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">hk</span><span class="p">)</span>
+<span class="w">  </span><span class="kt">integer</span><span class="w">                   </span><span class="kd">::</span><span class="w"> </span><span class="n">N</span>
+<span class="w">  </span><span class="kt">real</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">kvec</span>
+<span class="w">  </span><span class="kt">complex</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">hk</span>
+<span class="w">  </span><span class="kt">real</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w">                   </span><span class="kd">::</span><span class="w"> </span><span class="n">ek</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span>
+<span class="w">  </span><span class="c">!</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">N</span><span class="o">/=</span><span class="n">Nso</span><span class="p">)</span><span class="k">stop</span><span class="w"> </span><span class="s2">&quot;hk_bhz error: N != Nspin*Norb == 4&quot;</span>
+<span class="w">  </span><span class="n">kx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kvec</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">ky</span><span class="o">=</span><span class="n">kvec</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="n">ek</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="n">d0</span><span class="o">*</span><span class="p">(</span><span class="nb">cos</span><span class="p">(</span><span class="n">kx</span><span class="p">)</span><span class="o">+</span><span class="nb">cos</span><span class="p">(</span><span class="n">ky</span><span class="p">))</span>
+<span class="w">  </span><span class="n">Hk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Mh</span><span class="o">+</span><span class="n">ek</span><span class="p">)</span><span class="o">*</span><span class="n">Gamma5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">lambda</span><span class="o">*</span><span class="nb">sin</span><span class="p">(</span><span class="n">kx</span><span class="p">)</span><span class="o">*</span><span class="n">Gamma1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">lambda</span><span class="o">*</span><span class="nb">sin</span><span class="p">(</span><span class="n">ky</span><span class="p">)</span><span class="o">*</span><span class="n">Gamma2</span>
+<span class="w">  </span><span class="c">!</span>
+<span class="w">  </span><span class="c">!&gt; Include the self-energy correction, if previously defined</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">fhtop</span><span class="p">)</span><span class="k">then</span>
+<span class="k">    </span><span class="n">Hk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hk</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dreal</span><span class="p">(</span><span class="n">SigmaBHZ</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Hk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">matmul</span><span class="p">(</span><span class="n">Zbhz</span><span class="p">,</span><span class="n">Hk</span><span class="p">)</span>
+<span class="w">  </span><span class="k">endif</span>
+<span class="k">end function </span><span class="n">hk_bhz</span>
+</pre></div>
+</div>
+<p>the second is used to setup the self-energy correction
+<code class="xref f f-var docutils literal notranslate"><span class="pre">sigmabhz</span></code> to be when building <span class="math notranslate nohighlight">\(H_{top}(k)\)</span>:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="k">subroutine </span><span class="n">set_SigmaBHZ</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+<span class="w">  </span><span class="kt">complex</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="n">Nso</span><span class="p">,</span><span class="n">Nso</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sigma</span>
+<span class="w">  </span><span class="kt">integer</span><span class="w">                                </span><span class="kd">::</span><span class="w"> </span><span class="n">ii</span>
+<span class="w">  </span><span class="c">!</span>
+<span class="w">  </span><span class="n">sigmaBHZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">Zbhz</span><span class="o">=</span><span class="n">eye</span><span class="p">(</span><span class="n">Nso</span><span class="p">);</span><span class="w"> </span><span class="n">fhtop</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">  </span><span class="c">!</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">sigma</span><span class="p">))</span><span class="k">then</span>
+<span class="k">    </span><span class="n">sigmaBHZ</span><span class="o">=</span><span class="n">sigma</span>
+<span class="w">    </span><span class="c">!</span>
+<span class="w">    </span><span class="n">Zbhz</span><span class="o">=</span><span class="n">zero</span>
+<span class="w">    </span><span class="k">do </span><span class="n">ii</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">Nso</span>
+<span class="w">      </span><span class="n">Zbhz</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="n">ii</span><span class="p">)</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">1.d0</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="w"> </span><span class="mf">1.d0</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="nb">abs</span><span class="p">(</span><span class="n">dimag</span><span class="p">(</span><span class="n">sigmaBHZ</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="n">ii</span><span class="p">))</span><span class="o">/</span><span class="n">pi</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="w">    </span><span class="c">!</span>
+<span class="w">    </span><span class="n">fhtop</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">    </span><span class="c">!</span>
+<span class="w">  </span><span class="k">endif</span>
+<span class="k">end subroutine </span><span class="n">set_SigmaBHZ</span>
+</pre></div>
+</div>
+<p>We are now ready to initialize the calculation in the main
+program. The first step to take is to construct the lattice
+Hamiltonian which, for sake of simplicity, we do using procedures in
+<a class="reference external" href="https://github.com/aamaricci/DMFTtools">DMFT_TOOLS</a>:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!&gt; Set the basis vectors square lattice</span>
+<span class="k">call </span><span class="n">TB_set_ei</span><span class="p">([</span><span class="mi">1</span><span class="n">d0</span><span class="p">,</span><span class="mi">0</span><span class="n">d0</span><span class="p">],[</span><span class="mi">0</span><span class="n">d0</span><span class="p">,</span><span class="mi">1</span><span class="n">d0</span><span class="p">])</span><span class="w">  </span><span class="c">! real-space lattice basis vectors</span>
+<span class="k">call </span><span class="n">TB_set_bk</span><span class="p">([</span><span class="n">pi2</span><span class="p">,</span><span class="mi">0</span><span class="n">d0</span><span class="p">],[</span><span class="mi">0</span><span class="n">d0</span><span class="p">,</span><span class="n">pi2</span><span class="p">])</span><span class="w">   </span><span class="c">! k-space lattice basis vectors</span>
+<span class="c">!&gt; Set the self-energy correction to zero</span>
+<span class="k">call </span><span class="n">set_SigmaBHZ</span><span class="p">()</span>
+<span class="c">!&gt; Allocate and build the lattice Hamiltonian using model function above.</span>
+<span class="k">allocate</span><span class="p">(</span><span class="n">Hk</span><span class="p">(</span><span class="n">Nso</span><span class="p">,</span><span class="n">Nso</span><span class="p">,</span><span class="n">Lk</span><span class="p">))</span><span class="w"> </span><span class="p">;</span><span class="n">Hk</span><span class="o">=</span><span class="n">zero</span>
+<span class="k">call </span><span class="n">TB_build_model</span><span class="p">(</span><span class="n">Hk</span><span class="p">,</span><span class="n">hk_bhz</span><span class="p">,</span><span class="n">Nso</span><span class="p">,[</span><span class="n">Nx</span><span class="p">,</span><span class="n">Nx</span><span class="p">])</span>
+<span class="c">!&gt; Get the topological invariant Z_2 = 1/2[C_up - C_dw] using discretized Berry flux in the BZ</span>
+<span class="n">z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_spinChern</span><span class="p">(</span><span class="n">Hk</span><span class="p">,[</span><span class="n">Nx</span><span class="p">,</span><span class="n">Nx</span><span class="p">])</span>
+<span class="k">if</span><span class="p">(</span><span class="n">master</span><span class="p">)</span><span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="s2">&quot;Z2 = &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">z2</span>
+</pre></div>
+</div>
+<p>Next, to start DMFT calculation we need to set the local Hamiltonian
+which in the code setup the impurity Hamiltonian, initialize the bath.</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!&gt; Get local Hamiltonian summing over k (one can do better)</span>
+<span class="k">allocate</span><span class="p">(</span><span class="n">Hloc</span><span class="p">(</span><span class="n">Nso</span><span class="p">,</span><span class="n">Nso</span><span class="p">))</span>
+<span class="n">Hloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sum</span><span class="p">(</span><span class="n">Hk</span><span class="p">,</span><span class="nb">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="n">Lk</span>
+<span class="k">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">dreal</span><span class="p">(</span><span class="n">Hloc</span><span class="p">))</span><span class="o">&lt;</span><span class="mi">1</span><span class="n">d</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span><span class="n">Hloc</span><span class="o">=</span><span class="n">zero</span>
+<span class="c">!&gt; Set H_{loc} in EDIpack</span>
+<span class="k">call </span><span class="n">ed_set_hloc</span><span class="p">(</span><span class="n">Hloc</span><span class="p">)</span>
+<span class="c">!&gt; Get bath dimension and allocate user bath to this size</span>
+<span class="n">Nb</span><span class="o">=</span><span class="n">ed_get_bath_dimension</span><span class="p">()</span>
+<span class="k">allocate</span><span class="p">(</span><span class="n">Bath</span><span class="p">(</span><span class="n">Nb</span><span class="p">))</span>
+<span class="c">!</span>
+<span class="c">!&gt; Initialize the ED solver (bath is guessed or read from file)</span>
+<span class="k">call </span><span class="n">ed_init_solver</span><span class="p">(</span><span class="n">bath</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we implement the DMFT loop, using the same structure we
+discussed in the previous section:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Solve the quantum impurity problem for a given user bath <span class="math notranslate nohighlight">\(\vec{b}\)</span>.</p></li>
+<li><p>Retrieve Matsubara self-energy and get the local Green's function
+<span class="math notranslate nohighlight">\(G_{loc}=\sum_k [i\omega_n + \mu - H(k) - \Sigma]^{-1}\)</span></p></li>
+<li><p>Implement DMFT self-consistency to update Weiss field:
+<span class="math notranslate nohighlight">\({\cal G}_0 = [G^{-1}_{loc} + \Sigma]^{-1}\)</span></p></li>
+<li><p>Update the user bath <span class="math notranslate nohighlight">\(\vec{b}\)</span> using <span class="math notranslate nohighlight">\(\chi^2\)</span>
+optimization against the obtained updated Weiss field.</p></li>
+<li><p>Check error and restart.</p></li>
+</ol>
+</div></blockquote>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="n">iloop</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">converged</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="k">do while</span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="n">converged</span><span class="p">.</span><span class="nb">AND</span><span class="p">.</span><span class="n">iloop</span><span class="o">&lt;</span><span class="n">nloop</span><span class="p">)</span>
+<span class="w">  </span><span class="n">iloop</span><span class="o">=</span><span class="n">iloop</span><span class="o">+</span><span class="mi">1</span>
+
+<span class="w">  </span><span class="c">!&gt; Solve the impurity problem, retrieve matsubara self-energy</span>
+<span class="w">  </span><span class="k">call </span><span class="n">ed_solve</span><span class="p">(</span><span class="n">bath</span><span class="p">)</span>
+<span class="w">  </span><span class="k">call </span><span class="n">ed_get_sigma</span><span class="p">(</span><span class="n">Smats</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;mats&#39;</span><span class="p">)</span>
+
+
+<span class="w">  </span><span class="c">!&gt; Get Gloc (using DMFT_TOOLS)</span>
+<span class="w">  </span><span class="k">call </span><span class="n">get_gloc</span><span class="p">(</span><span class="n">Hk</span><span class="p">,</span><span class="n">Gmats</span><span class="p">,</span><span class="n">Smats</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">call </span><span class="n">write_gf</span><span class="p">(</span><span class="n">Gmats</span><span class="p">,</span><span class="s2">&quot;Gloc&quot;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;mats&#39;</span><span class="p">,</span><span class="n">iprint</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="w">  </span><span class="c">!&gt; Update the Weiss field: (using DMFT_TOOLS). Linear mixing.</span>
+<span class="w">  </span><span class="k">call </span><span class="n">dmft_self_consistency</span><span class="p">(</span><span class="n">Gmats</span><span class="p">,</span><span class="n">Smats</span><span class="p">,</span><span class="n">Weiss</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">iloop</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span><span class="n">Weiss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wmixing</span><span class="o">*</span><span class="n">Weiss</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mf">1.d0</span><span class="o">-</span><span class="n">wmixing</span><span class="p">)</span><span class="o">*</span><span class="n">Weiss_</span>
+
+
+<span class="w">  </span><span class="c">!&gt; Fit the new bath, starting from the current bath + the update Weiss field</span>
+<span class="w">  </span><span class="k">call </span><span class="n">ed_chi2_fitgf</span><span class="p">(</span><span class="n">Weiss</span><span class="p">,</span><span class="n">bath</span><span class="p">,</span><span class="n">ispin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c">!Check convergence (using DMFT_TOOLS)</span>
+<span class="w">  </span><span class="n">converged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">check_convergence</span><span class="p">(</span><span class="n">Weiss</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,:),</span><span class="n">dmft_error</span><span class="p">,</span><span class="n">nsuccess</span><span class="p">,</span><span class="n">nloop</span><span class="p">)</span>
+<span class="w">  </span><span class="n">Weiss_</span><span class="o">=</span><span class="n">Weiss</span>
+<span class="k">enddo</span>
+</pre></div>
+</div>
+<p>Finally, once converged is achieved and DMFT solution has been
+obtained we get real-axis Green's functions and solve the topological
+Hamiltonian:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!&gt; retrieve real-axis self-energy and build local Green&#39;s function</span>
+<span class="k">call </span><span class="n">ed_get_sigma</span><span class="p">(</span><span class="n">Sreal</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+<span class="k">call </span><span class="n">get_gloc</span><span class="p">(</span><span class="n">Hk</span><span class="p">,</span><span class="n">Greal</span><span class="p">,</span><span class="n">Sreal</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="k">call </span><span class="n">write_gf</span><span class="p">(</span><span class="n">Greal</span><span class="p">,</span><span class="s2">&quot;Gloc&quot;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">,</span><span class="n">iprint</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c">!</span>
+<span class="c">!&gt; Set the self-energy correction, build the topological Hamiltonian and get corresponding invariant</span>
+<span class="k">call </span><span class="n">set_SigmaBHZ</span><span class="p">(</span><span class="n">Smats</span><span class="p">(:,:,</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">call </span><span class="n">TB_build_model</span><span class="p">(</span><span class="n">Hk</span><span class="p">,</span><span class="n">hk_bhz</span><span class="p">,</span><span class="n">Nso</span><span class="p">,[</span><span class="n">Nx</span><span class="p">,</span><span class="n">Nx</span><span class="p">])</span><span class="w">  </span><span class="c">!this is now Htop = Z.(Hk + ReSigma)</span>
+<span class="c">!</span>
+<span class="n">z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_spinChern</span><span class="p">(</span><span class="n">Hk</span><span class="p">,[</span><span class="n">Nx</span><span class="p">,</span><span class="n">Nx</span><span class="p">])</span>
+<span class="k">if</span><span class="p">(</span><span class="n">master</span><span class="p">)</span><span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="s2">&quot;Z2* = &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">z2</span>
+</pre></div>
+</div>
+<hr></section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h2>
+<p>We now show some results obtained using this <cite>EDIpack</cite> based
+program, starting from a simple analysis of the effect of interaction
+to the QSHI state. For, we consider
+<span class="math notranslate nohighlight">\(M=1\)</span> and fix the Hund's exchange to <span class="math notranslate nohighlight">\(J/U=0.25\)</span>. As
+discussed thoroughly in the literature, a finite value of the Hund's
+coupling is required to obtain a Mott insulating state when
+considering (full or density-density) Kanamori interaction.</p>
+<p>In panel A, we report the evolution of the spectral function
+<span class="math notranslate nohighlight">\(-\Im G_{a=1,2}(\omega)\)</span> for increasing interaction strength
+<span class="math notranslate nohighlight">\(U\)</span>.  The results show how the  QSHI for weak
+interaction progressively transforms into a strongly correlated
+non-trivial state for increasing <span class="math notranslate nohighlight">\(U\)</span>, displaying smaller topological gap and spectral
+weight transfert to higher energy. Further increasing the interaction
+leads to a (high-spin) Mott
+insulating state, featuring two Hubbard bands separated by a large
+spectral gap.</p>
+<p>This snapshot of the evolution of the topological state is
+corroborated by the results reported in panel B. There, we show the
+band structure of the topological Hamiltonian <span class="math notranslate nohighlight">\(H_{top}\)</span>, which
+corresponds to the low-energy quasi-particle dispersion or low-energy
+poles of the Green's functions. The hallmark of strong correlation,
+renormalizing the band dispersion  and reducing the topological gap,
+is clearly visible.</p>
+<a class="with-border reference internal image-reference" href="../_images/01_bhz_fig1.svg"><img alt="../_images/01_bhz_fig1.svg" class="with-border" src="../_images/01_bhz_fig1.svg" style="width: 800px;" />
+</a>
+<p>Next, in the panel A of the second figure, we present a brief overview
+of the evolution of the model solution for <span class="math notranslate nohighlight">\(J/U=0\)</span>
+and <span class="math notranslate nohighlight">\(J/U=0.25\)</span>. The plot shows the behavior of the orbital
+polarization value
+<span class="math notranslate nohighlight">\(\langle T_z\rangle = \langle \psi_i^\dagger \Gamma_{03} \psi_i \rangle  = \sum_\sigma \langle n_{i2\sigma}\rangle  - \langle n_{i1\sigma} \rangle\)</span>
+in the two cases for a large range of interactions.
+In both cases we consider a starting regime in the QSHI
+state. Respectively, we choose <span class="math notranslate nohighlight">\(M=0.5\)</span> for <span class="math notranslate nohighlight">\(J=0\)</span> and
+<span class="math notranslate nohighlight">\(M=2.7\)</span> for <span class="math notranslate nohighlight">\(J&gt;0\)</span>.</p>
+<p>In absence of Hund's coupling the interaction favors states with
+larger orbital polarization, i.e. trivial band insulator. This state
+showing a saturated value of <span class="math notranslate nohighlight">\(\langle T_z\rangle\simeq 2\)</span>
+is reached through a first-order transition at  a critical value of
+the interaction.
+On the contrary, a finite value of <span class="math notranslate nohighlight">\(J\)</span> tend to favour state with
+maximal spin project and smaller orbital polarization. As effect the
+value of  <span class="math notranslate nohighlight">\(\langle T_z\rangle\)</span> is slowly reduced to zero, across
+two consecutive first-order transitions. The first between the trivial
+insulator and the QSHI, the second entering the high-spin Mott state.</p>
+<p>A reasonable question is then whether these strongly correlated states
+are stable against long-range ordering. To find possible
+answer this question we analyze the evolution of a excitonic
+in-plance triplet impurity susceptibility <span class="math notranslate nohighlight">\(\chi^{xy}\)</span>.
+The results reported in panel B shows a clear signature of the
+softening of this type of excitonic susceptibility which,
+although different from the correct local susceptibility, gives an
+indication of the possible instability of the system towards
+in-plane triplet excitonic ordering.</p>
+<p>We will analyze in a successive section the onset of this kind of ordering.</p>
+<a class="with-border reference internal image-reference" href="../_images/01_bhz_fig2.svg"><img alt="../_images/01_bhz_fig2.svg" class="with-border" src="../_images/01_bhz_fig2.svg" style="width: 800px;" />
+</a>
+<hr><p>The program to solve the main model is available here: <a class="reference download internal" download="" href="../_downloads/e79bd7b9bd995ebd3d503a2815ab4132/01_bhz.f90"><code class="xref download docutils literal notranslate"><span class="pre">BHZ</span> <span class="pre">Code</span></code></a></p>
+<p>Here is a list of bath files corresponding the solutions in figure 1:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Bath <span class="math notranslate nohighlight">\(M=1\)</span>, <span class="math notranslate nohighlight">\(J/U=0.25\)</span> and <span class="math notranslate nohighlight">\(U=2\)</span>  <a class="reference download internal" download="" href="../_downloads/22e4a7d85f9731fc5134181fc704e70d/M1_U2_J0.25_hamiltonian.restart"><code class="xref download docutils literal notranslate"><span class="pre">hamiltonian.restart</span></code></a></p></li>
+<li><p>Bath <span class="math notranslate nohighlight">\(M=1\)</span>, <span class="math notranslate nohighlight">\(J/U=0.25\)</span> and <span class="math notranslate nohighlight">\(U=4\)</span>  <a class="reference download internal" download="" href="../_downloads/eb9d773d7ed3122ee3d4d2f222855145/M1_U4_J0.25_hamiltonian.restart"><code class="xref download docutils literal notranslate"><span class="pre">hamiltonian.restart</span></code></a></p></li>
+<li><p>Bath <span class="math notranslate nohighlight">\(M=1\)</span>, <span class="math notranslate nohighlight">\(J/U=0.25\)</span> and <span class="math notranslate nohighlight">\(U=8\)</span>  <a class="reference download internal" download="" href="../_downloads/b8c78878de069b206cd652f1863a5783/M1_U8_J0.25_hamiltonian.restart"><code class="xref download docutils literal notranslate"><span class="pre">hamiltonian.restart</span></code></a></p></li>
+</ul>
+</div></blockquote>
+<p>Here is an example of input file used in the calculations above:  <a class="reference download internal" download="" href="../_downloads/bf7fc15fae96ae9b980a81d7c65a085c/inputED_BHZ.conf"><code class="xref download docutils literal notranslate"><span class="pre">InputFile</span></code></a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Further examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="02_ahm.html" class="btn btn-neutral float-right" title="Attractive Hubbard model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Lorenzo Crippa and Adriano Amaricci.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

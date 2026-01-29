@@ -1,0 +1,1268 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Input / Output Functions &mdash; EDIpack 5.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=5c5534e0" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ce74c6a2"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="\(\chi^2\) Fit" href="06_fit.html" />
+    <link rel="prev" title="Bath Replica" href="04_bath/04_ed_bath_replica.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            EDIpack
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-source">From source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#building">Building</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../installation.html#gnu-make">GNU Make</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#installing">Installing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-anaconda">From Anaconda</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/01_anderson.html">Solving a Single Impurity Anderson model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/01_anderson.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/01_anderson.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/02_dmft.html">Solving Dynamical Mean-Field Theory with <cite>EDIpack</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/02_dmft.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../quickstart/02_dmft.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Further examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/01_bhz.html">Interacting BHZ model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/01_bhz.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/01_bhz.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/02_ahm.html">Attractive Hubbard model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/02_ahm.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/02_ahm.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/03_excBHZ.html">In-plane spin excitons in QSHI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/03_excBHZ.html#source-code">Source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/03_excBHZ.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Library structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structure.html#edipack-edipack"><strong>EDIpack</strong>: <span class="xref std std-ref">edipack</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structure.html#edipack2ineq-edipack2ineq"><strong>EDIpack2ineq</strong>: <span class="xref std std-ref">edipack2ineq</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structure.html#edipack-c-bindings-edipack-cbindings"><strong>EDIpack C-bindings</strong>: <span class="xref std std-ref">edipack_cbindings</span></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack.html">The EDIpack Fortran Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/01_edipackmodule.html">EDIpack Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/02_main.html">Impurity Problem Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#general-environment">General Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html">Input Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/03_ed_aux_funx.html">Auxiliary Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/04_ed_setup.html">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/03_general/05_ed_parse_umatrix.html">Parse Umatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/04_classes/01_ed_sparse_matrix.html">Sparse Matrices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/04_classes/02_ed_eigenspace.html">EigenSpace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/04_classes/03_ed_gfmatrix.html">GFmatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#symmetry-sectors"><span class="xref std std-ref">Symmetry Sectors</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/05_sectors.html">Quantum Numbers Sectors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html">Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-auxiliary">Bath Auxiliary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/00_ed_vars_global.html">Bath class definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/01_ed_bath_aux.html">Bath auxiliary routines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/02_ed_bath_dim.html">Bath dimensions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/04_ed_bath_replica.html">Replica bath setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-dmft"><span class="xref std std-ref">Bath DMFT</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/05_ed_bath_dmft.html">Bath class implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/06_bath.html#bath-functions"><span class="xref std std-ref">Bath Functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/06_bath/06_ed_bath_functions.html">Bath  dynamical functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#hamiltonian"><span class="xref std std-ref">Hamiltonian</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html#normal-mode">Normal mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian_common.html">MPI all-2-all transposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html#superconductive-mode">Superconductive mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/07_hamiltonian.html#non-su-2-mode">Non-SU(2) mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/02_hamiltonian.html">Hamiltonian Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/02_hamiltonian_sparse.html">Stored Hamiltonian <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/02_hamiltonian_direct.html">Hamiltonian Direct <span class="math notranslate nohighlight">\(H\times\vec{v}\)</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#exact-diagonalization"><span class="xref std std-ref">Exact Diagonalization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html"><span class="xref std std-ref">Impurity Diagonalization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/08_diag/impurity_diag.html">Impurity diagonalization interface</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/01_diag.html">Exact Diagonalization: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/01_diag.html">Exact Diagonalization: Superconductive</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/08_diag.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/01_diag.html">Exact Diagonalization: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#green-s-functions"><span class="xref std std-ref">Green's Functions</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html"><span class="xref std std-ref">Impurity Green's functions</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/09_greensfunctions/impurity_greensfunctions.html">Impurity Green's functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/03_greensfunctions.html">Green's Function calculation: Normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/03_greensfunctions.html">Green's Function calculation: Superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/09_greensfunctions.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/03_greensfunctions.html">Green's Function calculation: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#susceptibilities"><span class="xref std std-ref">Susceptibilities</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html"><span class="xref std std-ref">Impurity Susceptibilities</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/10_chifunctions/impurity_chifunctions.html">Impurity dynamical response functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#spin-channel"><span class="xref std std-ref">Spin channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_spin.html">Spin Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#charge-channel"><span class="xref std std-ref">Charge channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_dens.html">Charge Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#pair-channel"><span class="xref std std-ref">Pair channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_pair.html">Pair Susceptibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/10_chifunctions.html#exciton-channel"><span class="xref std std-ref">Exciton channel</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/04_chi_exct.html">Exciton Susceptibility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#observables"><span class="xref std std-ref">Observables</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html"><span class="xref std std-ref">Impurity Observables</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/11_observables/impurity_observables.html">Impurity Observables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/05_observables.html">Observables: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/05_observables.html">Observables: superconducting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/11_observables.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/05_observables.html">Observables: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#reduced-density-matrix"><span class="xref std std-ref">Reduced Density Matrix</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html"><span class="xref std std-ref">Impurity Reduced Density Matrix</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/12_rdm/impurity_rdm.html">Impurity RDM</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html#normal-mode"><span class="xref std std-ref">Normal mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/normal/06_rdm.html">Reduced Density Matrix: normal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html#superconductive-mode"><span class="xref std std-ref">Superconductive mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/superc/06_rdm.html">Reduced Density Matrix: superconductivity</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/12_rdm.html#non-su-2-mode"><span class="xref std std-ref">Non-SU(2) mode</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../edipack/nonsu2/06_rdm.html">Reduced Density Matrix: non-SU(2)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/13_io.html">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../edipack/14_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack2ineq</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../edipack2ineq.html">EDIpack for inequivalent impurities</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#library-frontend"><span class="xref std std-ref">Library Frontend</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="01_edipack2ineqmodule.html">EDIpack2ineq Fortran Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#core-solver-routines"><span class="xref std std-ref">Core Solver Routines</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="02_main.html">Inequivalent Impurities Solver Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#general-environment">General Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="03_general/02_ed_vars_global.html">Global Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_general/03_ed_aux_funx.html">Auxiliary Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#quantum-impurity-bath"><span class="xref std std-ref">Quantum Impurity Bath</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04_bath.html">Inequivalent Impurities Bath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_bath.html#bath-user"><span class="xref std std-ref">Bath User</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="04_bath/03_ed_bath_user.html">Bath symmetry operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="04_bath.html#bath-replica"><span class="xref std std-ref">Bath Replica</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="04_bath/04_ed_bath_replica.html">Bath Replica</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../edipack2ineq.html#input-output"><span class="xref std std-ref">Input/Output</span></a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Input / Output Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../edipack2ineq.html#bath-optimization"><span class="xref std std-ref">Bath Optimization</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="06_fit.html"><span class="math notranslate nohighlight">\(\chi^2\)</span> Fit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">EDIpack C-bindings</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack_cbindings.html">EDIpack Fortran-C interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c_bindings/01_vars.html">EDIpack Fortran-C interface: Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv48has_ineq"><code class="docutils literal notranslate"><span class="pre">has_ineq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44beta"><code class="docutils literal notranslate"><span class="pre">beta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chidens_flag"><code class="docutils literal notranslate"><span class="pre">chidens_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chiexct_flag"><code class="docutils literal notranslate"><span class="pre">chiexct_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chipair_flag"><code class="docutils literal notranslate"><span class="pre">chipair_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv412chispin_flag"><code class="docutils literal notranslate"><span class="pre">chispin_flag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv410dmft_error"><code class="docutils literal notranslate"><span class="pre">dmft_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv47ed_twin"><code class="docutils literal notranslate"><span class="pre">ed_twin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv411ed_total_ud"><code class="docutils literal notranslate"><span class="pre">ed_total_ud</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43eps"><code class="docutils literal notranslate"><span class="pre">eps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv42Jh"><code class="docutils literal notranslate"><span class="pre">Jh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv42Jp"><code class="docutils literal notranslate"><span class="pre">Jp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv42Jx"><code class="docutils literal notranslate"><span class="pre">Jx</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Lfit"><code class="docutils literal notranslate"><span class="pre">Lfit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Lmats"><code class="docutils literal notranslate"><span class="pre">Lmats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Lreal"><code class="docutils literal notranslate"><span class="pre">Lreal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Lpos"><code class="docutils literal notranslate"><span class="pre">Lpos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Ltau"><code class="docutils literal notranslate"><span class="pre">Ltau</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Nbath"><code class="docutils literal notranslate"><span class="pre">Nbath</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Nloop"><code class="docutils literal notranslate"><span class="pre">Nloop</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Norb"><code class="docutils literal notranslate"><span class="pre">Norb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43Nph"><code class="docutils literal notranslate"><span class="pre">Nph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45nread"><code class="docutils literal notranslate"><span class="pre">nread</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv45Nspin"><code class="docutils literal notranslate"><span class="pre">Nspin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv48Nsuccess"><code class="docutils literal notranslate"><span class="pre">Nsuccess</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv48sb_field"><code class="docutils literal notranslate"><span class="pre">sb_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44Uloc"><code class="docutils literal notranslate"><span class="pre">Uloc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43Ust"><code class="docutils literal notranslate"><span class="pre">Ust</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44wfin"><code class="docutils literal notranslate"><span class="pre">wfin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44wini"><code class="docutils literal notranslate"><span class="pre">wini</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44xmax"><code class="docutils literal notranslate"><span class="pre">xmax</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv44xmin"><code class="docutils literal notranslate"><span class="pre">xmin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/01_vars.html#_CPPv43xmu"><code class="docutils literal notranslate"><span class="pre">xmu</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../c_bindings/02_funcs.html">EDIpack Fortran-C interface: Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv410read_inputPc"><code class="docutils literal notranslate"><span class="pre">read_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv421ed_set_Hloc_single_N4PNSt7complexIdEEPNSt7complexIdEEP7int64_t"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_single_N4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N2PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N3PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422ed_set_Hloc_lattice_N5PNSt7complexIdEEPNSt7complexIdEEP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ed_set_Hloc_lattice_N5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv425get_bath_dimension_directv"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_direct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv429get_bath_dimension_symmetriesi"><code class="docutils literal notranslate"><span class="pre">get_bath_dimension_symmetries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415search_variablePdPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">search_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hreplica_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427init_Hgeneral_symmetries_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hreplica_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hreplica_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d3PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv435init_Hgeneral_symmetries_lattice_d5PNSt7complexIdEEP7int64_tPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_Hgeneral_symmetries_lattice_d5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_sitePdP7int64_tddi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424break_symmetry_bath_ineqPdP7int64_tdPdi"><code class="docutils literal notranslate"><span class="pre">break_symmetry_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv425spin_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">spin_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_sitePdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv424orb_symmetrize_bath_ineqPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">orb_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv422orb_equality_bath_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">orb_equality_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_sitePdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423ph_symmetrize_bath_ineqPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">ph_symmetrize_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423save_array_as_bath_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">save_array_as_bath_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_normal_n5PNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_normal_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv427chi2_fitgf_single_superc_n5PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_tiii"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_single_superc_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n3PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n4PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_normal_n6PNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_normal_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n3PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n4PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv428chi2_fitgf_lattice_superc_n6PNSt7complexIdEEP7int64_tPNSt7complexIdEEP7int64_tPdP7int64_ti"><code class="docutils literal notranslate"><span class="pre">chi2_fitgf_lattice_superc_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_dens_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_dens_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv413ed_get_mag_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_mag_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_docc_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_docc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_phisc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_phisc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n2PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415ed_get_argsc_n3PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_argsc_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n1PNSt7complexIdEE"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_eimp_n2PNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_eimp_n2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417get_sigma_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420get_sigma_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_sigma_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n3PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416get_gimp_site_n5PNSt7complexIdEEiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_site_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n3PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n4PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419get_gimp_lattice_n6PNSt7complexIdEEiiiPNSt7complexIdEEii"><code class="docutils literal notranslate"><span class="pre">get_gimp_lattice_n6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_g0and_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_g0and_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_g0and_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_delta_n3PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv412get_delta_n5PNSt7complexIdEEP7int64_tPdiPNSt7complexIdEEP7int64_tPcPc"><code class="docutils literal notranslate"><span class="pre">get_delta_n5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_spinchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_spinchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_denschiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_denschi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_pairchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_pairchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv414ed_get_exctchiPNSt7complexIdEEPNSt7complexIdEEiiPcii"><code class="docutils literal notranslate"><span class="pre">ed_get_exctchi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv419ed_get_impurity_rdmPNSt7complexIdEEi"><code class="docutils literal notranslate"><span class="pre">ed_get_impurity_rdm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416init_solver_sitePdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423init_solver_site_nobathv"><code class="docutils literal notranslate"><span class="pre">init_solver_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv416init_solver_ineqPdP7int64_t"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv423init_solver_ineq_nobathi"><code class="docutils literal notranslate"><span class="pre">init_solver_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv410solve_sitePdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417solve_site_nobathii"><code class="docutils literal notranslate"><span class="pre">solve_site_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv410solve_ineqPdP7int64_tii"><code class="docutils literal notranslate"><span class="pre">solve_ineq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv417solve_ineq_nobathiii"><code class="docutils literal notranslate"><span class="pre">solve_ineq_nobath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv415finalize_solveri"><code class="docutils literal notranslate"><span class="pre">finalize_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv413reset_umatrixv"><code class="docutils literal notranslate"><span class="pre">reset_umatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../c_bindings/02_funcs.html#_CPPv420add_twobody_operatoriiiiiiiid"><code class="docutils literal notranslate"><span class="pre">add_twobody_operator()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python projects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../edipack_python.html">Python projects</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Browse code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../browsecode.html">Browse code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_aux_funx.html">E2I_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath.html">E2I_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath_fit.html">E2I_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath_replica.html">E2I_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_bath_user.html">E2I_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_io.html">E2I_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_main.html">E2I_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/e2i_vars_global.html">E2I_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_aux_funx.html">ED_AUX_FUNX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath.html">ED_BATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_aux.html">ED_BATH_AUX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_dim.html">ED_BATH_DIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_dmft.html">ED_BATH_DMFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_fit.html">ED_BATH_FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_functions.html">ED_BATH_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_replica.html">ED_BATH_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_bath_user.html">ED_BATH_USER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_dens.html">ED_CHI_DENS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_exct.html">ED_CHI_EXCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_functions.html">ED_CHI_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_pair.html">ED_CHI_PAIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_chi_spin.html">ED_CHI_SPIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag.html">ED_DIAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag_nonsu2.html">ED_DIAG_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag_normal.html">ED_DIAG_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_diag_superc.html">ED_DIAG_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_eigenspace.html">ED_EIGENSPACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_common.html">ED_FIT_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_general.html">ED_FIT_GENERAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_hybrid.html">ED_FIT_HYBRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_normal.html">ED_FIT_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_fit_replica.html">ED_FIT_REPLICA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gf_nonsu2.html">ED_GF_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gf_normal.html">ED_GF_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gf_superc.html">ED_GF_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_gfmatrix.html">ED_GFMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_greens_functions.html">ED_GREENS_FUNCTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian.html">ED_HAMILTONIAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2.html">ED_HAMILTONIAN_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2_common.html">ED_HAMILTONIAN_NONSU2_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2_direct_hxv.html">ED_HAMILTONIAN_NONSU2_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_nonsu2_stored_hxv.html">ED_HAMILTONIAN_NONSU2_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal.html">ED_HAMILTONIAN_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal_common.html">ED_HAMILTONIAN_NORMAL_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal_direct_hxv.html">ED_HAMILTONIAN_NORMAL_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_normal_stored_hxv.html">ED_HAMILTONIAN_NORMAL_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc.html">ED_HAMILTONIAN_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc_common.html">ED_HAMILTONIAN_SUPERC_COMMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc_direct_hxv.html">ED_HAMILTONIAN_SUPERC_DIRECT_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_hamiltonian_superc_stored_hxv.html">ED_HAMILTONIAN_SUPERC_STORED_HxV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_input_vars.html">ED_INPUT_VARS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_io.html">ED_IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_main.html">ED_MAIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables.html">ED_OBSERVABLES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables_nonsu2.html">ED_OBSERVABLES_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables_normal.html">ED_OBSERVABLES_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_observables_superc.html">ED_OBSERVABLES_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_parse_umatrix.html">ED_PARSE_UMATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm.html">ED_RDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm_nonsu2.html">ED_RDM_NONSU2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm_normal.html">ED_RDM_NORMAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_rdm_superc.html">ED_RDM_SUPERC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_sector.html">ED_SECTOR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_setup.html">ED_SETUP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_sparse_map.html">ED_SPARSE_MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_sparse_matrix.html">ED_SPARSE_MATRIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_vars_global.html">ED_VARS_GLOBAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/ed_version.html">ED_VERSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack.html">EDIPACK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack2ineq.html">EDIPACK2INEQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack_c.html">EDIPACK_C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../browsesource/module/edipack_c_common.html">EDIPACK_C_COMMON</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack">EDIpack on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/edipack/EDIpack2py">EDIpack2py on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/krivenko/edipack2triqs">EDIpack2Triqs on GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/SciFortran/SciFortran">SciFortran on GitHub</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EDIpack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../edipack2ineq.html">EDIpack for inequivalent impurities</a></li>
+      <li class="breadcrumb-item active">Input / Output Functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/edipack2ineq/05_io.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="04_bath/04_ed_bath_replica.html" class="btn btn-neutral float-left" title="Bath Replica" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="06_fit.html" class="btn btn-neutral float-right" title="\(\chi^2\) Fit" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="input-output-functions">
+<span id="e2i-io"></span><h1>Input / Output Functions<a class="headerlink" href="#input-output-functions" title="Link to this heading"></a></h1>
+<p class="rubric" id="f/e2i_io">Description</p>
+<p>Contains a set of routines that retrieve quantities such as Green's functions, self-energies (see <a class="reference internal" href="../edipack/09_greensfunctions/impurity_greensfunctions.html#f/ed_greens_functions" title="f/ed_greens_functions: Routines for Green's functions calculation"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ed_greens_functions</span></code></a> ) and observables (from <a class="reference internal" href="../edipack/11_observables/impurity_observables.html#f/ed_observables" title="f/ed_observables: Routines for observables calculation"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ed_observables</span></code></a> ) and pass them to the user, as well ass routines to read and store Green's function and self-energies.</p>
+<p class="rubric">Quick access</p>
+<dl class="field-list simple">
+<dt class="field-odd">Routines<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#f/e2i_io/ed_get_argphi" title="f/e2i_io/ed_get_argphi"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_argphi()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_dens" title="f/e2i_io/ed_get_dens"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_dens()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_denschi" title="f/e2i_io/ed_get_denschi"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_denschi()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_dimp" title="f/e2i_io/ed_get_dimp"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_dimp()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_docc" title="f/e2i_io/ed_get_docc"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_docc()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_doubles" title="f/e2i_io/ed_get_doubles"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_doubles()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_dph" title="f/e2i_io/ed_get_dph"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_dph()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_dse" title="f/e2i_io/ed_get_dse"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_dse()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_dund" title="f/e2i_io/ed_get_dund"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_dund()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_dust" title="f/e2i_io/ed_get_dust"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_dust()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_ehartree" title="f/e2i_io/ed_get_ehartree"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_ehartree()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_eimp" title="f/e2i_io/ed_get_eimp"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_eimp()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_eint" title="f/e2i_io/ed_get_eint"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_eint()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_eknot" title="f/e2i_io/ed_get_eknot"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_eknot()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_epot" title="f/e2i_io/ed_get_epot"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_epot()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_exct" title="f/e2i_io/ed_get_exct"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_exct()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_exctchi" title="f/e2i_io/ed_get_exctchi"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_exctchi()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_g0imp" title="f/e2i_io/ed_get_g0imp"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_g0imp()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_gimp" title="f/e2i_io/ed_get_gimp"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_gimp()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_mag" title="f/e2i_io/ed_get_mag"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_mag()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_pairchi" title="f/e2i_io/ed_get_pairchi"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_pairchi()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_phi" title="f/e2i_io/ed_get_phi"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_phi()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_sigma" title="f/e2i_io/ed_get_sigma"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_sigma()</span></code></a>, <a class="reference internal" href="#f/e2i_io/ed_get_spinchi" title="f/e2i_io/ed_get_spinchi"><code class="xref f f-func docutils literal notranslate"><span class="pre">ed_get_spinchi()</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Used modules</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../edipack/01_edipackmodule.html#f/edipack" title="f/edipack: EDIpack library frontend"><code class="xref f f-mod docutils literal notranslate"><span class="pre">edipack</span></code></a>: EDIpack library frontend</p></li>
+<li><p><a class="reference internal" href="03_general/02_ed_vars_global.html#f/e2i_vars_global" title="f/e2i_vars_global: Global variables, inequivalent sites version"><code class="xref f f-mod docutils literal notranslate"><span class="pre">e2i_vars_global</span></code></a>: Global variables, inequivalent sites version</p></li>
+<li><p><a class="reference internal" href="03_general/03_ed_aux_funx.html#f/e2i_aux_funx" title="f/e2i_aux_funx: Assortment of auxiliary procedures, inequivalent sites version"><code class="xref f f-mod docutils literal notranslate"><span class="pre">e2i_aux_funx</span></code></a>: Assortment of auxiliary procedures, inequivalent sites version</p></li>
+</ul>
+<p class="rubric">External modules</p>
+<ul>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_LINALG.html#f/sf_linalg" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_linalg</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_SPIN.html#f/sf_spin" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_spin</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_ARRAYS.html#f/sf_arrays" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_arrays</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_ARRAYS.html#f/sf_arrays/linspace" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">linspace()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_ARRAYS.html#f/sf_arrays/arange" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">arange()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/sf_iotools" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_iotools</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/str" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">str()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/reg" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">reg()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/iofile/free_unit" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">free_unit()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/ioplot/splot" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">splot()</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_IOTOOLS.html#f/ioread/sread" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">sread()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_MISC.html#f/sf_misc" title="(in SciFortran v4.14.1)"><code class="xref f f-mod docutils literal notranslate"><span class="pre">sf_misc</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://scifortran.github.io/SciFortran/modules/SF_MISC.html#f/sf_misc/assert_shape" title="(in SciFortran v4.14.1)"><code class="xref f f-func docutils literal notranslate"><span class="pre">assert_shape()</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p class="rubric">Subroutines and functions</p>
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_gimp">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_gimp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">type</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_gimp" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the impurity Green's function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</p>
+<p>The impurity Green's function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>
+<span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlso,Nlso,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>type</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;n&quot;</span></code> for Normal (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code> for anomalous</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_dimp">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_dimp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_dimp" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the impurity phonon's Green's function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</p>
+<p>The impurity phonon's Green's function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>,  <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlso,Nlso,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_sigma">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">type</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_sigma" title="Link to this definition"></a></dt>
+<dd><div class="line-block">
+<div class="line">This subrotine gets from the EDIpack library the value of the self-energy calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</div>
+<div class="line">The self-energy is an array having the following possible dimensions:</div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>
+<span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlso,Nlso,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>type</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;n&quot;</span></code> for Normal (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code> for anomalous</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_g0imp">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_g0imp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">bath</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">type</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_g0imp" title="Link to this definition"></a></dt>
+<dd><div class="line-block">
+<div class="line">This subroutine gets from the EDIpack library the value of the impurity non-interacting Green's function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</div>
+<div class="line">It autonomously decides whether the system is single-impurity or real-space DMFT based on the <code class="xref f f-var docutils literal notranslate"><span class="pre">bath</span></code> shape</div>
+</div>
+<p>The impurity non-interacting Green's function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>
+<span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a> <span class="math notranslate nohighlight">\(\cdot\)</span> <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/nspin" title="f/ed_input_vars/nspin"><code class="xref f f-var docutils literal notranslate"><span class="pre">nspin</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<p>The bath is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <code class="xref f f-var docutils literal notranslate"><span class="pre">nb</span></code>] for real-space DMFT, with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> the number of inequivalent impurity sites</p></li>
+</ul>
+</div></blockquote>
+<p>Where <code class="xref f f-var docutils literal notranslate"><span class="pre">nb</span></code> is the length of the <code class="xref f f-var docutils literal notranslate"><span class="pre">bath</span></code> array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlso,Nlso,:]</p></li>
+<li><p><strong>bath</strong> (•, •)<em> [</em><em>real</em><em>]</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>type</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;n&quot;</span></code> for Normal (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code> for anomalous</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_spinchi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_spinchi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_spinchi" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the impurity spin susceptibility function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</p>
+<p>The impurity spin susceptibility function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>,  <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •, •, •)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlat,Norb,Norb,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_denschi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_denschi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_denschi" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the impurity dens susceptibility function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</p>
+<p>The impurity dens susceptibility function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>,  <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •, •, •)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlat,Norb,Norb,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_pairchi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_pairchi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_pairchi" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the impurity pair susceptibility function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</p>
+<p>The impurity pair susceptibility function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>,  <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •, •, •)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlat,Norb,Norb,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_exctchi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_exctchi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">z</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_exctchi" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the impurity exct susceptibility function calculated
+on the Matsubara or real-frequency axis, with number of frequencies <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> or <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a> .</p>
+<p>The impurity exct susceptibility function is an array having the following possible dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>,  <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lmats" title="f/ed_input_vars/lmats"><code class="xref f f-var docutils literal notranslate"><span class="pre">lmats</span></code></a> / <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/lreal" title="f/ed_input_vars/lreal"><code class="xref f f-var docutils literal notranslate"><span class="pre">lreal</span></code></a>]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •, •, •, •)<em> [</em><em>complex</em><em>, </em><em>inout</em><em>]</em> – [Nlat,3,Norb,Norb,:]</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>, </em><em>in</em><em>]</em> – Number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>axis</strong><em> [</em><em>character(len=*)</em><em>]</em> – Can be <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;m&quot;</span></code> for Matsubara (default), <code class="xref f f-var docutils literal notranslate"><span class="pre">&quot;r&quot;</span></code> for real</p></li>
+<li><p><strong>z</strong> (•)<em> [</em><em>complex</em><em>]</em> – User provided array of complex frequency where to evaluate Self</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_dens">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_dens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_dens" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the charge density and passes it to the user.</p>
+<p>The <code class="xref f f-var docutils literal notranslate"><span class="pre">self</span></code> variable can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scalar: if <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> is provided for single-impurity DMFT, density for that orbital</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> (default = 1) is provided for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities, density for that orbital for all impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> is provided for real-space DMFT, density for all impurity sites and orbitals</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_mag">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_mag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">component</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_mag" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the magnetization and passes it to the user.</p>
+<p>The <code class="xref f f-var docutils literal notranslate"><span class="pre">self</span></code> variable can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scalar: if <code class="xref f f-var docutils literal notranslate"><span class="pre">component</span></code> and <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> are provided for single-impurity DMFT, given magnetization component for that orbital</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities, magnetization for that orbital for all impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> is provided for real-space DMFT, one magnetization component for all orbitals and impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <code class="code docutils literal notranslate"><span class="pre">3</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> is provided for real-space DMFT, all magnetization components for all orbitals and sites</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>component</strong><em> [</em><em>character(len=1)</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_docc">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_docc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_docc" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the double occupation and passes it to the user.</p>
+<p>The <code class="xref f f-var docutils literal notranslate"><span class="pre">self</span></code> variable can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scalar: if <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> is provided for single-impurity DMFT, dobule-occupation for that orbital</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> (default = 1) is provided for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities, double-occupation for that orbital for all impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> is provided for real-space DMFT, double-occupation for all impurity sites and orbitals</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_phi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">arg</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_phi" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the modulus value of the superconducting order parameter <span class="math notranslate nohighlight">\(\phi\)</span> ( <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">superc</span></code> ) and passes it to the user.</p>
+<p>The <code class="xref f f-var docutils literal notranslate"><span class="pre">self</span></code> variable can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]:  <span class="math notranslate nohighlight">\(\phi\)</span> for the specified <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> orbital and all impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]:  <span class="math notranslate nohighlight">\(\phi\)</span> for all impurity sites and orbitals</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>arg</strong> (various shapes)<em> [</em><em>real</em><em>]</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_argphi">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_argphi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_argphi" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the argument value of the superconducting order parameter  <span class="math notranslate nohighlight">\(\theta=tan^{-1}(Im\phi/Re\phi)\)</span> ( <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">superc</span></code> ) and passes it to the user.</p>
+<p>The <code class="xref f f-var docutils literal notranslate"><span class="pre">self</span></code> variable can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]:  <span class="math notranslate nohighlight">\(\theta\)</span> for the specified <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> orbital and all impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]:  <span class="math notranslate nohighlight">\(\theta\)</span> for all impurity sites and orbitals</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_exct">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_exct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">iorb</span></em>, <em class="sig-param"><span class="pre">jorb</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_exct" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library the value of the excitonic order parameters <span class="math notranslate nohighlight">\(X^a\)</span> ( <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/ed_mode" title="f/ed_input_vars/ed_mode"><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_mode</span></code></a> = <code class="code docutils literal notranslate"><span class="pre">normal</span></code>,:code:<cite>nonsu2</cite> ) and passes it to the user.</p>
+<p>The <code class="xref f f-var docutils literal notranslate"><span class="pre">self</span></code> variable can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: if <code class="xref f f-var docutils literal notranslate"><span class="pre">iorb</span></code> is provided <span class="math notranslate nohighlight">\(X\)</span> between orbital and orbital+1 for <code class="xref f f-var docutils literal notranslate"><span class="pre">component</span></code> and and all impurity sites</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> , <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a> , <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]:  <span class="math notranslate nohighlight">\(X\)</span> for all orbitals, for  <code class="xref f f-var docutils literal notranslate"><span class="pre">component</span></code>  and all impurity sites.</p></li>
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> , 4, <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a> , <a class="reference internal" href="../edipack/03_general/01_ed_input_vars.html#f/ed_input_vars/norb" title="f/ed_input_vars/norb"><code class="xref f f-var docutils literal notranslate"><span class="pre">norb</span></code></a>]: <span class="math notranslate nohighlight">\(X\)</span> for all orbitals, <code class="xref f f-var docutils literal notranslate"><span class="pre">component</span></code> and all impurity sites.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (various shapes)<em> [</em><em>real</em><em>]</em> – <span class="math notranslate nohighlight">\([S_0,T_x,T_y,T_z]\)</span> array</p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>iorb</strong><em> [</em><em>integer</em><em>]</em> – first orbital index</p></li>
+<li><p><strong>jorb</strong><em> [</em><em>integer</em><em>]</em> – second orbital index</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_eimp">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_eimp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_eimp" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the array [ <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_epot</span></code> , <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_eint</span></code> , <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_ehartree</span></code> , <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_eknot</span></code> ].
+These are the expectation values various contribution to the internal energy</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_epot</span></code> = energy contribution from the interaction terms, <strong>including</strong> the Hartree term</p></li>
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_eint</span></code> = energy contribution from the interaction terms, <strong>excluding</strong> the Hartree term</p></li>
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_ehartree</span></code> = <span class="math notranslate nohighlight">\(-\frac{U}{2} \sum_{i} \langle n_{i\uparrow} + n_{i\downarrow} \rangle
+-\frac{2U^{'}-J_{H}}{2} \sum_{i &lt; j} \langle n_{i\uparrow}+n_{i\downarrow} + n_{i\downarrow}+n_{j\downarrow} \rangle
++\frac{U}{4} + \frac{2U^{'}-J_{H}}{2}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals</p></li>
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_eknot</span></code> = kinetic term from the <strong>local</strong> 1-body Hamiltonian</p></li>
+</ul>
+</div></blockquote>
+<p>The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <code class="code docutils literal notranslate"><span class="pre">4</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_epot">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_epot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_epot" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_epot</span></code>, the energy contribution from the interaction terms, <strong>including</strong> the Hartree term.
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DM</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_eint">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_eint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_eint" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_int</span></code>, the energy contribution from the interaction terms, <strong>excluding</strong> the Hartree term.
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DM</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_ehartree">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_ehartree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_ehartree" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of the Hartree potential
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_ehartree</span></code>. The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DM</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_eknot">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_eknot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_eknot" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_eknot</span></code>, the kinetic term from the <strong>local</strong> 1-body Hamiltonian
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DM</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_doubles">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_doubles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_doubles" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the array [ <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dust</span></code> , <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dund</span></code> , <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dse</span></code> , <code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dph</span></code> ].
+These are the expectation values of the two-body operators associated with the density-density inter-orbital interaction (with opposite and parallel spins),
+spin-exchange and pair-hopping.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dust</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} n_{i\uparrow}n_{j\downarrow} + n_{i\downarrow}n_{j\uparrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals</p></li>
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dund</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} n_{i\uparrow}n_{j\uparrow}  + n_{i\downarrow}n_{j\downarrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals</p></li>
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dse</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} c^{\dagger}_{i\uparrow}c^{\dagger}_{j\uparrow}c_{i\downarrow}c_{j\uparrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals</p></li>
+<li><p><code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dph</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} c^{\dagger}_{i\uparrow}c^{\dagger}_{i\downarrow}c_{j\downarrow}c_{j\uparrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals</p></li>
+</ul>
+</div></blockquote>
+<p>The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>, <code class="code docutils literal notranslate"><span class="pre">4</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•, •)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_dust">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_dust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_dust" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dust</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} n_{i\uparrow}n_{j\downarrow} + n_{i\downarrow}n_{j\uparrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_dund">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_dund</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_dund" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dund</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} n_{i\uparrow}n_{j\uparrow}  + n_{i\downarrow}n_{j\downarrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_dse">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_dse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_dse" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dse</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} c^{\dagger}_{i\uparrow}c^{\dagger}_{j\uparrow}c_{i\downarrow}c_{j\uparrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/e2i_io/ed_get_dph">
+<span class="property"><span class="pre">interface</span>&#160; </span><span class="sig-prename descclassname"><span class="pre">e2i_io/</span></span><span class="sig-name descname"><span class="pre">ed_get_dph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nlat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#f/e2i_io/ed_get_dph" title="Link to this definition"></a></dt>
+<dd><p>This subroutine gets from the EDIpack library and passes to the user the value of
+<code class="xref f f-var docutils literal notranslate"><span class="pre">ed_dph</span></code> = <span class="math notranslate nohighlight">\(\sum_{i &lt; j} c^{\dagger}_{i\uparrow}c^{\dagger}_{i\downarrow}c_{j\downarrow}c_{j\uparrow}\)</span> for <span class="math notranslate nohighlight">\(i,j\)</span> orbitals
+The returned array can have the following dimensions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[<code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code>]: for real-space DMFT with <code class="xref f f-var docutils literal notranslate"><span class="pre">nlat</span></code> impurities</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (•)<em> [</em><em>real</em><em>]</em></p></li>
+<li><p><strong>nlat</strong><em> [</em><em>integer</em><em>]</em> – number of inequivalent impurity sites for real-space DMFT</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="04_bath/04_ed_bath_replica.html" class="btn btn-neutral float-left" title="Bath Replica" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="06_fit.html" class="btn btn-neutral float-right" title="\(\chi^2\) Fit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Lorenzo Crippa and Adriano Amaricci.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
