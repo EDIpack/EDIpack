@@ -79,7 +79,7 @@ contains
     endif
     !
     if(ed_sectors.AND.ed_mode/="normal")then
-       stop "ED_ERROR: using ed_sectors with ed_mode=[superc,nonsu2] NOT TESTED! Uncomment this line in ED_SETUP if u want to take the risk.."
+       stop "ED_ERROR: using ed_sectors with ed_mode=[superc,nonsu2] NOT TESTED! Comment out this line in ED_SETUP if u want to take the risk.."
     endif
 
     ! if(ed_mode=="superc".AND.cg_grad==0)then

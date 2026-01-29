@@ -292,7 +292,7 @@ MODULE ED_INPUT_VARS
   integer              :: ed_sectors_shift  !
   !Additional sectors to be evaluated if :f:var:`ed_sectors` is set. These are sectors 
   !with all the quantum numbers varying of at most by :f:var:`ed_sectors_shift` around the 
-  !sectors listed in :f:var:`ed_sectors`.
+  !sectors listed in :f:var:`sectorfile`.
   ! :Default ed_sectors_shift:`1`
   !
   integer              :: ed_verbose        !
