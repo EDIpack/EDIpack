@@ -78,9 +78,9 @@ contains
        lanc_nstates_total=1
     endif
     !
-    if(ed_sectors.AND.ed_mode/="normal")then
-       stop "ED_ERROR: using ed_sectors with ed_mode=[superc,nonsu2] NOT TESTED! Comment out this line in ED_SETUP if u want to take the risk.."
-    endif
+    !if(ed_sectors.AND.ed_mode/="normal")then
+    !   stop "ED_ERROR: using ed_sectors with ed_mode=[superc,nonsu2] NOT TESTED! Comment out this line in ED_SETUP if u want to take the risk.."
+    !endif
 
     ! if(ed_mode=="superc".AND.cg_grad==0)then
     !    write(LOGfile,*)"ED_WARNING: chi2_figgf_*_superc: revert to cg_grad=1(numeric)"
