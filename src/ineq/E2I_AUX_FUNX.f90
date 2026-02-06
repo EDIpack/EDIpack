@@ -87,6 +87,9 @@ contains
   !PURPOSE  : Setup Himpurity, the local part of the non-interacting Hamiltonian
   !+------------------------------------------------------------------+
   subroutine ed_set_Hloc_lattice_N2(Hloc,Nlat)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     complex(8),dimension(:,:),intent(in) :: Hloc
     integer                              :: Nlat !Number of impurities for real-space DMFT
     integer                              :: ilat
@@ -124,6 +127,9 @@ contains
 
 
   subroutine ed_set_Hloc_lattice_N3(Hloc,Nlat)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     complex(8),dimension(:,:,:),intent(in) :: Hloc
     integer                                :: Nlat,ilat
 #ifdef _DEBUG
@@ -163,6 +169,9 @@ contains
   end subroutine ed_set_Hloc_lattice_superc_N3
 
   subroutine ed_set_Hloc_lattice_N5(Hloc,Nlat)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     complex(8),dimension(:,:,:,:,:),intent(in) :: Hloc
     integer                                    :: Nlat,ilat
 #ifdef _DEBUG
@@ -197,6 +206,9 @@ contains
 
 
   subroutine set_impHloc(site)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     integer :: site
     if(.not.allocated(Hloc_ineq))stop "set_impHloc error: called with Hloc_ineq not allocated"
     

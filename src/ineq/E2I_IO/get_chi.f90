@@ -15,13 +15,16 @@ subroutine ed_get_spinChi_lattice_n3(self,nlat,axis,z)
      allocate(z_, source=z)
   else
      select case(axis_)
-     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
+     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,vm))
-     case ('r','R')
-        allocate(z_, source=dcmplx(vr,eps))
+        allocate(z_(lmats))
+        z_(:) = dcmplx(0d0,vm(:))
+     case('r','R')
+        allocate(z_(lreal))
+        z_(:) = dcmplx(vr(:),eps)
      case ('t','T')
-      allocate(z_, source=dcmplx(tau,0d0))
+        allocate(z_(ltau))
+        z_(:) = dcmplx(tau(:),0d0)
      end select
   endif
   !
@@ -63,13 +66,16 @@ subroutine ed_get_densChi_lattice_n3(self,nlat,axis,z)
      allocate(z_, source=z)
   else
      select case(axis_)
-     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
+     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,vm))
-     case ('r','R')
-        allocate(z_, source=dcmplx(vr,eps))
+        allocate(z_(lmats))
+        z_(:) = dcmplx(0d0,vm(:))
+     case('r','R')
+        allocate(z_(lreal))
+        z_(:) = dcmplx(vr(:),eps)
      case ('t','T')
-      allocate(z_, source=dcmplx(tau,0d0))
+        allocate(z_(ltau))
+        z_(:) = dcmplx(tau(:),0d0)
      end select
   endif
   !
@@ -109,13 +115,16 @@ subroutine ed_get_pairChi_lattice_n3(self,nlat,axis,z)
      allocate(z_, source=z)
   else
      select case(axis_)
-     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
+     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,vm))
-     case ('r','R')
-        allocate(z_, source=dcmplx(vr,eps))
+        allocate(z_(lmats))
+        z_(:) = dcmplx(0d0,vm(:))
+     case('r','R')
+        allocate(z_(lreal))
+        z_(:) = dcmplx(vr(:),eps)
      case ('t','T')
-      allocate(z_, source=dcmplx(tau,0d0))
+        allocate(z_(ltau))
+        z_(:) = dcmplx(tau(:),0d0)
      end select
   endif
   !
@@ -156,13 +165,16 @@ subroutine ed_get_exctChi_lattice_n3(self,nlat,axis,z)
      allocate(z_, source=z)
   else
      select case(axis_)
-     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
+     case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,vm))
-     case ('r','R')
-        allocate(z_, source=dcmplx(vr,eps))
+        allocate(z_(lmats))
+        z_(:) = dcmplx(0d0,vm(:))
+     case('r','R')
+        allocate(z_(lreal))
+        z_(:) = dcmplx(vr(:),eps)
      case ('t','T')
-        allocate(z_, source=dcmplx(tau,0d0))
+        allocate(z_(ltau))
+        z_(:) = dcmplx(tau(:),0d0)
      end select
   endif
   !

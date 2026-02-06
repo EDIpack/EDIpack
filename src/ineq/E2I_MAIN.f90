@@ -82,6 +82,9 @@ contains
   !+-----------------------------------------------------------------------------+!
   ! PURPOSE: allocate and initialize one or multiple baths -+!
   subroutine ed_init_solver_lattice(bath)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),dimension(:,:),intent(inout) :: bath !user bath input array
     integer                              :: ilat,Nineq,Nsectors
     !
@@ -385,6 +388,9 @@ contains
   end subroutine ed_solve_lattice
 
   subroutine ed_solve_lattice_nobath(Nlat,mpi_lanc,Uloc_ii,Ust_ii,Jh_ii,Jp_ii,Jx_ii,flag_gf)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     integer                                       :: Nlat
     real(8)                                       :: bath_dummy(Nlat,1) !user bath input array
     logical,optional                              :: mpi_lanc  !parallelization strategy flag: if :code:`.false.` each core serially solves an inequivalent site, if :code:`.true.` all cores parallely solve each site in sequence. Default :code:`.false.` .
