@@ -20,13 +20,13 @@ subroutine ed_get_spinChi_site_n3(self,axis,z)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
         allocate(z_(lmats))
-        z_(:) = dcmplx(0d0,vm(:))
+        z_ = dcmplx(0d0,vm)
      case('r','R')
         allocate(z_(lreal))
-        z_(:) = dcmplx(vr(:),eps)
+        z_ = dcmplx(vr,eps)
      case ('t','T')
         allocate(z_(ltau))
-        z_(:) = dcmplx(tau(:),0d0)
+        z_ = dcmplx(tau,0d0)
      end select
   endif
   !
@@ -61,13 +61,13 @@ subroutine ed_get_densChi_site_n3(self,axis,z)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
         allocate(z_(lmats))
-        z_(:) = dcmplx(0d0,vm(:))
+        z_ = dcmplx(0d0,vm)
      case('r','R')
         allocate(z_(lreal))
-        z_(:) = dcmplx(vr(:),eps)
+        z_ = dcmplx(vr,eps)
      case ('t','T')
         allocate(z_(ltau))
-        z_(:) = dcmplx(tau(:),0d0)
+        z_ = dcmplx(tau,0d0)
      end select
   endif
   !
@@ -102,13 +102,13 @@ subroutine ed_get_pairChi_site_n3(self,axis,z)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
         allocate(z_(lmats))
-        z_(:) = dcmplx(0d0,vm(:))
+        z_ = dcmplx(0d0,vm)
      case('r','R')
         allocate(z_(lreal))
-        z_(:) = dcmplx(vr(:),eps)
+        z_ = dcmplx(vr,eps)
      case ('t','T')
         allocate(z_(ltau))
-        z_(:) = dcmplx(tau(:),0d0)
+        z_ = dcmplx(tau,0d0)
      end select
   endif
   !
@@ -142,13 +142,13 @@ subroutine ed_get_exctChi_site_n3(self,axis,z)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis, nor Time"
      case ('m','M')
         allocate(z_(lmats))
-        z_(:) = dcmplx(0d0,vm(:))
+        z_ = dcmplx(0d0,vm)
      case('r','R')
         allocate(z_(lreal))
-        z_(:) = dcmplx(vr(:),eps)
+        z_ = dcmplx(vr,eps)
      case ('t','T')
         allocate(z_(ltau))
-        z_(:) = dcmplx(tau(:),0d0)
+        z_ = dcmplx(tau,0d0)
      end select
   endif
   !

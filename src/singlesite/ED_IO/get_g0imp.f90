@@ -25,10 +25,10 @@ subroutine ed_get_g0imp_site_n3(self,bath,axis,type,z)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
         allocate(z_(lmats))
-        z_(:) = dcmplx(0d0,vm(:))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
         allocate(z_(Lreal))
-        z_(:) = dcmplx(wr(:),eps)
+        z_ = dcmplx(wr,eps)
      end select
   endif
   !
@@ -74,10 +74,10 @@ subroutine ed_get_g0imp_site_n5(self,bath,axis,type,z)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
         allocate(z_(lmats))
-        z_(:) = dcmplx(0d0,vm(:))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
         allocate(z_(Lreal))
-        z_(:) = dcmplx(wr(:),eps)
+        z_ = dcmplx(wr,eps)
      end select
   endif
   !
