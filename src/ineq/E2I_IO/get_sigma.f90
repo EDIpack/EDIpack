@@ -36,9 +36,11 @@ subroutine ed_get_sigma_lattice_n3(self,nlat,axis,type,z)
      select case(axis_)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,wm))
+        allocate(z_(lmats))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
-        allocate(z_, source=dcmplx(wr,eps))
+        allocate(z_(lreal))
+        z_=dcmplx(wr,eps)
      end select
   endif
   !
@@ -112,9 +114,11 @@ subroutine ed_get_sigma_lattice_n4(self,nlat,axis,type,z)
      select case(axis_)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,wm))
+        allocate(z_(lmats))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
-        allocate(z_, source=dcmplx(wr,eps))
+        allocate(z_(lreal))
+        z_=dcmplx(wr,eps)
      end select
   endif
   !
@@ -187,9 +191,11 @@ subroutine ed_get_sigma_lattice_n6(self,nlat,axis,type,z)
      select case(axis_)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,wm))
+        allocate(z_(lmats))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
-        allocate(z_, source=dcmplx(wr,eps))
+        allocate(z_(lreal))
+        z_=dcmplx(wr,eps)
      end select
   endif
   !
