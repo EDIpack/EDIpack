@@ -206,7 +206,8 @@ MODULE ED_INPUT_VARS
   !External field coupling to exciton order parameter 
   ! :Default exc_field:`zero`
   !
-  logical              :: rdm_flag          !
+  logical                                                     :: rdm_flag_
+  logical(c_bool),bind(c, name="rdm_flag")                    :: rdm_flag          !
   !Flag to activate Reduced Density Matrix evaluation 
   ! :Default rdm_flag:`F`
   !
@@ -634,7 +635,9 @@ contains
     call parse_input_variable(chipair_flag_,"CHIPAIR_FLAG",INPUTunit,default=.false.,comment="Flag to activate pair susceptibility calculation.")
     chipair_flag = chipair_flag_
     call parse_input_variable(chiexct_flag_,"CHIEXCT_FLAG",INPUTunit,default=.false.,comment="Flag to activate excitonis susceptibility calculation.")
-    chiexct_flag = chiexct_flag_
+    chiexct_flag = chiexct_flag_ 
+    call parse_input_variable(rdm_flag_,"RDM_FLAG",INPUTunit,default=.false.,comment="Flag to activate RDM calculation.")
+    rdm_flag = rdm_flag_
     !
     !
     call parse_input_variable(ed_mode,"ED_MODE",INPUTunit,default='normal',comment="Flag to set ED type: normal=normal, superc=superconductive, nonsu2=broken SU(2)")
@@ -688,7 +691,6 @@ contains
     call parse_input_variable(wfin,"WFIN",INPUTunit,default=5.d0,comment="Largest real-axis frequency")
     call parse_input_variable(xmin,"XMIN",INPUTunit,default=-3.d0,comment="Smallest position for the lattice PDF")
     call parse_input_variable(xmax,"XMAX",INPUTunit,default=3.d0,comment="Largest position for the lattice PDF")
-    call parse_input_variable(rdm_flag,"RDM_FLAG",INPUTunit,default=.false.,comment="Flag to activate RDM calculation.")
     !
     !
     call parse_input_variable(hfmode,"HFMODE",INPUTunit,default=.true.,comment="Flag to set the Hartree form of the interaction (n-1/2). see xmu.")
