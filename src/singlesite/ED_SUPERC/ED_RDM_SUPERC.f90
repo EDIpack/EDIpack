@@ -46,7 +46,7 @@ MODULE ED_RDM_SUPERC
   type(sector)                        :: sectorI,sectorJ
   character(len=128)                  :: fmt
 
-contains 
+contains
 
   !+-------------------------------------------------------------------+
   !PURPOSE  : Lanc method
@@ -57,7 +57,7 @@ contains
 #endif
     !Evaluates the RDM using the saved eigen-states in the :f:var:`state_list` and an efficient sparse algorithm.
     !For any given eigen-state :math:`|N\rangle` we proceed as follows.
-    !Such state is a linear combination of the basis state in a given sector: 
+    !Such state is a linear combination of the basis state in a given sector:
     !
     !:math:`|N\rangle = \sum_I c_I |I\rangle = \sum_{I}C_I |I_\uparrow\rangle|B_\uparrow\rangle|I_\downarrow\rangle|B_\downarrow\rangle`
     !
@@ -102,18 +102,16 @@ contains
              call build_sector(isector,sectorI)
              do IimpUp=0,2**Norb-1
                 do IimpDw=0,2**Norb-1
+                   !I: get the Fock state ii, search the corresponding sector i
+                   ii= iImpUp + iImpDw*2**Ns
+                   i = binary_search(sectorI%H(1)%map,ii)
+                   if(i==0)cycle
                    do JimpUp=0,2**Norb-1
                       do JimpDw=0,2**Norb-1
-                         !I: get the Fock state ii, search the corresponding sector i
-                         ii= iImpUp + iImpDw*2**Ns
-                         i = binary_search(sectorI%H(1)%map,ii)
-                         !
                          !J: get the Fock state jj, search the corresponding sector j
                          jj= jImpUp + jImpDw*2**Ns
                          j = binary_search(sectorI%H(1)%map,jj)
-                         !
-                         !this is a safety measure which should never ever apply
-                         if(i==0.OR.j==0)cycle
+                         if(j==0)cycle
                          !
                          !Construct the sign of each components of RDM(io,jo)
                          nIdw  = popcnt(Ibits(ii,Ns,Norb))
