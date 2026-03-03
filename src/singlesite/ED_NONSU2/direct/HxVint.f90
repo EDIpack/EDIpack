@@ -135,6 +135,9 @@
         endif
         !
         i=binary_search(Hsector%H(1)%map,k4)
+        if (i == 0)then
+          STOP "H_sundry: impossible operator"
+        endif
         htmp = one*coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4
         !
         hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)

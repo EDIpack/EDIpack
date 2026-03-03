@@ -159,6 +159,9 @@
            endif
            !
            j=binary_search(Hsector%H(1)%map,k4)
+           if (j == 0)then
+              STOP "H_sundry: impossible operator"
+           endif
            htmp = one*coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4
            !
            select case(MpiStatus)
