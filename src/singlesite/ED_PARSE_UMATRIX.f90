@@ -14,6 +14,41 @@ MODULE ED_PARSE_UMATRIX
 
 contains
 
+
+  subroutine print_twobody_operator(opline)
+    !This subroutine pretty prints an operator, for
+    !debug purposes
+    integer                       :: oi
+    integer                       :: oj
+    integer                       :: ok
+    integer                       :: ol
+    character(len=1)              :: si
+    character(len=1)              :: sj
+    character(len=1)              :: sk
+    character(len=1)              :: sl
+    type(coulomb_matrix_element)  :: opline
+    character(len=300)            :: dummy
+
+    oi = opline%cd_i(1)
+    si = merge("u", "d", opline%cd_i(2) == 1)
+    oj = opline%cd_j(1)
+    sj = merge("u", "d", opline%cd_j(2) == 1)
+    ol = opline%c_l(1)
+    sl = merge("u", "d", opline%c_l(2) == 1)
+    ok = opline%c_k(1)
+    sk = merge("u", "d", opline%c_k(2) == 1)
+
+    write(dummy, '(F10.6)') opline%U 
+    write(LOGfile,"(A)")' '//&
+        trim(dummy)//&
+        ' cd_['//str(oi)//str(si)//']'//&
+        ' cd_['//str(oj)//str(sj)//']'//&
+        ' c_['//str(ok)//str(sk)//']'//&
+        ' c_['//str(ol)//str(sl)//']'     
+        
+  end subroutine print_twobody_operator
+
+
   subroutine add_twobody_operator(oi,si,oj,sj,ok,sk,ol,sl,Uijkl)
     !This subroutine lets the user add a two-body operator at runtime.
     !The convention is consistent with that of the umatrix file
@@ -219,8 +254,8 @@ contains
           write(LOGfile,"(A)")'Sundry operator '//txtfy(iline,3)//':     '//&
                trim(dummy)//&
                ' cd_['//str(o1)//str(s1)//']'//&
-               ' c_['//str(o2)//str(s2)//']'//&
-               ' cd_['//str(o3)//str(s3)//']'//&
+               ' cd_['//str(o2)//str(s2)//']'//&
+               ' c_['//str(o3)//str(s3)//']'//&
                ' c_['//str(o4)//str(s4)//']'
        enddo
        write(LOGfile,"(A)")''
@@ -428,11 +463,26 @@ contains
     character(len=10)                   :: operator_type
     integer,dimension(2)                :: dummy
     !
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: starting operator is"
+    call print_twobody_operator(line)
+#endif
     !Zero: onsistently with w2dynamics, 1/2 prefactor is applied by the code.
     !It is also multiplied by -1, because the line in the w2dynamics file is the following:
     ![i j k l U_ijkl], but the operator is defined as cd_i cd_j U_ijkl c_l c_k.
     !Note that l and k are inverted.
-    line%U = -0.5d0 * line%U
+    if (abs(line%U)<1d-10)then
+#ifdef _DEBUG
+      write(Logfile,"(A)")"DEBUG parse_umatrix_line: skipping operator, coefficient too small"
+#endif
+      return
+    else
+      line%U = -0.5d0 * line%U
+#ifdef _DEBUG
+      write(Logfile,"(A)")"DEBUG parse_umatrix_line: change sign of coefficient"
+      call print_twobody_operator(line)
+#endif
+    endif
     !
     !First: order the two creation operators so that they
     !are set in an increasing order of (first) spin and (second) orbital from left to right
@@ -444,6 +494,10 @@ contains
        line%cd_j = dummy
        line%U    = -1.0*line%U
     endif
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order creation by orbital"
+    call print_twobody_operator(line)
+#endif
     !spin (overrides orbital)
     if (line%cd_i(2) > line%cd_j(2)) then
        dummy = line%cd_i
@@ -451,6 +505,10 @@ contains
        line%cd_j = dummy
        line%U    = -1.0*line%U
     endif
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order creation by spin"
+    call print_twobody_operator(line)
+#endif
     !
     !Second: order the two annihilation operators so that they
     !are set in an increasing order of (first) spin and (second) orbital from left to right
@@ -462,6 +520,10 @@ contains
        line%c_l = dummy
        line%U    = -1.0*line%U
     endif
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order annihilation by orbital"
+    call print_twobody_operator(line)
+#endif
     !spin (overrides orbital)
     if (line%c_k(2) > line%c_l(2)) then
        dummy = line%c_k
@@ -469,6 +531,10 @@ contains
        line%c_l = dummy
        line%U    = -1.0*line%U
     endif
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order annihilation by spin"
+    call print_twobody_operator(line)
+#endif
     !
     !Third: are the indices of the swapped operators the same? If so, there is a mean-field
     !term coming out of the anticommutator
@@ -481,6 +547,10 @@ contains
     !as c->cd->c->cd, so second and third element are to be swapped
     !
     line%U = -1.0 * line%U
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: re-swap the coefficient sign"
+    call print_twobody_operator(line)
+#endif
     !
     !Fifth: look at the four-operator term. Does it look like any of the ones we would put 
     !in an Hubbard-Kanamori density-density interaction?
@@ -533,7 +603,10 @@ contains
     !Eight: if it is none of the above, put this into coulomb_everything_else
     !
     call grow_sundry_array(line)
-
+#ifdef _DEBUG
+    write(Logfile,"(A)")"DEBUG parse_umatrix_line: we are adding the following operator to sundry"
+    call print_twobody_operator(line)
+#endif
 
   end subroutine parse_umatrix_line
 
