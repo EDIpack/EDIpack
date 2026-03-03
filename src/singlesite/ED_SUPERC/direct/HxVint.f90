@@ -138,6 +138,9 @@
        endif
        !
        j_el = binary_search(Hsector%H(1)%map,k4)
+       if (j_el == 0)then
+         STOP "H_sundry: impossible operator"
+       endif
        j    = j_el + (iph-1)*DimEl
        htmp = one*coulomb_sundry(iline)%U *sg1*sg2*sg3*sg4
        !
