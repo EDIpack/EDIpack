@@ -8,9 +8,6 @@
      mup = Hsector%H(1)%map(iup)
      mdw = Hsector%H(2)%map(idw)
      !
-     nup = bdecomp(mup,Ns)
-     ndw = bdecomp(mdw,Ns)
-     !
      !
      if(allocated(coulomb_sundry))then
         do iline=1,size(coulomb_sundry)
@@ -61,7 +58,7 @@
              if (spinvec_dag(2)==1)then
                call cdg(orbvec_dag(2), p_up_old, p_up_new, sg2, Jcondition)   !last annihilation operator
              elseif (spinvec_dag(2)==2)then
-               call cdg(orbvec_dag(2), p_dw_old, p_dw_old, sg2, Jcondition)   !last annihilation operator
+               call cdg(orbvec_dag(2), p_dw_old, p_dw_new, sg2, Jcondition)   !last annihilation operator
              endif
              if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
            endif
@@ -83,15 +80,21 @@
              p_up_old = p_up_new
              p_dw_old = p_dw_new
              if (spinvec_dag(1)==1)then
-               call cdg(orbvec(1), p_up_old ,p_up_new ,sg4 ,Jcondition)  !last annihilation operator
+               call cdg(orbvec_dag(1), p_up_old ,p_up_new ,sg4 ,Jcondition)  !last annihilation operator
              elseif (spinvec_dag(1)==2)then
-               call cdg(orbvec(1), p_dw_old ,p_dw_new ,sg4 ,Jcondition)  !last annihilation operator
+               call cdg(orbvec_dag(1), p_dw_old ,p_dw_new ,sg4 ,Jcondition)  !last annihilation operator
              endif
              if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
            endif
            !
-           jdw=binary_search(Hsector%H(2)%map,p_dw_new)
-           jup=binary_search(Hsector%H(1)%map,p_up_new)
+           !
+           jdw=binary_search(Hsector%H(2)%map, p_dw_new)
+           jup=binary_search(Hsector%H(1)%map, p_up_new)
+           
+           if (jup == 0 .or. jdw == 0)then
+              STOP "H_sundry: impossible operator"
+           endif
+           
            htmp = coulomb_sundry(iline)%U * sg1 * sg2 * sg3 * sg4
            j = jup + (jdw-1)*DimUp
            !
