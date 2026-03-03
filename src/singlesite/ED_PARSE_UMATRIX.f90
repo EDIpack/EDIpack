@@ -199,7 +199,7 @@ contains
                 (&
                 '(',dreal(mfHloc(ispin,jspin,iorb,jorb)),',',dimag(mfHloc(ispin,jspin,iorb,jorb)),')',&
                 jorb =1,Norb),&
-                jspin=1,Nspin)
+                jspin=1,2)
         enddo
      enddo
      write(LOGfile,"(A)")''
