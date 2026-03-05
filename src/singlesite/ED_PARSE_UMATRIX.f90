@@ -473,13 +473,13 @@ contains
     !Note that l and k are inverted.
     if (abs(line%U)<1d-10)then
 #ifdef _DEBUG
-      write(Logfile,"(A)")"DEBUG parse_umatrix_line: skipping operator, coefficient too small"
+      write(Logfile,"(A)")"Skipping operator, coefficient too small"
 #endif
       return
     else
       line%U = -0.5d0 * line%U
 #ifdef _DEBUG
-      write(Logfile,"(A)")"DEBUG parse_umatrix_line: change sign of coefficient"
+      write(Logfile,"(A)")"Change sign of coefficient"
       call print_twobody_operator(line)
 #endif
     endif
@@ -495,7 +495,7 @@ contains
        line%U    = -1.0*line%U
     endif
 #ifdef _DEBUG
-    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order creation by orbital"
+    write(Logfile,"(A)")"Order creation by orbital"
     call print_twobody_operator(line)
 #endif
     !spin (overrides orbital)
@@ -506,7 +506,7 @@ contains
        line%U    = -1.0*line%U
     endif
 #ifdef _DEBUG
-    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order creation by spin"
+    write(Logfile,"(A)")"Order creation by spin"
     call print_twobody_operator(line)
 #endif
     !
@@ -521,7 +521,7 @@ contains
        line%U    = -1.0*line%U
     endif
 #ifdef _DEBUG
-    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order annihilation by orbital"
+    write(Logfile,"(A)")"Order annihilation by orbital"
     call print_twobody_operator(line)
 #endif
     !spin (overrides orbital)
@@ -532,7 +532,7 @@ contains
        line%U    = -1.0*line%U
     endif
 #ifdef _DEBUG
-    write(Logfile,"(A)")"DEBUG parse_umatrix_line: order annihilation by spin"
+    write(Logfile,"(A)")"Order annihilation by spin"
     call print_twobody_operator(line)
 #endif
     !
@@ -548,26 +548,35 @@ contains
     !
     line%U = -1.0 * line%U
 #ifdef _DEBUG
-    write(Logfile,"(A)")"DEBUG parse_umatrix_line: re-swap the coefficient sign"
+    write(Logfile,"(A)")"Re-swap the coefficient sign"
     call print_twobody_operator(line)
 #endif
     !
     !Fifth: look at the four-operator term. Does it look like any of the ones we would put 
     !in an Hubbard-Kanamori density-density interaction?
     !
-    if(line%cd_i(1)==line%c_k(1))then          !c_dag c: First two operators form a density
-       if(line%cd_j(1)==line%c_l(1))then        !c_dag c: Second two operators form a density
-          if(line%cd_i(2)/=line%cd_j(2))then          !c_dag spin are opposite: It is either Uloc or Ust
+    if(line%cd_i(1)==line%c_k(1))then                  !c_dag c: First two operators form a density
+       if(line%cd_j(1)==line%c_l(1))then               !c_dag c: Second two operators form a density
+          if(line%cd_i(2)/=line%cd_j(2))then           !c_dag spin are opposite: It is either Uloc or Ust
              if(line%cd_i(1)==line%cd_j(1))then        !It is Uloc
                 Uloc_internal(line%cd_i(1)) = Uloc_internal(line%cd_i(1)) + line%U
+#ifdef _DEBUG
+                write(Logfile,"(A)")"Add to Uloc"
+#endif
                 return
              else    !It is Ust
                 Ust_internal(line%cd_i(1),line%cd_j(1)) = Ust_internal(line%cd_i(1),line%cd_j(1)) + line%U
+#ifdef _DEBUG
+                write(Logfile,"(A)")"Add to Ust"
+#endif
                 return
              endif
           else
              if(line%cd_i(1)/=line%cd_j(1))then        !It is Ust - Jh. Store this coefficient in Jh for now. Will need to do Jh = Ust - this in the end.
                 Jh_internal(line%cd_i(1),line%cd_j(1)) = Jh_internal(line%cd_i(1),line%cd_j(1)) + line%U
+#ifdef _DEBUG
+                write(Logfile,"(A)")"Add to Ust-JH"
+#endif
                 return
              endif
           endif
@@ -578,12 +587,18 @@ contains
     !S-E: -J c^+_a_up c_a_dw c^+_b_dw c_b_up (i.ne.j)
     !Note that the sign change was already done at step 0
     !
-    if(line%cd_i(1) /= line%cd_j(1) .and.& !iorb != jorb
-         line%cd_i(1) /= line%c_k(1)  .and.& 
-         line%cd_i(2) == line%c_k(2)  .and.&
-         line%cd_j(1) /= line%c_l(1)  .and.&
-         line%cd_j(2) == line%c_l(2))  then         
+    if(  line%cd_i(1) /= line%cd_j(1) .and.&     !iorb   != jorb
+         line%cd_i(2) /= line%cd_j(2) .and.&     !ispin  != jspin
+         line%c_k(1) /= line%c_l(1)   .and.&     !korb   != lorb
+         line%c_k(2) /= line%c_l(2)   .and.&     !kspin  != lspin
+         line%cd_i(1) /= line%c_l(1)  .and.&    !iorb   == lorb
+         line%cd_i(2) /= line%c_k(2)  .and.&    !ispin  == kspin
+         line%cd_j(1) /= line%c_k(1)  .and.&    !jorb   == korb
+         line%cd_j(2) /= line%c_l(2))  then   !jspin  == lspin
        Jx_internal(line%cd_i(1),line%c_k(1)) = Jx_internal(line%cd_i(1),line%c_k(1)) + line%U
+#ifdef _DEBUG
+        write(Logfile,"(A)")"Add to Jx"
+#endif
        return
     endif
     !
@@ -591,12 +606,18 @@ contains
     !P-H: -J c^+_iorb_up c_jorb_up c^+_iorb_dw  c_jorb_dw (i.ne.j)
     !Note that the sign change was already done at step 0
     !
-    if(line%cd_i(1) /= line%c_k(1)  .and.& !iorb != jorb
-         line%cd_i(1) == line%cd_j(1) .and.& 
-         line%cd_i(2) /= line%cd_j(2) .and.&
-         line%c_k(1)  == line%c_l(1)  .and.&
-         line%c_k(2)  /= line%c_l(2))  then          
+    if(  line%cd_i(1) == line%cd_j(1) .and.&     !iorb   == jorb
+         line%cd_i(2) /= line%cd_j(2) .and.&     !ispin  == jspin 
+         line%c_k(1)  == line%c_l(1)  .and.&     !korb   == lorb
+         line%c_k(2)  == line%c_l(2)  .and.&     !kspin  == lspin
+         line%cd_i(1) /= line%c_k(1)  .and.&     !iorb   != korb
+         line%cd_i(2) == line%c_k(2)  .and.&     !ispin  == kspin
+         line%cd_j(1) /= line%c_l(1)  .and.&     !iorb   != korb
+         line%cd_j(2) == line%c_l(2))  then      !jspin  == klspin  
        Jp_internal(line%cd_i(1),line%c_k(1)) = Jp_internal(line%cd_i(1),line%c_k(1)) + line%U
+#ifdef _DEBUG
+        write(Logfile,"(A)")"Add to Jp"
+#endif
        return
     endif
     !
@@ -604,7 +625,7 @@ contains
     !
     call grow_sundry_array(line)
 #ifdef _DEBUG
-    write(Logfile,"(A)")"DEBUG parse_umatrix_line: we are adding the following operator to sundry"
+    write(Logfile,"(A)")"Add to sundry"
     call print_twobody_operator(line)
 #endif
 
