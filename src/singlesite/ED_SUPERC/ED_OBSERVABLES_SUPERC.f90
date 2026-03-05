@@ -399,12 +399,14 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     !Calculate the values of the local observables
-    integer,dimension(2*Ns) :: ib
-    integer,dimension(2,Ns) :: Nud
-    integer,dimension(Ns)   :: IbUp,IbDw
+    integer,dimension(2*Ns)         :: ib
+    integer,dimension(2,Ns)         :: Nud
+    integer,dimension(Ns)           :: IbUp,IbDw
     real(8),dimension(Norb)         :: nup,ndw
     real(8),dimension(Nspin,Norb)   :: eloc
-    !
+    integer,dimension(2)            :: orbvec, orbvec_dag, spinvec, spinvec_dag
+    integer                         :: iline
+    ! 
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG local_energy_superc"
 #endif
@@ -600,6 +602,86 @@ contains
                 enddo
              endif
              !
+             !Mean-field from sundry terms
+             do iorb=1,Norb
+                ed_Epot = ed_Epot + mfHloc(1,1,iorb,iorb)*Nup(iorb)*gs_weight
+                ed_Epot = ed_Epot + mfHloc(2,2,iorb,iorb)*Ndw(iorb)*gs_weight
+             enddo
+             ! !> H_imp: Off-diagonal elements, i.e. non-local part. 
+             do iorb=1,Norb
+                do jorb=1,Norb
+                   !SPIN UP
+                   Jcondition = &
+                        (mfHloc(1,1,iorb,jorb)/=zero) .AND. &
+                        (ib(jorb)==1)                  .AND. &
+                        (ib(iorb)==0)
+                   if (Jcondition) then
+                      call c(jorb,m,k1,sg1)
+                      call cdg(iorb,k1,k2,sg2)
+                      j_el=binary_search(sectorI%H(1)%map,k2)
+                      j   = j_el + (iph-1)*sectorI%DimEl
+                      ed_Epot     = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+                   endif
+                   !SPIN DW
+                   Jcondition = &
+                        (mfHloc(2,2,iorb,jorb)/=zero) .AND. &
+                        (ib(jorb+Ns)==1)                       .AND. &
+                        (ib(iorb+Ns)==0)
+                   if (Jcondition) then
+                      call c(jorb+Ns,m,k1,sg1)
+                      call cdg(iorb+Ns,k1,k2,sg2)
+                      j_el=binary_search(sectorI%H(1)%map,k2)
+                      j   = j_el + (iph-1)*sectorI%DimEl
+                      ed_Epot      = ed_Epot + mfHloc(2,2,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+                   endif
+                enddo
+             enddo
+             !
+             !Sundry Coulomb terms
+             if(allocated(coulomb_sundry))then
+                do iline=1,size(coulomb_sundry)
+                   orbvec_dag  = [coulomb_sundry(iline)%cd_i(1), coulomb_sundry(iline)%cd_j(1)]
+                   orbvec      = [coulomb_sundry(iline)%c_k(1),  coulomb_sundry(iline)%c_l(1) ]
+                   spinvec_dag = [coulomb_sundry(iline)%cd_i(2), coulomb_sundry(iline)%cd_j(2)]
+                   spinvec     = [coulomb_sundry(iline)%c_k(2),  coulomb_sundry(iline)%c_l(2) ]
+                   
+                  
+                   !- we need to operate on either m_up or m_dw depending on the spins
+                   !- the operators need to be applied from right to left as c -> cd -> c -> cd to be consistent with the
+                   !  density terms originating from the anticommutation relations that are included in mfHloc
+                   
+                   Jcondition=.true. !Start applying operators
+                   !
+                   !last annihilation operator
+                   if(Jcondition)then 
+                     call c(orbvec(2) + Ns * (spinvec(2)-1), m ,k1 ,sg1 ,Jcondition)  !last annihilation operator
+                     if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
+                   endif
+                   !
+                   !last creation operator
+                   if(Jcondition)then 
+                       call cdg(orbvec_dag(2) + Ns * (spinvec_dag(2)-1), k1, k2, sg2, Jcondition)   !last annihilation operator
+                     if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
+                   endif
+                   !
+                   !first annihilation operator
+                   if(Jcondition)then 
+                     call c(orbvec(1) + Ns * (spinvec(1)-1), k2 ,k3 ,sg3 ,Jcondition)  !last annihilation operator
+                     if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
+                   endif
+                   !
+                   !last creation operator
+                   if(Jcondition)then 
+                       call cdg(orbvec_dag(1) + Ns * (spinvec_dag(1)-1), k3, k4, sg4, Jcondition)   !last annihilation operator
+                     if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
+                   endif
+                   !
+                   j_el=binary_search(sectorI%H(1)%map,k4)
+                   j = j_el + (iph-1)*sectorI%DimEl
+                   ed_Epot = ed_Epot + coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+                  !
+                 enddo
+              endif  
              !
              !HARTREE-TERMS CONTRIBUTION:
              if(hfmode)then               

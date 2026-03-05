@@ -430,7 +430,7 @@ contains
              opline%c_l  = [o4, merge(1, 2, s4 == "u")]
              if(ed_verbose>2)then
                 write(dummy, '(F10.6)') opline%U 
-                write(LOGfile,"(A)")'Two-body operator '//txtfy(nops,3)//':     '//&
+                write(LOGfile,"(A)")'Two-body operator '//txtfy(nops,4)//':     '//&
                      trim(dummy)//&
                      ' cd_['//str(o1)//str(s1)//']'//&
                      ' cd_['//str(o2)//str(s2)//']'//&
