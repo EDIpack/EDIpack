@@ -251,7 +251,7 @@ contains
           s3 = merge("u", "d", coulomb_sundry(iline)%c_k(2)==1)
           s4 = merge("u", "d", coulomb_sundry(iline)%c_l(2)==1)
           write(dummy, '(F10.6)') coulomb_sundry(iline)%U
-          write(LOGfile,"(A)")'Sundry operator '//txtfy(iline,3)//':     '//&
+          write(LOGfile,"(A)")'Sundry operator '//txtfy(iline,4)//':     '//&
                trim(dummy)//&
                ' cd_['//str(o1)//str(s1)//']'//&
                ' cd_['//str(o2)//str(s2)//']'//&

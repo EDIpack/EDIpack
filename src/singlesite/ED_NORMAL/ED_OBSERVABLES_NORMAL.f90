@@ -167,7 +167,6 @@ contains
                    n2(jorb,iorb)  = n2(jorb,iorb)   +  (nt(jorb)*nt(iorb))*gs_weight
                 enddo
              enddo
-             print*,docc
              s2tot = s2tot  + (sum(sz))**2*gs_weight
              !
              iph = (i-1)/(sectorI%DimEl) + 1
