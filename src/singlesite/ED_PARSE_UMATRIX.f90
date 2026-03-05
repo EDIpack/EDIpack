@@ -589,12 +589,10 @@ contains
     !
     if(  line%cd_i(1) /= line%cd_j(1) .and.&     !iorb   != jorb
          line%cd_i(2) /= line%cd_j(2) .and.&     !ispin  != jspin
-         line%c_k(1) /= line%c_l(1)   .and.&     !korb   != lorb
-         line%c_k(2) /= line%c_l(2)   .and.&     !kspin  != lspin
-         line%cd_i(1) /= line%c_l(1)  .and.&    !iorb   == lorb
-         line%cd_i(2) /= line%c_k(2)  .and.&    !ispin  == kspin
-         line%cd_j(1) /= line%c_k(1)  .and.&    !jorb   == korb
-         line%cd_j(2) /= line%c_l(2))  then   !jspin  == lspin
+         line%cd_i(1) == line%c_l(1)  .and.&     !iorb   == lorb
+         line%cd_i(2) == line%c_k(2)  .and.&     !ispin  == kspin
+         line%cd_j(1) == line%c_k(1)  .and.&     !jorb   == korb
+         line%cd_j(2) == line%c_l(2))  then      !jspin  == lspin
        Jx_internal(line%cd_i(1),line%c_k(1)) = Jx_internal(line%cd_i(1),line%c_k(1)) + line%U
 #ifdef _DEBUG
         write(Logfile,"(A)")"Add to Jx"
@@ -607,13 +605,11 @@ contains
     !Note that the sign change was already done at step 0
     !
     if(  line%cd_i(1) == line%cd_j(1) .and.&     !iorb   == jorb
-         line%cd_i(2) /= line%cd_j(2) .and.&     !ispin  == jspin 
-         line%c_k(1)  == line%c_l(1)  .and.&     !korb   == lorb
-         line%c_k(2)  == line%c_l(2)  .and.&     !kspin  == lspin
+         line%cd_i(2) /= line%cd_j(2) .and.&     !ispin  /= jspin 
          line%cd_i(1) /= line%c_k(1)  .and.&     !iorb   != korb
          line%cd_i(2) == line%c_k(2)  .and.&     !ispin  == kspin
-         line%cd_j(1) /= line%c_l(1)  .and.&     !iorb   != korb
-         line%cd_j(2) == line%c_l(2))  then      !jspin  == klspin  
+         line%cd_j(1) /= line%c_l(1)  .and.&     !jorb   != lorb
+         line%cd_j(2) == line%c_l(2))  then      !jspin  == lspin  
        Jp_internal(line%cd_i(1),line%c_k(1)) = Jp_internal(line%cd_i(1),line%c_k(1)) + line%U
 #ifdef _DEBUG
         write(Logfile,"(A)")"Add to Jp"
