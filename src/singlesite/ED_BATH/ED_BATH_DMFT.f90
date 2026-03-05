@@ -683,7 +683,10 @@ contains
     real(8),dimension(:)   :: bath_
     integer                :: stride,io,jo,i
     integer                :: iorb,ispin,jorb,jspin,ibath
-    logical                :: check
+    logical                :: check, diag_condition
+    !
+    diag_condition = check_diag_impHloc()
+    if (bath_type=="normal" .and. .not. diag_condition) STOP "Normal bath cannot be used if impHloc(_anomalous) are off-diagonal"
     !
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG set_dmft_bath: dmft_bath <- user_bath"

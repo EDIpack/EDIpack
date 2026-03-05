@@ -196,16 +196,18 @@ MODULE ED_INPUT_VARS
   !Magnetic field per orbital coupling to Z-spin component 
   ! :Default spin_field_z:`zero`
   !
-  real(8),allocatable,dimension(:)  :: pair_field       !
-  !Pair field per orbital coupling to s-wave order parameter component 
-  !which explicitly appears in the impurity Hamiltonian 
+  real(8),allocatable,dimension(:)                             :: pair_field_    !
+  real(c_double),dimension(15),bind(c, name="pair_field")      :: pair_field     !
+  !Pair field per orbital (max 15) coupling to s-wave order parameter component 
+  !which explicitly appears in the impurity Hamiltonian.
   ! :Default pair_field:`zero`
   !
   real(8),dimension(4) :: exc_field                     !
   !External field coupling to exciton order parameter 
   ! :Default exc_field:`zero`
   !
-  logical              :: rdm_flag          !
+  logical                                                     :: rdm_flag_
+  logical(c_bool),bind(c, name="rdm_flag")                    :: rdm_flag          !
   !Flag to activate Reduced Density Matrix evaluation 
   ! :Default rdm_flag:`F`
   !
@@ -291,7 +293,7 @@ MODULE ED_INPUT_VARS
   integer              :: ed_sectors_shift  !
   !Additional sectors to be evaluated if :f:var:`ed_sectors` is set. These are sectors 
   !with all the quantum numbers varying of at most by :f:var:`ed_sectors_shift` around the 
-  !sectors listed in :f:var:`ed_sectors`.
+  !sectors listed in :f:var:`sectorfile`.
   ! :Default ed_sectors_shift:`1`
   !
   integer              :: ed_verbose        !
@@ -578,6 +580,8 @@ contains
     call parse_input_variable(Nph,"NPH",INPUTunit,default=0,comment="Max number of phonons allowed (cut off)")
     call parse_input_variable(bath_type,"BATH_TYPE",INPUTunit,default='normal',comment="flag to set bath type: normal (1bath/imp), hybrid(1bath), replica(1replica/imp), general(replica++)")
     !
+    !Set a more general bath if there is no bath. Normal is too restrictive on which elements of G are calculated
+    if (NBATH==0) bath_type = "hybrid"
     !
     !
     allocate(Uloc_(Norb)) !#TODO: put me back!
@@ -610,17 +614,19 @@ contains
     if(allocated(spin_field_x))deallocate(spin_field_x)
     if(allocated(spin_field_y))deallocate(spin_field_y)
     if(allocated(spin_field_z))deallocate(spin_field_z)
-    if(allocated(pair_field))deallocate(pair_field)
     allocate(spin_field_x(Norb))
     allocate(spin_field_y(Norb))
     allocate(spin_field_z(Norb))
-    allocate(pair_field(Norb))
     call parse_input_variable(spin_field_x,"SPIN_FIELD_X",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="magnetic field per orbital coupling to X-spin component (Norb)")
     call parse_input_variable(spin_field_y,"SPIN_FIELD_Y",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="magnetic field per orbital coupling to Y-spin component (Norb)")
     call parse_input_variable(spin_field_z,"SPIN_FIELD_Z",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="magnetic field per orbital coupling to Z-spin component (Norb)")
-    call parse_input_variable(pair_field,"PAIR_FIELD",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="pair field per orbital coupling to s-wave order parameter component (4)")
     call parse_input_variable(exc_field,"EXC_FIELD",INPUTunit,default=[0d0,0d0,0d0,0d0],comment="external field coupling to exciton order parameters (Norb)")
     !
+    if(allocated(pair_field_))deallocate(pair_field_)
+    allocate(pair_field_(Norb))
+    call parse_input_variable(pair_field_,"PAIR_FIELD",INPUTunit,default=(/( 0d0,i=1,Norb )/),comment="pair field per orbital coupling to s-wave order parameter component (Norb)")
+    pair_field=0.d0 
+    pair_field(1:Norb)=pair_field_
     !
     call parse_input_variable(chispin_flag_,"CHISPIN_FLAG",INPUTunit,default=.false.,comment="Flag to activate spin susceptibility calculation.")
     chispin_flag = chispin_flag_
@@ -629,7 +635,9 @@ contains
     call parse_input_variable(chipair_flag_,"CHIPAIR_FLAG",INPUTunit,default=.false.,comment="Flag to activate pair susceptibility calculation.")
     chipair_flag = chipair_flag_
     call parse_input_variable(chiexct_flag_,"CHIEXCT_FLAG",INPUTunit,default=.false.,comment="Flag to activate excitonis susceptibility calculation.")
-    chiexct_flag = chiexct_flag_
+    chiexct_flag = chiexct_flag_ 
+    call parse_input_variable(rdm_flag_,"RDM_FLAG",INPUTunit,default=.false.,comment="Flag to activate RDM calculation.")
+    rdm_flag = rdm_flag_
     !
     !
     call parse_input_variable(ed_mode,"ED_MODE",INPUTunit,default='normal',comment="Flag to set ED type: normal=normal, superc=superconductive, nonsu2=broken SU(2)")
@@ -683,7 +691,6 @@ contains
     call parse_input_variable(wfin,"WFIN",INPUTunit,default=5.d0,comment="Largest real-axis frequency")
     call parse_input_variable(xmin,"XMIN",INPUTunit,default=-3.d0,comment="Smallest position for the lattice PDF")
     call parse_input_variable(xmax,"XMAX",INPUTunit,default=3.d0,comment="Largest position for the lattice PDF")
-    call parse_input_variable(rdm_flag,"RDM_FLAG",INPUTunit,default=.false.,comment="Flag to activate RDM calculation.")
     !
     !
     call parse_input_variable(hfmode,"HFMODE",INPUTunit,default=.true.,comment="Flag to set the Hartree form of the interaction (n-1/2). see xmu.")
@@ -873,7 +880,7 @@ contains
        exc_field=vals
     case ("PAIR_FIELD")
        if(size(vals)/=Norb)stop "WRONG SIZE IN ED_UPDATE_PAIR_FIELD"
-       pair_field=vals
+       pair_field(1:Norb) = vals
     case ("SPIN_FIELD_X")
        if(size(vals)/=Norb)stop "WRONG SIZE IN ED_UPDATE_SPIN_FIELD_X"
        spin_field_x=vals

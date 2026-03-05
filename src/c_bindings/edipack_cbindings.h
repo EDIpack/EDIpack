@@ -293,9 +293,11 @@ Rank-2 array variant for single-site DMFT
 \endrst
 *
 * @param Hloc: the local Hamiltonian
+* @param Hloc_anomalous: the local anomalous Hamiltonian (for SC)
 * @param d: array of dimensions of the local Hamiltonian
 */
 void ed_set_Hloc_single_N2(std::complex<double> *Hloc, 
+                           std::complex<double> *Hloc_anomalous, 
                            int64_t *d
                            );
 
@@ -307,9 +309,11 @@ Rank-4 array variant for single-site DMFT.
 \endrst
 *
 * @param Hloc: the local Hamiltonian
+* @param Hloc_anomalous: the local anomalous Hamiltonian (for SC)
 * @param d: array of dimensions of the local Hamiltonian
 */       
-void ed_set_Hloc_single_N4(std::complex<double> *Hloc, 
+void ed_set_Hloc_single_N4(std::complex<double> *Hloc,
+                           std::complex<double> *Hloc_anomalous, 
                            int64_t *d
                            );
                            
@@ -322,10 +326,12 @@ Rank-2 array variant for real-space DMFT.
 \endrst
 *
 * @param Hloc: the local Hamiltonian
+* @param Hloc_anomalous: the local anomalous Hamiltonian (for SC)
 * @param d: array of dimensions of the local Hamiltonian
 * @param Nlat: number of inequivalent sites
 */                      
 void ed_set_Hloc_lattice_N2(std::complex<double> *Hloc,
+                            std::complex<double> *Hloc_anomalous, 
                             int64_t *d,
                             int Nlat
                             );
@@ -338,10 +344,12 @@ Rank-3 array variant for real-space DMFT.
 \endrst
 *
 * @param Hloc: the local Hamiltonian
+* @param Hloc_anomalous: the local anomalous Hamiltonian (for SC)
 * @param d: array of dimensions of the local Hamiltonian
 * @param Nlat: number of inequivalent sites
 */ 
 void ed_set_Hloc_lattice_N3(std::complex<double> *Hloc,
+                            std::complex<double> *Hloc_anomalous, 
                             int64_t *d,
                             int Nlat
                             );
@@ -354,10 +362,12 @@ Rank-5 array variant for real-space DMFT.
 \endrst
 *
 * @param Hloc: the local Hamiltonian
+* @param Hloc_anomalous: the local anomalous Hamiltonian (for SC)
 * @param d: array of dimensions of the local Hamiltonian
 * @param Nlat: number of inequivalent sites
 */ 
-void ed_set_Hloc_lattice_N5(std::complex<double> *Hloc, 
+void ed_set_Hloc_lattice_N5(std::complex<double> *Hloc,
+                            std::complex<double> *Hloc_anomalous, 
                             int64_t *d, 
                             int Nlat
                             );

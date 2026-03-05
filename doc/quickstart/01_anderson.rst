@@ -58,7 +58,8 @@ function, using procedures available in SciFortran_:
 
 .. code-block:: fortran
 		
-   !> Get the Bethe lattice non-interacting Matsubara GF as a guess for the bath 
+   !> Get the Bethe lattice non-interacting Matsubara GF as a guess for the bath
+   Nso = Nspin * Norb
    allocate(Weiss(Nso,Nso,Lmats))
    call bethe_guess_g0(Weiss(1,1,:),D,beta,hloc=0d0)
 

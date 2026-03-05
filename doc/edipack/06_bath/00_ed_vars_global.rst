@@ -10,8 +10,10 @@ the code to store the current state of the user provided bath.
 
 
 
-.. f:automodule::   ed_vars_global
-   :members: effective_bath_component,effective_bath,dmft_bath
+.. f:autotype::  f/ed_vars_global/effective_bath_component
+.. f:autotype::  f/ed_vars_global/effective_bath
+.. f:autovariable::  f/ed_vars_global/dmft_bath
+
 
 
 

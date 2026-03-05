@@ -25,7 +25,7 @@ MODULE E2I_VARS_GLOBAL
 
 
   !--------------- LATTICE WRAP VARIABLES -----------------!
-  complex(8),dimension(:,:,:,:,:),allocatable        :: Hloc_ineq
+  complex(8),dimension(:,:,:,:,:),allocatable        :: Hloc_ineq, Hloc_anomalous_ineq
   complex(8),dimension(:,:,:,:,:),allocatable,save   :: single_particle_density_matrix_ineq
   complex(8),dimension(:,:,:),allocatable,save       :: impurity_density_matrix_ineq
   real(8),dimension(:,:),allocatable,save            :: dens_ineq 

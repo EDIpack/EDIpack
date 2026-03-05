@@ -24,9 +24,11 @@ subroutine ed_get_gimp_site_n3(self,axis,type,z)
      select case(axis_)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,wm))
+        allocate(z_(lmats))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
-        allocate(z_, source=dcmplx(wr,eps))
+        allocate(z_(Lreal))
+        z_ = dcmplx(wr,eps)
      end select
   endif
   !
@@ -75,9 +77,11 @@ subroutine ed_get_gimp_site_n5(self,axis,type,z)
      select case(axis_)
      case default;stop "ed_get_sigma ERROR: axis is neither Matsubara, nor Realaxis"
      case ('m','M')
-        allocate(z_, source=dcmplx(0d0,wm))
+        allocate(z_(lmats))
+        z_ = dcmplx(0d0,wm)
      case ('r','R')
-        allocate(z_, source=dcmplx(wr,eps))
+        allocate(z_(Lreal))
+        z_ = dcmplx(wr,eps)
      end select
   endif
   !

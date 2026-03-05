@@ -40,7 +40,7 @@ MODULE EDIPACK2INEQ
        ed_get_ehartree        , &
        ed_get_eknot           , &
        ed_get_doubles!          , &
-  ! ed_get_sp_dm  
+ ! ed_get_sp_dm  
 
 
   USE E2I_MAIN, only:    &

@@ -44,7 +44,7 @@ sector  assuming
 :math:`\vec{Q}\equiv S_z=N_\uparrow-N_\downarrow`.
 
 This case corresponds to the superconductive phase with :math:`s-`
-wave pairing.
+wave spin singlet pairing.
 
 
 .. toctree::

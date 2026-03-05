@@ -50,32 +50,36 @@
      enddo
   enddo
   !
-  !Evaluate: Fd . D = Fd . (C^+_{a,up}C^+_{a,dw} + C_{a,dw}C_{a,up})
-  if(any(pair_field/=0d0))then
+  !Evaluate: Fd . D = Fd . (C^+_{a,up}C^+_{b,dw} + C_{b,dw}C_{a,up})
+  if(any(pair_field/=0d0).or.any(abs(impHloc_anomalous)/=0d0))then
      do iorb=1,Norb
-        !
-        Jcondition = (ib(iorb)==1) .AND. (ib(iorb+Ns)==1)
-        if(Jcondition)then
-           call c(iorb,m,k1,sg1)
-           call c(iorb+Ns,k1,k2,sg2)
-           j_el = binary_search(Hsector%H(1)%map,k2)
-           j    = j_el + (iph-1)*DimEl
-           htmp=one*pair_field(iorb)*sg1*sg2
-           !
-           hv(i-MpiIshift) = hv(i-MpiIshift) + htmp*vin(j)
-           !
-        endif
-        !
-        Jcondition = (ib(iorb)==0) .AND. (ib(iorb+Ns)==0)
-        if(Jcondition)then
-           call cdg(iorb+Ns,m,k1,sg1)
-           call cdg(iorb,k1,k2,sg2)
-           j_el = binary_search(Hsector%H(1)%map,k2)
-           j    = j_el + (iph-1)*DimEl
-           htmp=one*pair_field(iorb)*sg1*sg2 !
-           !
-           hv(i-MpiIshift) = hv(i-MpiIshift) + htmp*vin(j)
-           !
-        endif
+       do jorb=1,Norb
+          !
+          Jcondition = (ib(iorb)==1) .AND. (ib(jorb+Ns)==1)
+          if(Jcondition)then
+             call c(iorb,m,k1,sg1)
+             call c(jorb+Ns,k1,k2,sg2)
+             j_el = binary_search(Hsector%H(1)%map,k2)
+             j    = j_el + (iph-1)*DimEl
+             htmp=one*impHloc_anomalous(1,1,iorb,jorb)*sg1*sg2
+             if(iorb == jorb) htmp= htmp + one*pair_field(iorb)*sg1*sg2
+             !
+             hv(i-MpiIshift) = hv(i-MpiIshift) + htmp*vin(j)
+             !
+          endif
+          !
+          Jcondition = (ib(iorb)==0) .AND. (ib(jorb+Ns)==0)
+          if(Jcondition)then
+             call cdg(jorb+Ns,m,k1,sg1)
+             call cdg(iorb,k1,k2,sg2)
+             j_el = binary_search(Hsector%H(1)%map,k2)
+             j    = j_el + (iph-1)*DimEl
+             htmp=one*conjg(impHloc_anomalous(1,1,iorb,jorb))*sg1*sg2
+             if(iorb == jorb) htmp= htmp + one*pair_field(iorb)*sg1*sg2
+             !
+             hv(i-MpiIshift) = hv(i-MpiIshift) + htmp*vin(j)
+             !
+          endif
+       enddo
      enddo
   endif

@@ -65,6 +65,7 @@ contains
     !
     if(present(Hmat))call assert_shape(Hmat,[Dim,Dim],"ed_buildh_main","Hmat")
     !
+    Hbath_tmp = zero
     !
     !Get diagonal hybridization, bath energy
     if(allocated(diag_hybr))deallocate(diag_hybr)
@@ -125,6 +126,18 @@ contains
           enddo
        enddo
     end select
+    
+    !Check spin-singlet pairing
+    if(bath_type=="replica" .or. bath_type=="general")then
+      do ibath=1,Nbath
+        do ispin=1,Nnambu*Nspin
+          if(any(abs(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)-transpose(Hbath_tmp(ispin,1+Nnambu*Nspin-ispin,:,:,ibath)))>1d-10))then
+            STOP "anomalous Hbath is not symmetric. Only spin-singlet s-wave pairing is allowed in SUPERC."
+          endif
+        enddo
+      enddo
+    endif
+    
     !
 #ifdef _MPI
     if(MpiStatus)then

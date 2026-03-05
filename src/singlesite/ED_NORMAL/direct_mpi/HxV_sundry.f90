@@ -83,15 +83,20 @@
              p_up_old = p_up_new
              p_dw_old = p_dw_new
              if (spinvec_dag(1)==1)then
-               call cdg(orbvec(1), p_up_old ,p_up_new ,sg4 ,Jcondition)  !last annihilation operator
+               call cdg(orbvec_dag(1), p_up_old ,p_up_new ,sg4 ,Jcondition)  !last annihilation operator
              elseif (spinvec_dag(1)==2)then
-               call cdg(orbvec(1), p_dw_old ,p_dw_new ,sg4 ,Jcondition)  !last annihilation operator
+               call cdg(orbvec_dag(1), p_dw_old ,p_dw_new ,sg4 ,Jcondition)  !last annihilation operator
              endif
              if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
            endif
            !
            idw=binary_search(Hsector%H(2)%map,p_dw_new)
            iup=binary_search(Hsector%H(1)%map,p_up_new)
+           
+           if (idw == 0 .or. iup == 0)then
+              STOP "H_sundry: impossible operator"
+           endif
+           
            htmp = coulomb_sundry(iline)%U * sg1 * sg2 * sg3 * sg4
            !
            i = iup + (idw-1)*DimUp + (iph-1)*DimUp*MpiQdw

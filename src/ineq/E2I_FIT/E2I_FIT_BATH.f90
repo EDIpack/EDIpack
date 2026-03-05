@@ -56,6 +56,9 @@ contains
 
 
   subroutine chi2_fitgf_lattice_normal_n3(g,bath,ispin)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),intent(inout)       :: bath(:,:)
     complex(8),dimension(:,:,:) :: g
     integer,optional            :: ispin
@@ -133,6 +136,9 @@ contains
   end subroutine chi2_fitgf_lattice_normal_n3
 
   subroutine chi2_fitgf_lattice_normal_n4(g,bath,ispin)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),intent(inout)         :: bath(:,:)
     complex(8),dimension(:,:,:,:) :: g
     integer,optional              :: ispin
@@ -210,6 +216,9 @@ contains
   end subroutine chi2_fitgf_lattice_normal_n4
 
   subroutine chi2_fitgf_lattice_normal_n6(g,bath,ispin)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),intent(inout)             :: bath(:,:)
     complex(8),dimension(:,:,:,:,:,:) :: g
     integer,optional                  :: ispin
@@ -302,6 +311,9 @@ contains
 
 
   subroutine chi2_fitgf_lattice_superc_n3(g,f,bath,ispin)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),intent(inout)       :: bath(:,:)
     complex(8),dimension(:,:,:) :: g,f
     integer,optional            :: ispin
@@ -382,6 +394,9 @@ contains
 
 
   subroutine chi2_fitgf_lattice_superc_n4(g,f,bath,ispin)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),intent(inout)         :: bath(:,:)
     complex(8),dimension(:,:,:,:) :: g,f
     integer,optional              :: ispin
@@ -466,6 +481,9 @@ contains
 
 
   subroutine chi2_fitgf_lattice_superc_n6(g,f,bath,ispin)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),intent(inout)             :: bath(:,:)
     complex(8),dimension(:,:,:,:,:,:) :: g,f
     integer,optional                  :: ispin

@@ -82,6 +82,9 @@ contains
   !+-----------------------------------------------------------------------------+!
   ! PURPOSE: allocate and initialize one or multiple baths -+!
   subroutine ed_init_solver_lattice(bath)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     real(8),dimension(:,:),intent(inout) :: bath !user bath input array
     integer                              :: ilat,Nineq,Nsectors
     !
@@ -266,7 +269,11 @@ contains
           lanc_nstates_total = neigen_total_ineq(ilat)
           call ed_set_neigen_sector( neigen_sector_ineq(ilat,:) )
           !
-          call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          if(allocated(Hloc_anomalous_ineq))then
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:),Hloc_anomalous_ineq(ilat,:,:,:,:))
+          else
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          endif
           !
           if(MPI_MASTER)call save_input_file(str(ed_input_file))
           !
@@ -354,7 +361,11 @@ contains
           lanc_nstates_total = neigen_total_ineq(ilat)
           call ed_set_neigen_sector( neigen_sector_ineq(ilat,:) )
           !
-          call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          if(allocated(Hloc_anomalous_ineq))then
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:),Hloc_anomalous_ineq(ilat,:,:,:,:))
+          else
+            call ed_set_Hloc(Hloc_ineq(ilat,:,:,:,:))
+          endif
           call ed_solve(bath(ilat,:),flag_gf=flag_gf_,flag_mpi=mpi_lanc_)
           !
           neigen_total_ineq(ilat)     = lanc_nstates_total
@@ -377,6 +388,9 @@ contains
   end subroutine ed_solve_lattice
 
   subroutine ed_solve_lattice_nobath(Nlat,mpi_lanc,Uloc_ii,Ust_ii,Jh_ii,Jp_ii,Jx_ii,flag_gf)
+#if __INTEL_COMPILER
+    use ED_INPUT_VARS, only: Nspin,Norb
+#endif
     integer                                       :: Nlat
     real(8)                                       :: bath_dummy(Nlat,1) !user bath input array
     logical,optional                              :: mpi_lanc  !parallelization strategy flag: if :code:`.false.` each core serially solves an inequivalent site, if :code:`.true.` all cores parallely solve each site in sequence. Default :code:`.false.` .
@@ -409,6 +423,8 @@ contains
     if(allocated(exct_ineq))deallocate(exct_ineq)
     if(allocated(e_ineq))deallocate(e_ineq)
     if(allocated(dd_ineq))deallocate(dd_ineq)
+    if(allocated(Hloc_ineq))deallocate(Hloc_ineq)
+    if(allocated(Hloc_anomalous_ineq))deallocate(Hloc_anomalous_ineq)
 
     if(allocated(single_particle_density_matrix_ineq))deallocate(single_particle_density_matrix_ineq)
     if(allocated(impurity_density_matrix_ineq))deallocate(impurity_density_matrix_ineq)

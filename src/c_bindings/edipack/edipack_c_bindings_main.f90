@@ -20,7 +20,7 @@ subroutine solve_site_c(bath,dim_bath,flag_gf,flag_mpi) bind(c, name='solve_site
   call ed_solve(bath,flag_gf=i2l(flag_gf),flag_mpi=i2l(flag_mpi))
 end subroutine solve_site_c
 
-subroutine solve_site_nobath_c(flag_gf,flag_mpi) bind(c, name='solve_site')
+subroutine solve_site_nobath_c(flag_gf,flag_mpi) bind(c, name='solve_site_nobath')
   use, intrinsic :: iso_c_binding
   integer(c_int),value                                                                   :: flag_gf,flag_mpi
   call ed_solve(flag_gf=i2l(flag_gf),flag_mpi=i2l(flag_mpi))

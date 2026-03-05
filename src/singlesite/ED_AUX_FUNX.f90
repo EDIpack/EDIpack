@@ -19,6 +19,8 @@ MODULE ED_AUX_FUNX
   interface ed_set_Hloc
      !This subroutine sets the local Hamiltonian of the impurity problem. 
      !The local hamiltonian can have different shapes:
+     !If :f:var:`ed_mode`==:code:`SUPERC`, a matrix of the same shape containing
+     !anomalous one-body terms can optionally be passed.
      !
      !   * [|Nso| , |Nso| ]: single-impurity case, rank-2 array
      !   * [|Nspin| , |Nspin| , |Norb| , |Norb| ]: single-impurity case, rank-4 array
@@ -88,7 +90,8 @@ MODULE ED_AUX_FUNX
   public :: read_pairChimatrix
   public :: read_exctChimatrix
 
-
+  !check diagonality of impHloc and impHloc_anomalous
+  public :: check_diag_impHloc
 
   !AUX RESHAPE FUNCTIONS (internal use)
   public :: index_stride_so
@@ -177,32 +180,78 @@ contains
   !+------------------------------------------------------------------+
   !PURPOSE  : Setup Himpurity, the local part of the non-interacting Hamiltonian
   !+------------------------------------------------------------------+
-  subroutine ed_set_Hloc_single_N2(Hloc)
-    complex(8),dimension(:,:),intent(in) :: Hloc !The local Hamiltonian array
+  subroutine ed_set_Hloc_single_N2(Hloc,Hloc_anomalous)
+    complex(8),dimension(:,:),intent(in)          :: Hloc !The local Hamiltonian array
+    complex(8),dimension(:,:),intent(in),optional :: Hloc_anomalous !The local Hamiltonian array (anomalous terms)
+    logical                                           :: diag_condition
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
 #endif
     !
     if(allocated(impHloc))deallocate(impHloc)
+    !
+    if(present(Hloc_anomalous))then
+      if(ED_MODE/="superc")write(Logfile,"(A)")"Warning: passing anomalous term for non-sc calculation. Anomalous terms will be discarded"
+      if(allocated(impHloc_anomalous))deallocate(impHloc_anomalous)
+    endif
+    !
     allocate(impHloc(Nspin,Nspin,Norb,Norb));impHloc=zero
+    !
+    if(present(Hloc_anomalous))then
+      allocate(impHloc_anomalous(Nspin,Nspin,Norb,Norb));impHloc_anomalous=zero
+    endif
     !
     call assert_shape(Hloc,[Nspin*Norb,Nspin*Norb],"ed_set_Hloc","Hloc")
     impHloc = so2nn_reshape(Hloc(1:Nspin*Norb,1:Nspin*Norb),Nspin,Norb)
-    if(ed_verbose>2)call print_hloc(impHloc)
+    if(ed_verbose>2)call print_hloc(impHloc)  
+    !
+    if(present(Hloc_anomalous))then
+      call assert_shape(Hloc_anomalous,[Nspin*Norb,Nspin*Norb],"ed_set_Hloc","Hloc_anomalous")
+      impHloc_anomalous = so2nn_reshape(Hloc_anomalous(1:Nspin*Norb,1:Nspin*Norb),Nspin,Norb)
+      if(ed_verbose>2)call print_hloc(impHloc_anomalous)
+      if(any(abs(impHloc_anomalous(1,1,:,:)-transpose(impHloc_anomalous(1,1,:,:)))>1d-10))then
+        STOP "impHloc_anomalous is not symmetric. Only spin-singlet pairing is allowed in SUPERC."
+      endif
+    endif
+    !
+    diag_condition = check_diag_impHloc()
+    if (bath_type=="normal" .and. .not. diag_condition) STOP "Normal bath cannot be used if impHloc(_anomalous) are off-diagonal"
+    !
   end subroutine ed_set_Hloc_single_N2
 
-  subroutine ed_set_Hloc_single_N4(Hloc)
-    complex(8),dimension(:,:,:,:),intent(in) :: Hloc
+  subroutine ed_set_Hloc_single_N4(Hloc,Hloc_anomalous)
+    complex(8),dimension(:,:,:,:),intent(in)          :: Hloc
+    complex(8),dimension(:,:,:,:),intent(in),optional :: Hloc_anomalous
+    logical                                           :: diag_condition
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG ed_set_Hloc: set impHloc"
 #endif
     !
     if(allocated(impHloc))deallocate(impHloc)
     allocate(impHloc(Nspin,Nspin,Norb,Norb));impHloc=zero
+    !
+    if(present(Hloc_anomalous))then
+      if(ED_MODE/="superc")write(Logfile,"(A)")"Warning: passing anomalous term for non-sc calculation. Anomalous terms will be discarded"
+      if(allocated(impHloc_anomalous))deallocate(impHloc_anomalous)
+      allocate(impHloc_anomalous(Nspin,Nspin,Norb,Norb));impHloc_anomalous=zero
+    endif
     !
     call assert_shape(Hloc,[Nspin,Nspin,Norb,Norb],"ed_set_Hloc","Hloc")
     impHloc = Hloc
     if(ed_verbose>2)call print_hloc(impHloc)
+    !
+    if(present(Hloc_anomalous))then
+      call assert_shape(Hloc_anomalous,[Nspin,Nspin,Norb,Norb],"ed_set_Hloc","Hloc")
+      impHloc_anomalous = Hloc_anomalous
+      if(ed_verbose>2)call print_hloc(impHloc_anomalous)
+      if(any(abs(impHloc_anomalous(1,1,:,:)-transpose(impHloc_anomalous(1,1,:,:)))>1d-10))then
+        STOP "impHloc_anomalous is not symmetric. Only spin-singlet s-wave pairing is allowed in SUPERC."
+      endif
+    endif
+    !
+    diag_condition = check_diag_impHloc()
+    if (bath_type=="normal" .and. .not. diag_condition) STOP "Normal bath cannot be used if impHloc(_anomalous) are off-diagonal"
+    !
   end subroutine ed_set_Hloc_single_N4
 
   
@@ -1060,7 +1109,41 @@ contains
 
 
 
+function check_diag_impHloc() result(is_diagonal)
+  !This functions checks the structure of :f:var:`impHloc` and :f:var:`impHloc_anomalous` 
+  !(if present) and returns :code:`TRUE` if they are diagonal in spin/orbital
+  !and :code:`FALSE` otherwise
+#if __INTEL_COMPILER
+   use ED_INPUT_VARS, only: Nspin, Norb
+#endif
+   logical :: is_diagonal
+   integer :: iorb, jorb, ispin, jspin
 
+   is_diagonal = .true.
+
+   do ispin = 1, Nspin
+      do jspin = 1, Nspin
+         do iorb = 1, Norb
+            do jorb = 1, Norb
+               if (iorb /= jorb) then
+                  if (allocated(impHloc)) then
+                     if (impHloc(ispin,jspin,iorb,jorb) /= zero) then
+                        is_diagonal = .false.
+                        return
+                     end if
+                  end if
+                  if (allocated(impHloc_anomalous)) then
+                     if (impHloc_anomalous(ispin,jspin,iorb,jorb) /= zero) then
+                        is_diagonal = .false.
+                        return
+                     end if
+                  end if
+               end if
+            end do
+         end do
+      end do
+   end do
+end function check_diag_impHloc
 
 
 
