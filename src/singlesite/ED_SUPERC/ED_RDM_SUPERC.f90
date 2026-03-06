@@ -113,18 +113,11 @@ contains
                          j = binary_search(sectorI%H(1)%map,jj)
                          if(j==0)cycle
                          !
-                         !Construct the sign of each components of RDM(io,jo)
-                         nIdw  = popcnt(Ibits(ii,Ns,Norb))
-                         nJdw  = popcnt(Ibits(jj,Ns,Norb))
-                         signI = (-1)**(nIdw)
-                         signJ = (-1)**(nJdw)
-                         sign  = signI*signJ
-                         !
                          !Build (i,j)_th contribution to the (io,jo)_th element of \rho_IMP
                          io = (iImpUp+1) + 2**Norb*iImpDw
                          jo = (jImpUp+1) + 2**Norb*jImpDw
                          impurity_density_matrix(io,jo) = impurity_density_matrix(io,jo) + &
-                              v_state(i)*conjg(v_state(j))*peso*sign
+                              v_state(i)*conjg(v_state(j))*peso
                       enddo
                    enddo
                 enddo
