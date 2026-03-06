@@ -213,7 +213,6 @@ contains
        if(MpiRank==(MpiSize-1))MpiR=mod(Dim,MpiSize)
     end if
 #endif
-    vecDim=MpiQ + MpiR
     !
     vecDim = MpiQ + MpiR
     !
