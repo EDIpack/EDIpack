@@ -156,7 +156,11 @@ contains
                             if(i==0.OR.j==0)cycle
                             !
                             !Construct the sign of each components of RDM(io,jo)
-                            nBup  = popcnt(Ibits(ii,Norb,Norb*Nbath))
+                            if (BATH_TYPE == "hybrid")then
+                                nBup  = popcnt(Ibits(ii,Norb,Nbath))
+                            else
+                                nBup  = popcnt(Ibits(ii,Norb,Norb*Nbath))
+                            endif
                             nIdw  = popcnt(Ibits(ii,Ns,Norb))
                             nJdw  = popcnt(Ibits(jj,Ns,Norb))
                             signI = (-1)**(nIdw*nBup)
