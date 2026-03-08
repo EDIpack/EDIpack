@@ -103,14 +103,17 @@ contains
              call build_sector(isector,sectorI) !no bath to trace
              !
              do IimpUp=0,2**Norb-1
+                iUP = binary_search(sectorI%H(1)%map,IimpUp)
+                if(iUP==0)cycle
                 do JimpUp=0,2**Norb-1
+                   jUP = binary_search(sectorI%H(1)%map,JimpUp)
+                   if(jUP==0)cycle
                    do IimpDw=0,2**Norb-1
+                      iDW = binary_search(sectorI%H(2)%map,IimpDw)
+                      if(iDW==0)cycle
                       do JimpDw=0,2**Norb-1
-                         iUP= binary_search(sectorI%H(1)%map,IimpUp)
-                         iDW= binary_search(sectorI%H(2)%map,IimpDw)
-                         !
-                         jUP= binary_search(sectorI%H(1)%map,JimpUp)
-                         jDW= binary_search(sectorI%H(2)%map,JimpDw)
+                         jDW = binary_search(sectorI%H(2)%map,JimpDw)
+                         if(jDW==0)cycle
                          !
                          i  = iUP + (iDW-1)*sectorI%DimUp
                          j  = jUP + (jDW-1)*sectorI%DimUp
