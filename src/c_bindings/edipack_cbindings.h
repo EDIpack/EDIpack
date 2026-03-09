@@ -209,6 +209,14 @@ extern int Nsuccess;
 
 /*!
 \rst
+Flag to enable the calculation of the reduced density matrix (RDM). 
+Interfaces to :f:var:`rdm_flag`.
+\endrst
+*/ 
+extern bool rdm_flag;
+
+/*!
+\rst
 Symmetry-breaking field. 
 Interfaces to :f:var:`sb_field`.
 \endrst
