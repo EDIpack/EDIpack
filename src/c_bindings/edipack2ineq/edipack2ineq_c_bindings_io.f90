@@ -497,3 +497,43 @@ subroutine ed_get_impurity_rdm_c(rdm,doprint) bind(c,name='ed_get_impurity_rdm')
   endif
   !
 end subroutine ed_get_impurity_rdm_c
+
+
+!----------------!
+!     PHONONS    !
+!----------------!
+
+subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="get_dimp_site_n1")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: dz,axis,zflag
+  character(len=1)                              :: axis_
+  complex(c_double_complex)                     :: zeta(dz)
+  complex(c_double_complex)                     :: dimp(dz)
+  !
+  axis_="m"
+  if(axis==1)axis_="r"
+  if(zflag==1)then
+     call ed_get_dimp(dimp,axis_,zeta)
+  else
+     call ed_get_dimp(dimp,axis_)
+  endif
+end subroutine get_dimp_site_n1_c
+
+subroutine get_dimp_lattice_n2_c(dimp,Nineq,axis,zeta,dz,zflag) bind(c,name="get_dimp_lattice_n2")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: dz,axis,zflag,Nineq
+  character(len=1)                              :: axis_
+  complex(c_double_complex)                     :: zeta(dz)
+  complex(c_double_complex)                     :: dimp(Nineq,dz)
+  !
+  axis_="m"
+  if(axis==1)axis_="r"
+  if(zflag==1)then
+     call ed_get_dimp(dimp,Nineq,axis_,zeta)
+  else
+     call ed_get_dimp(dimp,Nineq,axis_)
+  endif
+end subroutine get_dimp_lattice_n2_c
+
+
+

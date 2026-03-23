@@ -1387,6 +1387,47 @@ void get_gimp_lattice_n6(std::complex<double> *gimp,
 
 /*!
 \rst
+This function obtains the phonon Green's function.
+Interfaces to :f:func:`ed_io/ed_get_dimp` for a rank-1 array.
+Single-site DMFT variant.
+\endrst
+* @param dimp: the impurity Green's function array
+* @param axis: integer flag for axis: `1` = `r`, otherwise `m`
+* @param zeta: frequency array
+* @param dz: dimension of the frequency array
+* @param zflag: flag to set (`1`) or not (`0`) calculation with internal frequency array
+*/   
+void get_dimp_site_n1(std::complex<double> *dimp, 
+                       int axis,
+                       std::complex<double> *zeta, 
+                       int dz, 
+                       int zflag
+                       );
+                       
+                       
+/*!
+\rst
+This function obtains the phonon Green's function.
+Interfaces to :f:func:`e2i_io/ed_get_dimp` for a rank-2 array.
+Real-space DMFT variant.
+\endrst
+* @param dimp: the impurity Green's function array
+* @param Nineq: numer of inequivalent sites
+* @param axis: integer flag for axis: `1` = `r`, otherwise `m`
+* @param zeta: frequency array
+* @param dz: dimension of the frequency array
+* @param zflag: flag to set (`1`) or not (`0`) calculation with internal frequency array
+*/   
+void get_dimp_lattice_n2(std::complex<double> *dimp,
+                       int Nineq, 
+                       int axis,
+                       std::complex<double> *zeta, 
+                       int dz, 
+                       int zflag
+                       );
+
+/*!
+\rst
 This function obtains the Weiss field.
 Interfaces to :f:func:`ed_io/ed_get_g0and` for a rank-3 array.
 Single-site DMFT variant.
