@@ -40,6 +40,7 @@ contains
     isector=Hsector%index
     !
     Dim = getdim(isector)
+    DimEl = Dim/DimPh
     !
     if(Nloc/=dim)stop "directMatVec_cc ERROR: Nloc /= dim(isector)"
     !
@@ -90,7 +91,9 @@ contains
     Hv=zero
     !-----------------------------------------------!
     states: do j=MpiIstart,MpiIend
-       m    = Hsector%H(1)%map(j)
+       j_el = mod(i-1,DimEl) + 1
+       iph = (i-1)/DimEl + 1
+       m    = Hsector%H(1)%map(j_el)
        ib   = bdecomp(m,2*Ns)
        !
        do iorb=1,Norb
@@ -110,6 +113,13 @@ contains
        !
        !IMPURITY- BATH HYBRIDIZATION
        include "direct/HxVimp_bath.f90"
+
+       if(DimPh>1) then
+          !PHONON TERMS
+          include "direct/HxV_ph.f90"
+          !ELECTRON-PHONON INTERACTION
+          include "direct/HxV_eph.f90"
+       end if
     enddo states
     !-----------------------------------------------!
     !

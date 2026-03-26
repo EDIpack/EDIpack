@@ -18,11 +18,11 @@ MODULE ED_HAMILTONIAN_NONSU2_COMMON
 
   type(sector)       :: Hsector
 
-  integer                              :: Dim
+  integer                              :: Dim, DimEl
   integer                              :: i,iup,idw
   integer                              :: m,mup,mdw
   integer                              :: ishift,ishift_up,ishift_dw
-  integer                              :: j,ms
+  integer                              :: j,ms,i_el,j_el,iph
   integer                              :: iorb,jorb,ispin,jspin,ibath
   integer                              :: kp,k1,k2,k3,k4
   integer                              :: ialfa,ibeta
