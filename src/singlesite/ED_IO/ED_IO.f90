@@ -117,8 +117,20 @@ MODULE ED_IO
      !
      !  * [ :f:var:`lmats` / :f:var:`lreal`]
      !
+     !
      module procedure :: ed_get_exctChi_site_n3
   end interface ed_get_exctChi
+
+  interface ed_get_Dimp
+     !This subroutine gets from the EDIpack library the value of the impurity phononic Green's function calculated 
+     !on the Matsubara or real-frequency axis, with number of frequencies :f:var:`lmats` or :f:var:`lreal` .
+     !
+     !The impurity phononic Green's susceptibility function is an array having the following possible dimensions:
+     !
+     !  * [ :f:var:`lmats` / :f:var:`lreal`]
+     module procedure :: ed_get_Dimp_site
+  end interface ed_get_Dimp
+
 
 
   !Observables
@@ -204,6 +216,15 @@ MODULE ED_IO
      module procedure :: ed_get_exct_n2
      module procedure :: ed_get_exct_n3
   end interface ed_get_exct
+
+  interface ed_get_phon
+     !This subroutine gets from the EDIpack library the value of the following phononic observables: bdag*b , X_ph and X_ph^2
+     !where X_ph = (bdag+b)/sqrt(2)
+     !
+     !The :f:var:`self` is a real array of dimension 3
+     !
+     module procedure :: ed_get_phon_site
+  end interface ed_get_phon
 
 
   !Get Energies
