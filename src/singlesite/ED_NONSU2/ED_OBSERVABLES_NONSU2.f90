@@ -35,9 +35,16 @@ MODULE ED_OBSERVABLES_NONSU2
   real(8),dimension(:,:),allocatable    :: exct_tx ! excitonic order parameter :math:`\langle c^{\dagger}_{is}\sigma^{x}c_{js^{'}} \rangle`
   real(8),dimension(:,:),allocatable    :: exct_ty ! excitonic order parameter :math:`\langle c^{\dagger}_{is}\sigma^{y}c_{js^{'}} \rangle`
   real(8),dimension(:,:),allocatable    :: exct_tz ! excitonic order parameter :math:`\langle c^{\dagger}_{is}\sigma^{z}c_{js^{'}} \rangle`
+  real(8)                               :: dens_ph !phonon density
+  real(8)                               :: X_ph ! :math:`\langle X \rangle` with :math:`X = \frac{b + b^{dagger}}{2}`
+  real(8)                               :: X2_ph ! :math:`\langle X^{2} \rangle` with :math:`X = \frac{b + b^{dagger}}{2}`
   real(8)                               :: s2tot ! :math:`\langle S_{z}^{2} \rangle`
   real(8)                               :: Egs ! Ground-state energy
   real(8)                               :: Ei
+  real(8),dimension(:),allocatable      :: Prob ! Probability distribution
+  real(8),dimension(:),allocatable      :: prob_ph ! Phonon probability
+  real(8),dimension(:),allocatable      :: pdf_ph ! Phonon probability distribution :f:func:`prob_distr_ph`
+  real(8),dimension(:,:),allocatable    :: pdf_part ! Lattice probability distribution as obtained by :f:func:`prob_distr_ph`
   !
   integer                               :: iorb,jorb,istate
   integer                               :: ispin,jspin
@@ -47,14 +54,14 @@ MODULE ED_OBSERVABLES_NONSU2
   integer                               :: iup,idw
   integer                               :: jup,jdw
   integer                               :: mup,mdw
-  integer                               :: iph,i_el,isz
+  integer                               :: iph,i_el,j_el,isz,val
   real(8)                               :: sgn,sgn1,sgn2,sg1,sg2,sg3,sg4
   real(8)                               :: gs_weight
   !
   real(8)                               :: peso
   real(8)                               :: norm
   !
-  integer                               :: i,j,ii
+  integer                               :: i,j,ii,iprob
   integer                               :: isector,jsector
   !
   complex(8),dimension(:),allocatable   :: vvinit
@@ -101,6 +108,10 @@ contains
     allocate(magX(Norb),magY(Norb))
     allocate(exct_S0(Norb,Norb),exct_Tz(Norb,Norb))
     allocate(exct_Tx(Norb,Norb),exct_Ty(Norb,Norb))
+    allocate(Prob(3**Norb))
+    allocate(prob_ph(DimPh))
+    allocate(pdf_ph(Lpos))
+    allocate(pdf_part(Lpos,3**Norb)) ! each orbital can be empty '0', single occupied '1' and doubly occupied '2'
     !
     Egs     = state_list%emin
     dens    = 0.d0
@@ -123,6 +134,13 @@ contains
     theta_dwup = 0d0
     omega_updw = 0d0
     omega_dwup = 0d0
+    Prob    = 0.d0
+    prob_ph = 0.d0
+    dens_ph = 0.d0
+    X_ph    = 0.d0
+    X2_ph   = 0.d0
+    pdf_ph  = 0.d0
+    pdf_part= 0.d0
     !
 #ifdef _DEBUG
     if(ed_verbose>2)write(Logfile,"(A)")&
@@ -144,9 +162,13 @@ contains
        if(Mpimaster)then
           call build_sector(isector,sectorI)
           do i = 1,sectorI%Dim
+            !
+             iph = (i-1)/(sectorI%DimEl) + 1
+             i_el = mod(i-1,sectorI%DimEl) + 1
+             !
              gs_weight=peso*abs(v_state(i))**2
              !
-             m  = sectorI%H(1)%map(i)
+             m  = sectorI%H(1)%map(i_el)
              ib = bdecomp(m,2*Ns)
              do iorb=1,Norb
                 nup(iorb)= dble(ib(iorb))
@@ -154,6 +176,12 @@ contains
              enddo
              sz = (nup-ndw)/2d0
              nt =  nup+ndw
+             !Configuration probability
+             iprob=1
+             do iorb=1,Norb
+                iprob=iprob+nint(nt(iorb))*3**(iorb-1)
+             end do
+             Prob(iprob) = Prob(iprob) + gs_weight
              !
              !Evaluate averages of observables:
              do iorb=1,Norb
@@ -172,6 +200,35 @@ contains
                 enddo
              enddo
              s2tot = s2tot  + (sum(sz))**2*gs_weight
+             !
+             prob_ph(iph) = prob_ph(iph) + gs_weight
+             dens_ph = dens_ph + (iph-1)*gs_weight
+             !
+             !<X> and <X^2> with X=(b+bdg)/sqrt(2)
+             if(iph<DimPh)then
+                j= i_el + (iph)*sectorI%DimEl
+                X_ph = X_ph + sqrt(2.d0*dble(iph))*(v_state(i)*v_state(j))*peso
+             end if
+             X2_ph = X2_ph + 0.5d0*(1+2*(iph-1))*gs_weight
+             if(iph<DimPh-1)then
+                j= i_el + (iph+1)*sectorI%DimEl
+                X2_ph = X2_ph + sqrt(dble((iph)*(iph+1)))*(v_state(i)*v_state(j))*peso
+             end if
+             !
+             !compute the lattice probability distribution function
+             if(Dimph>1 .AND. iph==1) then
+               val = 1
+                ! val encodes the occupation of each orbital in basis 3 (since each orbital can have occupation 0,1,2)
+                ! the ternary representation of 'val-1' gives the occupation of each orbital
+                ! val-1 mod 3 is the first orbital, (val-1)/3 mod 3 is the second and so on...
+                ! 
+                ! OLD : val= 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
+                do iorb=1,Norb
+                   !val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   val = val + nt(iorb)*( 3**(iorb-1) )
+                enddo
+                call prob_distr_ph(v_state,val)
+             end if
           enddo
        endif
        if(allocated(v_state))deallocate(v_state)
@@ -395,8 +452,10 @@ contains
              do iorb=1,Norb
                 isite=iorb + (ispin-1)*Norb
                 do m=1,sectorI%Dim
-                   i  = sectorI%H(1)%map(m)
-                   ib = bdecomp(i,2*Ns)
+                   iph  = (m-1)/(sectorI%DimEl)+1
+                   i_el = mod(m-1,sectorI%DimEl)+1
+                   i  = sectorI%H(1)%map(i_el)
+                   ib = bdecomp(i_el,2*Ns)
                    single_particle_density_matrix(ispin,ispin,iorb,iorb) = &
                         single_particle_density_matrix(ispin,ispin,iorb,iorb) + &
                         peso*ib(isite)*conjg(v_state(m))*v_state(m)
@@ -416,12 +475,16 @@ contains
                       isite=iorb + (ispin-1)*Norb
                       jsite=jorb + (jspin-1)*Norb
                       do m=1,sectorI%Dim
-                         i  = sectorI%H(1)%map(m)
+                         iph  = (m-1)/(sectorI%DimEl)+1
+                         i_el = mod(m-1,sectorI%DimEl)+1
+                         i  = sectorI%H(1)%map(i_el)
                          ib = bdecomp(i,2*Ns)
                          if((ib(jsite)==1).and.(ib(isite)==0))then
                             call c(jsite,i,r,sgn1)
                             call cdg(isite,r,k,sgn2)
-                            j=binary_search(sectorI%H(1)%map,k)
+                            j_el=binary_search(sectorI%H(1)%map,k)
+                            j = j_el + (iph-1)*sectorI%DimEl
+
                             single_particle_density_matrix(ispin,jspin,iorb,jorb) = &
                                  single_particle_density_matrix(ispin,jspin,iorb,jorb) + &
                                  peso*sgn1*v_state(m)*sgn2*conjg(v_state(j))
@@ -506,7 +569,8 @@ contains
        call write_observables()
     endif
     !
-    deallocate(dens,docc,dens_up,dens_dw,magz,sz2,n2)
+    deallocate(dens,docc,dens_up,dens_dw,magz,sz2,n2,Prob)
+    deallocate(prob_ph,pdf_ph,pdf_part)
     deallocate(magX,magY)
     deallocate(exct_S0,exct_Tz)
     deallocate(exct_Tx,exct_Ty)
@@ -572,8 +636,10 @@ subroutine local_energy_nonsu2()
         !
         call build_sector(isector,sectorI)
         do i=1,sectorI%Dim
+           iph  = (i-1)/(sectorI%DimEl)+1
+           i_el = mod(i-1,sectorI%DimEl)+1
            gs_weight=peso*abs(v_state(i))**2
-           m  = sectorI%H(1)%map(i)
+           m  = sectorI%H(1)%map(i_el)
            ib = bdecomp(m,2*Ns)
            do iorb=1,Norb
               nup(iorb)= dble(ib(iorb))
@@ -590,7 +656,8 @@ subroutine local_energy_nonsu2()
                  if((ib(iorb)==0).AND.(ib(jorb)==1))then
                     call c(jorb,m,k1,sg1)
                     call cdg(iorb,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Eknot = ed_Eknot + impHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -598,7 +665,8 @@ subroutine local_energy_nonsu2()
                  if((ib(iorb+Ns)==0).AND.(ib(jorb+Ns)==1))then
                     call c(jorb+Ns,m,k1,sg1)
                     call cdg(iorb+Ns,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Eknot = ed_Eknot + impHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -611,7 +679,8 @@ subroutine local_energy_nonsu2()
                  if((impHloc(1,Nspin,iorb,jorb)/=zero).AND.(ib(iorb)==0).AND.(ib(jorb+Ns)==1))then
                     call c(jorb+Ns,m,k1,sg1)
                     call cdg(iorb,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Eknot = ed_Eknot + impHloc(1,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -619,7 +688,8 @@ subroutine local_energy_nonsu2()
                  if((impHloc(Nspin,1,iorb,jorb)/=zero).AND.(ib(iorb+Ns)==0).AND.(ib(jorb)==1))then
                     call c(jorb,m,k1,sg1)
                     call cdg(iorb+Ns,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Eknot = ed_Eknot + impHloc(Nspin,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -673,7 +743,9 @@ subroutine local_energy_nonsu2()
                        call c(iorb+Ns,k1,k2,sg2)
                        call cdg(jorb+Ns,k2,k3,sg3)
                        call cdg(iorb,k3,k4,sg4)
-                       j=binary_search(sectorI%H(1)%map,k4)
+                       j_el = binary_search(sectorI%H(1)%map,k4)
+                       j = j_el + (iph-1)*sectorI%DimEl
+                       
                        if(Jz_basis.and.j==0)cycle
                        ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
                        ed_Dse  = ed_Dse  + sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
@@ -699,7 +771,8 @@ subroutine local_energy_nonsu2()
                        call c(jorb+Ns,k1,k2,sg2)
                        call cdg(iorb+Ns,k2,k3,sg3)
                        call cdg(iorb,k3,k4,sg4)
-                       j=binary_search(sectorI%H(1)%map,k4)
+                       j_el=binary_search(sectorI%H(1)%map,k4)
+                       j = j_el + (iph-1)*sectorI%DimEl
                        if(Jz_basis.and.j==0)cycle
                        ed_Epot = ed_Epot + Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
                        ed_Dph  = ed_Dph  + sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
@@ -717,7 +790,8 @@ subroutine local_energy_nonsu2()
                  if((ib(iorb)==0).AND.(ib(jorb)==1))then
                     call c(jorb,m,k1,sg1)
                     call cdg(iorb,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Epot = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -725,7 +799,8 @@ subroutine local_energy_nonsu2()
                  if((ib(iorb+Ns)==0).AND.(ib(jorb+Ns)==1))then
                     call c(jorb+Ns,m,k1,sg1)
                     call cdg(iorb+Ns,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Epot = ed_Epot + mfHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -738,7 +813,8 @@ subroutine local_energy_nonsu2()
                  if((mfHloc(1,Nspin,iorb,jorb)/=zero).AND.(ib(iorb)==0).AND.(ib(jorb+Ns)==1))then
                     call c(jorb+Ns,m,k1,sg1)
                     call cdg(iorb,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Epot = ed_Epot + mfHloc(1,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -746,7 +822,8 @@ subroutine local_energy_nonsu2()
                  if((mfHloc(Nspin,1,iorb,jorb)/=zero).AND.(ib(iorb+Ns)==0).AND.(ib(jorb)==1))then
                     call c(jorb,m,k1,sg1)
                     call cdg(iorb+Ns,k1,k2,sg2)
-                    j=binary_search(sectorI%H(1)%map,k2)
+                    j_el=binary_search(sectorI%H(1)%map,k2)
+                    j = j_el + (iph-1)*sectorI%DimEl
                     if(Jz_basis.and.j==0)cycle
                     ed_Epot = ed_Epot + mfHloc(Nspin,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
                  endif
@@ -786,7 +863,8 @@ subroutine local_energy_nonsu2()
                    if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
                  endif
                  !
-                 j=binary_search(sectorI%H(1)%map,k4)
+                 j_el=binary_search(sectorI%H(1)%map,k4)
+                 j = j_el + (iph-1)*sectorI%DimEl
                  if(Jz_basis.and.j==0)cycle
                  ed_Epot = ed_Epot + coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
                  !
@@ -929,6 +1007,22 @@ end subroutine local_energy_nonsu2
     write(unit,"(A1,*(A10,6X))") "# ",(("Exct_"//str(iorb)//str(jorb),jorb=iorb+1,Norb),iorb=1,Norb)
     close(unit)
     !
+    !Phonons info
+    if(Nph>0)then
+      unit = free_unit()
+      open(unit,file="nph_info.ed")
+      write(unit,"(A1,*(A10,6X))") "#","1nph","2X_ph", "3X2_ph"
+      close(unit)
+      !
+      !N_ph probability:
+      unit = free_unit()
+      open(unit,file="Nph_probability_info.ed")
+      write(unit,"(A1,90(A10,6X))")"#",&
+           (reg(txtfy(i+1))//"Nph="//reg(txtfy(i)),i=0,DimPh-1)
+      close(unit)
+   endif
+    !
+    !
   end subroutine write_obs_info
 
 
@@ -1017,6 +1111,25 @@ end subroutine local_energy_nonsu2
     write(unit,"(*(F15.9,1X))") ((exct_tz(iorb,jorb),jorb=iorb+1,Norb),iorb=1,Norb)
     close(unit)
     !
+    !Phonons info
+    if(Nph>0)then
+      unit = free_unit()
+      open(unit,file="nph_last"//reg(ed_file_suffix)//".ed")
+      write(unit,"(90(F15.9,1X))") dens_ph, X_ph, X2_ph
+      close(unit)
+      !
+      unit = free_unit()
+      open(unit,file="Occupation_prob"//reg(ed_file_suffix)//".ed")
+      write(unit,"(125F15.9)")Prob,sum(Prob)
+      close(unit)
+      !
+      !N_ph probability:
+      unit = free_unit()
+      open(unit,file="Nph_probability"//reg(ed_file_suffix)//".ed")
+      write(unit,"(90(F15.9,1X))") (prob_ph(i),i=1,DimPh)
+      close(unit)
+   endif
+   !
   end subroutine write_obs_last
 
 
@@ -1098,6 +1211,14 @@ end subroutine local_energy_nonsu2
     open(unit,file="ExctTz_all"//reg(ed_file_suffix)//".ed",position='append')
     write(unit,"(*(F15.9,1X))") ((exct_tz(iorb,jorb),jorb=iorb+1,Norb),iorb=1,Norb)
     close(unit)
+    !
+    !Phonons info
+    if(Nph>0)then
+      unit = free_unit()
+      open(unit,file="nph_all"//reg(ed_file_suffix)//".ed",position='append')
+      write(unit,"(*(F15.9,1X))") dens_ph,X_ph, X2_ph
+      close(unit)
+   endif
   end subroutine write_obs_all
 
 
@@ -1127,6 +1248,76 @@ end subroutine local_energy_nonsu2
     close(unit)
   end subroutine write_energy
 
+
+  subroutine write_pdf()
+   !Write the lattice probability distribution function
+   integer :: unit,i
+   real(8) :: x,dx
+   unit = free_unit()
+   open(unit,file="lattice_prob"//reg(ed_file_suffix)//".ed")
+   dx = (xmax-xmin)/dble(Lpos)
+   x = xmin
+   do i=1,Lpos
+      write(unit,"(5F15.9)") x,pdf_ph(i),pdf_part(i,:)
+      x = x + dx
+   enddo
+   close(unit)
+ end subroutine write_pdf
+
+
+ subroutine prob_distr_ph(vec,val)
+   ! Compute the contribution of the currect state to the local lattice probability distribution function (PDF)
+   ! ,i.e. the local probability of displacement operator X_ph=(bdag+b) as a function of the displacement itself
+   !
+   ! P(X) = <x| rho_ph |x> where rho_ph = Tr_fermions rho_aim
+   ! and |x> = \sum_n psi*_n(x)|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
+   complex(8),dimension(:) :: vec
+   real(8)              :: psi(0:DimPh-1)
+   real(8)              :: x,dx
+   integer              :: i,j,i_ph,j_ph,val
+   integer              :: istart,jstart,iend,jend
+   !
+   dx = (xmax-xmin)/dble(Lpos)
+   !
+   x = xmin
+   do i=1,Lpos
+      call Hermite(x,psi)
+      !
+      do i_ph=1,DimPh
+         istart = i_el + (i_ph-1)*sectorI%DimEl
+         !
+         do j_ph=1,DimPh
+            jstart = i_el + (j_ph-1)*sectorI%DimEl
+            ! Global PDF
+            pdf_ph(i) = pdf_ph(i) + peso*psi(i_ph-1)*psi(j_ph-1)*real( vec(istart)*conjg(vec(jstart)))
+            ! PDF restricted to a sector of orbital occupation
+            pdf_part(i,val) = pdf_part(i,val) + peso*psi(i_ph-1)*psi(j_ph-1)*real(vec(istart)*conjg(vec(jstart)))
+            !
+         enddo
+      enddo
+      !
+      x = x + dx
+   enddo
+ end subroutine prob_distr_ph
+
+
+ subroutine Hermite(x,psi)
+   !Compute the Hermite functions (i.e. harmonic oscillator eigenfunctions)
+   !the output is a vector with the functions up to order Dimph-1 evaluated at position x
+   real(8),intent(in)  ::  x
+   real(8),intent(out) ::  psi(0:DimPh-1)
+   integer             ::  i
+   real(8)             ::  den
+   !
+   den=1.331335373062335d0!pigr**(0.25d0)
+   !
+   psi(0)=exp(-0.5d0*x*x)/den
+   psi(1)=exp(-0.5d0*x*x)*sqrt(2d0)*x/den
+   !
+   do i=2,DimPh-1
+      psi(i)=2*x*psi(i-1)/sqrt(dble(2*i))-psi(i-2)*sqrt(dble(i-1)/dble(i))
+   enddo
+ end subroutine Hermite
 
 
 end MODULE ED_OBSERVABLES_NONSU2
