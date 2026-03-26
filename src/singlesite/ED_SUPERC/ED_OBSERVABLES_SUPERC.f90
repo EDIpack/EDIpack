@@ -362,6 +362,9 @@ contains
     ed_mag(3,:) = magZ
     ed_phisc    = abs(phisc(:,:))
     ed_argsc    = atan2(dimag(phisc(:,:)),dreal(phisc(:,:)))
+    ed_dens_ph = dens_ph
+    ed_X_ph = X_ph
+    ed_X2_ph = X2_ph
     !
     ed_imp_info = [s2tot,egs]
     !

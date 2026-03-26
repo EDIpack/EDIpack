@@ -548,6 +548,9 @@ contains
           ed_exct(4,iorb,jorb) = exct_Tz(iorb,jorb)
        enddo
     enddo
+    ed_dens_ph = dens_ph
+    ed_X_ph = X_ph
+    ed_X2_ph = X2_ph
     !
     ed_imp_info=[s2tot,egs]
     !
