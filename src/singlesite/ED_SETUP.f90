@@ -87,6 +87,11 @@ contains
     !    cg_grad=1
     ! endif
     !
+    
+    if(rdm_flag .and. (Nph > 0))then
+      stop "ED ERROR: RDM_FLAG=T and Nph>0. This is not yet supported."
+    endif
+    
     if(Norb==1)then
        chiexct_flag    =.false.
        ed_print_chiexct=.false.
