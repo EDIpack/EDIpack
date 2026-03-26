@@ -30,16 +30,6 @@ MODULE ED_IO
      module procedure :: ed_get_gimp_site_n5
   end interface ed_get_gimp
 
-  interface ed_get_dimp
-     !This subroutine gets from the EDIpack library the value of the impurity phonon's Green's function calculated 
-     !on the Matsubara or real-frequency axis, with number of frequencies :f:var:`lmats` or :f:var:`lreal` .
-     !
-     !The impurity phonon's Green's function is an array having the following possible dimensions:
-     !
-     !  * [ :f:var:`lmats` / :f:var:`lreal`]
-     !
-     module procedure :: ed_get_dimp_site_n1
-  end interface ed_get_dimp
 
   interface ed_get_sigma
      !| This subrotine gets from the EDIpack library the value of the self-energy calculated 
@@ -457,6 +447,15 @@ contains
   include "get_g0imp.f90"
 #endif
 
+  !+--------------------------------------------------------------------------+!
+  ! PURPOSE: Retrieve phononic green's functions 
+  !+--------------------------------------------------------------------------+!
+#if __INTEL_COMPILER
+#include "get_Dimp.f90"
+#else
+  include "get_Dimp.f90"
+#endif
+
 
   !+--------------------------------------------------------------------------+!
   ! PURPOSE: Retrieve spin.dens.pair.exct susceptibilties
@@ -488,6 +487,7 @@ contains
 #include "get_exct.f90"
 #include "get_energy.f90"
 #include "get_doubles.f90"
+#include "get_phon.f90"
 #else
   include "get_dens.f90"
   include "get_mag.f90"
@@ -496,6 +496,7 @@ contains
   include "get_exct.f90"
   include "get_energy.f90"
   include "get_doubles.f90"
+  include "get_phon.f90"
 #endif
 
 
