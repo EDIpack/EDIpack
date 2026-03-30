@@ -75,7 +75,7 @@
                  call cdg(jorb+Ns,k2,k3,sg3)
                  call cdg(iorb,k3,k4,sg4)
                  j_el=binary_search(Hsector%H(1)%map,k4)
-                 j = j_el * (iph-1)*DimEl
+                 j = j_el + (iph-1)*DimEl
                  htmp = one*Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4
                  !
                  select case(MpiStatus)
@@ -108,7 +108,7 @@
                  call cdg(iorb+Ns,k2,k3,sg3)
                  call cdg(iorb,k3,k4,sg4)
                  j_el=binary_search(Hsector%H(1)%map,k4)
-                 j = j_el * (iph-1)*DimEl
+                 j = j_el + (iph-1)*DimEl
                  htmp = one*Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4
                  !
                  select case(MpiStatus)
@@ -163,7 +163,9 @@
              if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
            endif
            !
-           j=binary_search(Hsector%H(1)%map,k4)
+           j_el=binary_search(Hsector%H(1)%map,k4)
+           j = j_el + (iph-1)*DimEl
+
            if (j == 0)then
               STOP "H_sundry: impossible operator"
            endif
