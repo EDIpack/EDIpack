@@ -1,4 +1,4 @@
-!Electron-Phono hamiltonian H_eph =  \sum_sigma \sum_m,n g_m,n cdagger_m,sigma c_n,sigma ( bdg + b ) 
+!Electron-Phonon hamiltonian H_eph =  \sum_sigma \sum_m,n g_m,n cdagger_m,sigma c_n,sigma ( bdg + b ) 
 !
 ! Diagonal terms: Sum_iorb g_iorb,iorb n_iorb*(bdg + b)
 htmp=zero
@@ -26,12 +26,12 @@ do iorb=1,Norb
             if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
                 htmp = g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))
                 i = i_el + (iph)*DimEl
-                !HERE CHANGE STILL TO MULTIPLY
+                hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
             endif
             if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
                 htmp = g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))
                 i = i_el + (iph-2)*DimEl
-                !HERE CHANGE
+                hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
             endif
         endif
     end do
@@ -49,12 +49,12 @@ do iorb=1,Norb
             if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
                 htmp = g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))
                 i = i_el + (iph)*DimEl
-                !HERE CHANGE
+                hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
             endif
             if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
                 htmp = g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))
                 i = i_el + (iph-2)*DimEl
-                !HERE CHANGE
+                hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
             endif
         endif
     end do
