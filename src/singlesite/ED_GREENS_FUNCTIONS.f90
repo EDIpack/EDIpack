@@ -153,6 +153,7 @@ contains
     case default  ;stop "get_impD error: not a valid ed_mode"
     case("normal");self = get_impD_normal(zeta,axis_)
     case("superc");self = get_impD_superc(zeta,axis_)
+    case("nonsu2");self = get_impD_nonsu2(zeta,axis_)
     end select
   end function get_impD
 
@@ -357,13 +358,11 @@ contains
     call allocate_grids()
     !Print the impurity functions:
     select case(ed_mode)
-    case ("normal","superc")
+    case ("normal","superc","nonsu2")
        impDmats  = get_impD(dcmplx(0d0,wm(:)),axis='m')
        impDreal  = get_impD(dcmplx(wr(:),eps),axis='r')
        call splot("impDph_iw.ed"   ,vm,impDmats(:))
        call splot("impDph_realw.ed",vr,impDreal(:))
-    case("nonsu2");
-       write(LOGfile,*)"print_impD WARNING: phonon GF is not available in ed_mode=nonsu2."
     end select
     call deallocate_grids()
   end subroutine Print_ImpD

@@ -8,6 +8,37 @@ do i=MpiIstart,MpiIend
        nup(iorb)=dble(ib(iorb))
        ndw(iorb)=dble(ib(iorb+Ns))
     enddo
+
+     ! Diagonal terms: Sum_iorb g_iorb,iorb n_iorb
+     !
+     if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|     
+        htmp = zero
+        do iorb=1,Norb
+           htmp = htmp + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+        enddo
+        htmp = htmp*sqrt(dble(iph))
+        j = i_el + (iph)*DimEl
+        select case(MpiStatus)
+            case (.true.)
+                call sp_insert_element(MpiComm,spH0,htmp,i,j)
+            case (.false.)
+                call sp_insert_element(spH0,htmp,i,j)
+        end select
+    endif
+    if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|  
+        htmp = zero
+        do iorb=1,Norb
+           htmp = htmp + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+        enddo
+        htmp = htmp*sqrt(dble(iph-1))
+        j = i_el + (iph-2)*DimEl
+        select case(MpiStatus)
+            case (.true.)
+                call sp_insert_element(MpiComm,spH0,htmp,i,j)
+            case (.false.)
+                call sp_insert_element(spH0,htmp,i,j)
+        end select
+    endif
     !
     ! UP
     do iorb=1,Norb
