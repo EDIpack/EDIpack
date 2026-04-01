@@ -286,6 +286,8 @@ contains
 #endif
     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
+    if(allocated(full_denmat)) deallocate(sfull_denmat)
+    allocate(full_denmat(Nspin,Nspin,Norb,Norb));full_denmat=zero
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
@@ -344,6 +346,31 @@ contains
                    enddo
                 enddo
              endif
+             do ispin=1,Nspin
+               do iorb=1,Ns
+                  do jorb=1,Ns
+                  ! diagonal
+                  if(iorb==jorb )then
+                     full_denmat(ispin,ispin,iorb,jorb) = &
+                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*v_state(i)
+                  elseif((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
+                     iud(1) = sectorI%H(1)%map(Indices(1))
+                     iud(2) = sectorI%H(2)%map(Indices(2))
+                     call c(jorb,iud(ispin),r,sgn1)
+                     call cdg(iorb,r,k,sgn2)
+                     Jndices = Indices
+                     Jndices(1+(ispin-1)*Ns_Ud) = &
+                           binary_search(sectorI%H(1+(ispin-1)*Ns_Ud)%map,k)
+                     call indices2state(Jndices,[sectorI%DimUps,sectorI%DimDws],j)
+                     !
+                     j = j + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(ispin,ispin,iorb,jorb) = &
+                        full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+                  endif
+                  enddo
+               enddo
+             enddo
              !
              !
           enddo
@@ -403,6 +430,7 @@ contains
        call Bcast_MPI(MpiComm,ed_exct)
        call Bcast_MPI(MpiComm,ed_imp_info)
        if(allocated(single_particle_density_matrix))call Bcast_MPI(MpiComm,single_particle_density_matrix)
+       if(allocated(full_denmat))call Bcast_MPI(MpiComm,full_denmat)
     endif
 #endif
     !

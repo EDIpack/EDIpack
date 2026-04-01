@@ -432,6 +432,8 @@ contains
 #endif
     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
+    if(allocated(full_denmat)) deallocate(full_denmat)
+    allocate(full_denmat(Nspin,Nspin,Ns,Ns));full_denmat=zero
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
@@ -455,7 +457,7 @@ contains
                    iph  = (m-1)/(sectorI%DimEl)+1
                    i_el = mod(m-1,sectorI%DimEl)+1
                    i  = sectorI%H(1)%map(i_el)
-                   ib = bdecomp(i_el,2*Ns)
+                   ib = bdecomp(i,2*Ns)
                    single_particle_density_matrix(ispin,ispin,iorb,iorb) = &
                         single_particle_density_matrix(ispin,ispin,iorb,iorb) + &
                         peso*ib(isite)*conjg(v_state(m))*v_state(m)
@@ -494,6 +496,35 @@ contains
                 enddo
              enddo
           enddo
+          do i=1,sectorI%Dim
+            iph  = (m-1)/(sectorI%DimEl)+1
+            i_el = mod(m-1,sectorI%DimEl)+1
+            m  = sectorI%H(1)%map(i_el)
+            ib = bdecomp(m,2*Ns)
+            do ispin=1,Nspin
+               do jspin=1,Nspin
+                  do iorb=1,Ns
+                     do jorb=1,Ns
+                     isite=iorb + (ispin-1)*Ns
+                     jsite=jorb + (jspin-1)*Ns
+                     ! diagonal
+                     if( isite==jsite )then
+                        full_denmat(ispin,jspin,iorb,jorb) = &
+                        full_denmat(ispin,jspin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*conjg(v_state(i))
+                     elseif( (ib(jsite)==1) .and. (ib(isite)==0) )then
+                        call c(jsite,m,r,sgn1)
+                        call cdg(isite,r,k,sgn2)
+                        j_el=binary_search(sectorI%H(1)%map,k)
+                        j = j_el + (iph-1)*sectorI%DimEl
+                        !
+                        full_denmat(ispin,jspin,iorb,jorb) = &
+                           full_denmat(ispin,jspin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+                     endif
+                     enddo
+                  enddo
+               enddo
+            enddo
+         enddo
           call delete_sector(sectorI)
        endif
        if(allocated(v_state))deallocate(v_state)
@@ -565,6 +596,7 @@ contains
        call Bcast_MPI(MpiComm,ed_exct)
        call Bcast_MPI(MpiComm,ed_imp_info)
        if(allocated(single_particle_density_matrix))call Bcast_MPI(MpiComm,single_particle_density_matrix)
+       if(allocated(full_denmat))call Bcast_MPI(MpiComm,full_denmat)
     endif
 #endif
     !

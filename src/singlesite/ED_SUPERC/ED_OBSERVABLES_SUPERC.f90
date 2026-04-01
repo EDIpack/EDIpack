@@ -251,15 +251,111 @@ contains
     !STATUS: IMPORTED FROM NORMAL, TO BE UPDATE TO NAMBU BASIS <\psi^+_a Psi_a>
     !     !
     !     !SINGLE PARTICLE IMPURITY DENSITY MATRIX
-    ! #ifdef _DEBUG
-    !     if(ed_verbose>2)write(Logfile,"(A)")&
-    !          "DEBUG observables_superc: eval single particle density matrix <C^+_a C_b>"
-    ! #endif
+#ifdef _DEBUG
+    if(ed_verbose>2)write(Logfile,"(A)")&
+      "DEBUG observables_superc: eval single particle density matrix <C^+_a C_b>"
+#endif
+    if(allocated(full_denmat)) deallocate(full_denmat)
+    allocate(full_denmat(Nnambu,Nnambu,Ns,Ns));full_denmat=zero
+
+    do istate=1,state_list%size
+      isector = es_return_sector(state_list,istate)
+      Ei      = es_return_energy(state_list,istate)
+      v_state    =  es_return_cvec(state_list,istate)       
+#ifdef _DEBUG
+      if(ed_verbose>3)write(Logfile,"(A)")&
+           "DEBUG observables_superc: get contribution from state:"//str(istate)
+#endif
+      !
+      peso = 1.d0 ; if(finiteT)peso=exp(-beta*(Ei-Egs))
+      peso = peso/zeta_function
+      !
+      if(Mpimaster)then
+         call build_sector(isector,sectorI)
+         do i = 1,sectorI%Dim
+            gs_weight=peso*abs(v_state(i))**2
+            iph = (i-1)/(sectorI%DimEl) + 1
+            i_el = mod(i-1,sectorI%DimEl)+1
+            m    = sectorI%H(1)%map(i_el)
+            ib   = bdecomp(m,2*Ns)
+            do iorb=1,Norb
+               nup(iorb)= dble(ib(iorb))
+               ndw(iorb)= dble(ib(iorb+Ns))
+            enddo
+            !
+            !NORMAL
+            do iorb=1,Ns   
+               do jorb=1,Ns
+                  ! SPIN-UP, NORMAL, cdag_up,iorb c_up,jorb
+                  isite=iorb
+                  jsite=jorb
+                  ! diagonal
+                  if( isite==jsite )then
+                        full_denmat(1,1,iorb,jorb) = &
+                        full_denmat(1,1,iorb,jorb) + Nud(1,iorb)*peso*(v_state(i))*conjg(v_state(i))
+                  elseif( (ib(jsite)==1) .and. (ib(isite)==0) )then
+                     call c(  jsite,m,r,sgn1)
+                     call cdg(isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(1,1,iorb,jorb) = &
+                        full_denmat(1,1,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+                  !
+                  ! SPIN-DOWN, NORMAL, c_dw,iorb cdag_dw,jorb
+                  isite=iorb+Ns
+                  jsite=jorb+Ns
+                  if( isite==jsite )then
+                     full_denmat(2,2,iorb,jorb) = &
+                     full_denmat(2,2,iorb,jorb) + (1-Nud(ispin,iorb))*peso*(v_state(i))*conjg(v_state(i))
+                  elseif( (ib(jsite)==0) .and. (ib(isite)==1) )then
+                     call cdg(jsite,m,r,sgn1)
+                     call c(  isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(2,2,iorb,jorb) = &
+                        full_denmat(2,2,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+                  !
+                  ! UP-DW, ANOMALOUS, cdag_up,iorb cdag_dw,jorb
+                  isite=iorb
+                  jsite=jorb+Ns
+                  if( (ib(jsite)==0) .and. (ib(isite)==0) )then
+                     call cdg(jsite,m,r,sgn1)
+                     call cdg(isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(1,2,iorb,jorb) = &
+                        full_denmat(1,2,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+                  !
+                  ! DW-UP, ANOMALOUS, c_dw,iorb c_up,jorb
+                  isite=iorb+Ns
+                  jsite=jorb
+                  if( (ib(jsite)=1) .and. (ib(isite)==1) )then
+                     call c(jsite,m,r,sgn1)
+                     call c(isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(2,1,iorb,jorb) = &
+                        full_denmat(2,1,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+               enddo
+            enddo
+         enddo 
+         call delete_sector(sectorI)
+      endif
+   enddo
+          
+
+            ! HERE COMPUTE NORMAL AND ANOMALUS 1BDM
+
     !     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     !     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
-    !     do istate=1,state_list%size
-    !        isector = es_return_sector(state_list,istate)
-    !        Ei      = es_return_energy(state_list,istate)
     ! #ifdef _DEBUG
     !        if(ed_verbose>3)write(Logfile,"(A)")&
     !             "DEBUG observables_normal: get contribution from state:"//str(istate)

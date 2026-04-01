@@ -264,6 +264,7 @@ MODULE ED_VARS_GLOBAL
   !PRIVATE (now public but accessible thru routine)
   !=========================================================
   complex(8),allocatable,dimension(:,:,:,:)          :: single_particle_density_matrix ![Nspin,Nspin,Norb,Norb]
+  complex(8),allocatable,dimension(:,:,:,:)          :: full_denmat                    ![Nspin,Nspin,Ns,Ns]
   complex(8),allocatable,dimension(:,:)              :: impurity_density_matrix        ![2**2Norb,2**2Norb]
   integer,dimension(3)                               :: Lzdiag = [-1,+1,0]
   integer,dimension(2)                               :: Szdiag = [1,-1]
