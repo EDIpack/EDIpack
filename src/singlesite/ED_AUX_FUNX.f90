@@ -288,16 +288,34 @@ contains
   subroutine ed_set_A_ph(A_new)
     real(8), intent(in)  :: A_new
     A_ph = A_new
+    !
   end subroutine ed_set_A_ph
+
+  !+------------------------------------------------------------------+
+  !PURPOSE  : SET the electron-phonon coupling matrix
+  !+------------------------------------------------------------------+
 
   subroutine ed_set_G_ph_N1(G_new)
    ! set G from diagonal af shape (Norb)
-   complex(8), dimension(:) :: G_new
+   complex(8), dimension(Norb) :: G_new
+   integer :: iorb
+   !
+   if(allocated(G_ph)) deallocate(G_ph)
+   allocate(G_ph(Norb,Norb))
+   !
+   do iorb=1,Norb
+      G_ph(iorb,iorb) = G_new(iorb)
+   enddo
+   !
   end subroutine ed_set_G_ph_N1
 
   subroutine ed_set_G_ph_N2(G_new)
    ! set G from hermitian matrix of shape (Norb,Norb)
-   complex(8), dimension(:,:) :: G_new
+   complex(8), dimension(Norb,Norb) :: G_new
+   !
+   if(allocated(G_ph)) deallocate(G_ph)
+   G_ph = G_new
+   !
   end subroutine ed_set_G_ph_N2
 
 
