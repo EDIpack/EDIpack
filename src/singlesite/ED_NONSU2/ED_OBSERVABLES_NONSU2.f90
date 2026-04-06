@@ -524,7 +524,7 @@ contains
                   enddo
                enddo
             enddo
-         enddo
+          enddo
           call delete_sector(sectorI)
        endif
        if(allocated(v_state))deallocate(v_state)

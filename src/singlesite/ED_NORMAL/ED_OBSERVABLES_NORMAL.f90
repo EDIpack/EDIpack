@@ -286,7 +286,7 @@ contains
 #endif
     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
-    if(allocated(full_denmat)) deallocate(sfull_denmat)
+    if(allocated(full_denmat)) deallocate(full_denmat)
     allocate(full_denmat(Nspin,Nspin,Norb,Norb));full_denmat=zero
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)

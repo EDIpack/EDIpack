@@ -335,7 +335,7 @@ contains
                   ! DW-UP, ANOMALOUS, c_dw,iorb c_up,jorb
                   isite=iorb+Ns
                   jsite=jorb
-                  if( (ib(jsite)=1) .and. (ib(isite)==1) )then
+                  if( (ib(jsite)==1) .and. (ib(isite)==1) )then
                      call c(jsite,m,r,sgn1)
                      call c(isite,r,k,sgn2)
                      j_el=binary_search(sectorI%H(1)%map,k)
@@ -352,7 +352,7 @@ contains
    enddo
           
 
-            ! HERE COMPUTE NORMAL AND ANOMALUS 1BDM
+    ! HERE COMPUTE NORMAL AND ANOMALUS 1BDM
 
     !     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     !     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
