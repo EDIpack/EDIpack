@@ -292,7 +292,7 @@ contains
                   ! diagonal
                   if( isite==jsite )then
                         full_denmat(1,1,iorb,jorb) = &
-                        full_denmat(1,1,iorb,jorb) + Nud(1,iorb)*peso*(v_state(i))*conjg(v_state(i))
+                        full_denmat(1,1,iorb,jorb) + ib(isite)*peso*(v_state(i))*conjg(v_state(i))
                   elseif( (ib(jsite)==1) .and. (ib(isite)==0) )then
                      call c(  jsite,m,r,sgn1)
                      call cdg(isite,r,k,sgn2)
@@ -308,7 +308,7 @@ contains
                   jsite=jorb+Ns
                   if( isite==jsite )then
                      full_denmat(2,2,iorb,jorb) = &
-                     full_denmat(2,2,iorb,jorb) + (1-Nud(ispin,iorb))*peso*(v_state(i))*conjg(v_state(i))
+                     full_denmat(2,2,iorb,jorb) + (1-ib(isite))*peso*(v_state(i))*conjg(v_state(i))
                   elseif( (ib(jsite)==0) .and. (ib(isite)==1) )then
                      call cdg(jsite,m,r,sgn1)
                      call c(  isite,r,k,sgn2)
@@ -474,6 +474,7 @@ contains
        call Bcast_MPI(MpiComm,ed_argsc)
        call Bcast_MPI(MpiComm,ed_mag)
        call Bcast_MPI(MpiComm,ed_imp_info)
+       if(allocated(full_denmat))call Bcast_MPI(MpiComm,full_denmat)
     endif
 #endif
     !
