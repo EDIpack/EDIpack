@@ -113,7 +113,8 @@ MODULE EDIPACK
        ed_get_neigen_sector   , &
        ed_set_neigen_sector   , &
        ed_get_impurity_rdm    , &
-       ed_get_sp_dm           
+       ed_get_sp_dm           , &
+       ed_get_denmat
 
 
   USE ED_RDM, only: &
