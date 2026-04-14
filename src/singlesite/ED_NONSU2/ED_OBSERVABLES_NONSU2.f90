@@ -497,8 +497,8 @@ contains
              enddo
           enddo
           do i=1,sectorI%Dim
-            iph  = (m-1)/(sectorI%DimEl)+1
-            i_el = mod(m-1,sectorI%DimEl)+1
+            iph  = (i-1)/(sectorI%DimEl)+1
+            i_el = mod(i-1,sectorI%DimEl)+1
             m  = sectorI%H(1)%map(i_el)
             ib = bdecomp(m,2*Ns)
             do ispin=1,Nspin
@@ -510,7 +510,7 @@ contains
                      ! diagonal
                      if( isite==jsite )then
                         full_denmat(ispin,jspin,iorb,jorb) = &
-                        full_denmat(ispin,jspin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*conjg(v_state(i))
+                        full_denmat(ispin,jspin,iorb,jorb) + dble(ib(isite))*peso*(v_state(i))*conjg(v_state(i))
                      elseif( (ib(jsite)==1) .and. (ib(isite)==0) )then
                         call c(jsite,m,r,sgn1)
                         call cdg(isite,r,k,sgn2)
@@ -518,7 +518,7 @@ contains
                         j = j_el + (iph-1)*sectorI%DimEl
                         !
                         full_denmat(ispin,jspin,iorb,jorb) = &
-                           full_denmat(ispin,jspin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+                           full_denmat(ispin,jspin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
                      endif
                      enddo
                   enddo
