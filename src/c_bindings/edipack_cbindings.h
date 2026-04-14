@@ -1631,6 +1631,36 @@ void ed_get_impurity_rdm(std::complex<double> *rdm,
                     int doprint
                     );             
 
+
+/*!
+\rst
+This function obtains the 1-body density matrix.
+Interfaces to :f:func:`ed_io/ed_get_denmat`.
+Rank-2 version.
+\endrst
+* @param denmat: 1-body density matrix
+* @param printflag: flag to print to file (`1`) or not (`0`) the RDM
+*/                      
+void ed_get_denmat_n2(std::complex<double> *denmat, 
+                    int doprint
+                    );  
+                    
+
+/*!
+\rst
+This function obtains the 1-body density matrix.
+Interfaces to :f:func:`ed_io/ed_get_denmat`.
+Rank-4 version.
+\endrst
+* @param denmat: 1-body density matrix
+* @param printflag: flag to print to file (`1`) or not (`0`) the RDM
+*/                      
+void ed_get_denmat_n4(std::complex<double> *denmat, 
+                    int doprint
+                    );  
+
+
+
 /*!
 \rst
 This function initializes the solver.

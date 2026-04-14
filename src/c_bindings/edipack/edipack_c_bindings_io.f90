@@ -344,7 +344,7 @@ end subroutine ed_get_impurity_rdm_c
 !     PHONONS    !
 !----------------!
 
-subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="get_dimp_site_n1")
+subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="ed_get_dimp")
   use, intrinsic :: iso_c_binding
   integer(c_int),value                          :: dz,axis,zflag
   character(len=1)                              :: axis_
@@ -360,3 +360,31 @@ subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="get_dimp_sit
   endif
 end subroutine get_dimp_site_n1_c
 
+
+!----------------!
+!     1BDM       !
+!----------------!
+
+subroutine get_denmat_n4_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n4")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: printflag
+  complex(c_double_complex)                     :: denmat(Nspin,Nspin,Ns,Ns)
+  !
+  if(doprint==1)then
+     call ed_get_denmat(denmat,.true.)
+  else
+     call ed_get_denmat(denmat,.false.)
+  endif
+end subroutine get_denmat_n4_c
+
+subroutine get_denmat_n2_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n2")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: doprint
+  complex(c_double_complex)                     :: denmat(Nspin*Ns,Nspin*Ns)
+  !
+  if(doprint==1)then
+     call ed_get_denmat(denmat,.true.)
+  else
+     call ed_get_denmat(denmat,.false.)
+  endif
+end subroutine get_denmat_n2_c
