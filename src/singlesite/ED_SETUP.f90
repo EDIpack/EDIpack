@@ -678,6 +678,7 @@ contains
     write(Logfile,"(A)")"DEBUG setup_global_superc"
 #endif
     isector=0
+    Nnambu=2
     do isz=-Ns,Ns
        sz=abs(isz)
        isector=isector+1
