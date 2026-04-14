@@ -45,6 +45,25 @@ end subroutine search_variable
 
 
 
+subroutine ed_set_A_ph_c(A_new) bind(c, name='ed_set_A_ph')
+  !
+  !Sets the phonon displacement field
+  !
+  use, intrinsic :: iso_c_binding
+  real(c_double),dimension(1)         :: A_new(1)
+  
+  call ed_set_A_ph(A_new(1))
+
+end subroutine ed_set_A_ph_c
 
 
+subroutine ed_set_G_ph_c(G_new) bind(c, name='ed_set_G_ph')
+  !
+  !Sets the electron-phonon coupling matrix
+  !
+  use, intrinsic :: iso_c_binding
+  real(c_double),dimension(2)         :: G_new(Norb,Norb)
+  
+  call ed_set_G_ph(G_new)
 
+end subroutine ed_set_G_ph_c

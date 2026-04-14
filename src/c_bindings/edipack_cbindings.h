@@ -419,6 +419,25 @@ void search_variable(double *var,
                     double *ntmp, 
                     int64_t *converged
                     );
+                    
+                    
+/*!
+\rst
+This function sets the phonon displacement field
+\endrst
+*
+* @param A_new: the new displacement field
+*/ 
+void ed_set_A_ph_c(double *A_new);
+
+/*!
+\rst
+This function sets the electron-phonon coupling
+\endrst
+*
+* @param G_new: the new coupling matrix
+*/ 
+void ed_set_G_ph_c(double *G_new);
 
 
 /*!
