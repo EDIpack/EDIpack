@@ -7,9 +7,12 @@ program ed_normal_superc
   USE COMMON
   implicit none
   integer                :: i,js,Nso,Nmomenta
-  integer                :: Nb,iorb,jorb,ispin,jspin
+  integer                :: Nb,iorb,jorb,ispin,jspin,Ns_full
+  integer, parameter     :: Nnambu=2
   complex(8),allocatable :: Smats(:,:,:,:,:,:)
   complex(8),allocatable :: Hloc(:,:,:,:)
+  complex(8),allocatable :: denmat4(:,:,:,:)
+  complex(8),allocatable :: denmat2(:,:)
   real(8)                :: Delta
   character(len=16)      :: finput
   logical                :: dsave
@@ -100,6 +103,15 @@ contains
     call ed_get_doubles(doubles)
     call ed_get_imp_info(imp)
     call ed_get_evals(evals)
+    ! In SUPERC/NORMAL mode full_denmat covers all sites in Nambu space:
+    ! shape [Nnambu,Nnambu,Ns,Ns] with Ns=(Nbath+1)*Norb for normal bath
+    Ns_full = (Nbath+1)*Norb
+    if(allocated(denmat4))deallocate(denmat4)
+    if(allocated(denmat2))deallocate(denmat2)
+    allocate(denmat4(Nnambu,Nnambu,Ns_full,Ns_full))
+    allocate(denmat2(Nnambu*Ns_full,Nnambu*Ns_full))
+    call ed_get_denmat(denmat4)
+    call ed_get_denmat(denmat2)
     do i=1,Nmomenta
        do iorb=1,Norb
           call compute_momentum(Wlist,Smats(1,1,1,iorb,iorb,:),i,Smom(iorb,i))
@@ -113,6 +125,7 @@ contains
        stop
     endif
     call test_results()
+    call test_denmat_checks()
   end subroutine run_test
 
 
@@ -188,6 +201,87 @@ contains
   end subroutine save_results
 
 
+
+
+  subroutine test_denmat_checks()
+    !
+    ! Verify the one-body density matrix getters in SUPERC/Nambu mode.
+    !
+    ! full_denmat has shape [Nnambu=2, Nnambu=2, Ns_, Ns_] where Ns_=(Nbath+1)*Norb.
+    ! The Nambu spinor is Psi = (c_up, c†_dn), so:
+    !   dm4(1,1,io,io) = <c†_up c_up>  = <n_up(io)>         in [0,1]
+    !   dm4(2,2,io,io) = <c_dn  c†_dn> = 1 - <n_dn(io)>     in [0,1]
+    !   dm4(1,2,io,jo) = <c†_up c†_dn> (anomalous/pairing)
+    !   dm4(2,1,io,jo) = <c_dn  c_up>  (conjugate)
+    !
+    ! Checks (no reference files needed):
+    !   1. Both normal-sector diagonals are real
+    !   2. The full Nambu dm4 is Hermitian: dm4(a,b,io,jo) = conj(dm4(b,a,jo,io))
+    !   3. n2 variant matches the block-interleaved reshape of n4:
+    !         dm2(io+(a-1)*Ns_, jo+(b-1)*Ns_) = dm4(a,b,io,jo)
+    !   4. Density check for impurity orbitals (io=1..Norb are the impurity sites):
+    !         dens(io) = <n_up> + <n_dn>
+    !                  = dm4(1,1,io,io) + (1 - dm4(2,2,io,io))
+    !                  = dm4(1,1,io,io) - dm4(2,2,io,io) + 1
+    !      With SU2: <n_up>=<n_dn>, so dens = 2*dm4(1,1,io,io) = 2*(1-dm4(2,2,io,io)).
+    !
+    complex(8),allocatable :: dm4_hc(:,:,:,:)
+    complex(8),allocatable :: dm2_from_dm4(:,:)
+    integer :: ia,ib,io,jo
+    !
+    allocate(dm4_hc(Nnambu,Nnambu,Ns_full,Ns_full))
+    allocate(dm2_from_dm4(Nnambu*Ns_full,Nnambu*Ns_full))
+    !
+    write(*,*)
+    write(*,"(A50)") "Summary DENMAT CHECKS (SUPERC/Nambu):"
+    !
+    ! 1. Normal-sector diagonal imaginary parts vanish
+    do io=1,Ns_full
+       call assert(dimag(denmat4(1,1,io,io)),0.d0, &
+            "denmat4: Im[dm(1,1,"//str(io)//","//str(io)//")]")
+       call assert(dimag(denmat4(2,2,io,io)),0.d0, &
+            "denmat4: Im[dm(2,2,"//str(io)//","//str(io)//")]")
+    enddo
+    !
+    ! 2. Hermiticity: dm4(a,b,io,jo) = conj(dm4(b,a,jo,io))
+    !    Holds even for the anomalous blocks because
+    !    <c†_up c†_dn>† = <c_dn c_up>, i.e. dm4(1,2)† = dm4(2,1).
+    do ia=1,Nnambu
+       do ib=1,Nnambu
+          do io=1,Ns_full
+             do jo=1,Ns_full
+                dm4_hc(ia,ib,io,jo) = conjg(denmat4(ib,ia,jo,io))
+             enddo
+          enddo
+       enddo
+    enddo
+    call assert(denmat4,dm4_hc,"denmat4: Hermitian (Nambu)")
+    !
+    ! 3. n2 variant is block-interleaved reshape of n4:
+    !    dm2(io+(a-1)*Ns_, jo+(b-1)*Ns_) = dm4(a,b,io,jo)
+    !    Block layout of dm2:  [ particle-particle | particle-hole ]
+    !                          [ hole-particle     | hole-hole     ]
+    do ia=1,Nnambu
+       do ib=1,Nnambu
+          do io=1,Ns_full
+             do jo=1,Ns_full
+                dm2_from_dm4(io+(ia-1)*Ns_full,jo+(ib-1)*Ns_full) = denmat4(ia,ib,io,jo)
+             enddo
+          enddo
+       enddo
+    enddo
+    call assert(denmat2,dm2_from_dm4,"denmat: n2 vs n4 consistency (Nambu)")
+    !
+    ! 4. Density check for impurity orbitals (io=1..Norb):
+    !    dens(io) = dm4(1,1,io,io) + 1 - dm4(2,2,io,io)
+    do io=1,Norb
+       call assert(dreal(denmat4(1,1,io,io))+1.d0-dreal(denmat4(2,2,io,io)),dens(io), &
+            "denmat4 vs dens: Re[dm_pp-dm_hh+1]("//str(io)//") == dens")
+    enddo
+    !
+    deallocate(dm4_hc,dm2_from_dm4)
+    !
+  end subroutine test_denmat_checks
 
 
   subroutine set_twobody_hk()
