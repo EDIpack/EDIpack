@@ -224,6 +224,8 @@ contains
     !                  = dm4(1,1,io,io) + (1 - dm4(2,2,io,io))
     !                  = dm4(1,1,io,io) - dm4(2,2,io,io) + 1
     !      With SU2: <n_up>=<n_dn>, so dens = 2*dm4(1,1,io,io) = 2*(1-dm4(2,2,io,io)).
+    !   5. Order parameter check for impurity orbitals (io,jo=1..Norb):
+    !         phisc(io,jo) = Re[dm4(1,2,io,jo)] = <c†_up c†_dn>
     !
     complex(8),allocatable :: dm4_hc(:,:,:,:)
     complex(8),allocatable :: dm2_from_dm4(:,:)
@@ -236,6 +238,8 @@ contains
     write(*,"(A50)") "Summary DENMAT CHECKS (SUPERC/Nambu):"
     !
     ! 1. Normal-sector diagonal imaginary parts vanish
+    write(*,*) dreal(denmat4(1,2,:,:))
+    write(*,*) dimag(denmat4(1,2,:,:))
     do io=1,Ns_full
        call assert(dimag(denmat4(1,1,io,io)),0.d0, &
             "denmat4: Im[dm(1,1,"//str(io)//","//str(io)//")]")
@@ -277,6 +281,15 @@ contains
     do io=1,Norb
        call assert(dreal(denmat4(1,1,io,io))+1.d0-dreal(denmat4(2,2,io,io)),dens(io), &
             "denmat4 vs dens: Re[dm_pp-dm_hh+1]("//str(io)//") == dens")
+    enddo
+    !
+    ! 5. Order parameter check for impurity orbitals (io,jo=1..Norb):
+    !    phisc(io,jo) = Re[dm4(1,2,io,jo)] = <c†_up c†_dn>
+    do io=1,Norb
+       do jo=1,Norb
+          call assert(abs(denmat4(1,2,io,jo)),abs(phisc(io,jo)), &
+               "denmat4 vs phisc: abs[dm(1,2,"//str(io)//","//str(jo)//")]  == abs(phisc)")
+       enddo
     enddo
     !
     deallocate(dm4_hc,dm2_from_dm4)
