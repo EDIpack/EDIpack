@@ -365,9 +365,9 @@ end subroutine get_dimp_site_n1_c
 !     1BDM       !
 !----------------!
 
-subroutine get_denmat_n4_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n4")
+subroutine get_denmat_n4_c(denmat,doprint) bind(c,name="ed_get_denmat_n4")
   use, intrinsic :: iso_c_binding
-  integer(c_int),value                          :: printflag
+  integer(c_int),value                          :: doprint
   complex(c_double_complex)                     :: denmat(Nspin,Nspin,Ns,Ns)
   !
   if(doprint==1)then
@@ -377,7 +377,7 @@ subroutine get_denmat_n4_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_
   endif
 end subroutine get_denmat_n4_c
 
-subroutine get_denmat_n2_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n2")
+subroutine get_denmat_n2_c(denmat,doprint) bind(c,name="ed_get_denmat_n2")
   use, intrinsic :: iso_c_binding
   integer(c_int),value                          :: doprint
   complex(c_double_complex)                     :: denmat(Nspin*Ns,Nspin*Ns)
