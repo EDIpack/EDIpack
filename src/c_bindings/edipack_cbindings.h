@@ -437,7 +437,7 @@ This function sets the electron-phonon coupling
 *
 * @param G_new: the new coupling matrix
 */ 
-void ed_set_G_ph_c(double *G_new);
+void ed_set_G_ph_c(std::complex<double> *G_new);
 
 
 /*!
