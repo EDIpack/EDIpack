@@ -62,7 +62,7 @@ subroutine ed_set_G_ph_c(G_new) bind(c, name='ed_set_G_ph')
   !Sets the electron-phonon coupling matrix
   !
   use, intrinsic :: iso_c_binding
-  real(c_double),dimension(2)         :: G_new(Norb,Norb)
+  complex(c_double_complex),dimension(2)         :: G_new(Norb,Norb)
   
   call ed_set_G_ph(G_new)
 
