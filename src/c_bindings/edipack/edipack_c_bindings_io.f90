@@ -344,7 +344,7 @@ end subroutine ed_get_impurity_rdm_c
 !     PHONONS    !
 !----------------!
 
-subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="ed_get_dimp")
+subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="get_dimp_site_n1")
   use, intrinsic :: iso_c_binding
   integer(c_int),value                          :: dz,axis,zflag
   character(len=1)                              :: axis_
