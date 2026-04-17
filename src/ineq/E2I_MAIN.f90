@@ -70,7 +70,6 @@ module E2I_MAIN
   public :: ed_finalize_solver
 
 
-
   logical,save :: isetup=.true. !Allow :f:func:`init_ed_structure` and :f:func:`setup_global` to be called. Set to :f:code:`.false.` by :f:func:`ed_init_solver`, reset by :f:func:`ed_finalize_solver` . Default :code:`.true.`
 
 

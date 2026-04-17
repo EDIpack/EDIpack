@@ -75,6 +75,9 @@ MODULE ED_IO
      !  * [ :f:var:`lmats` / :f:var:`lreal`]
      !
      module procedure :: ed_get_spinChi_site_n3
+#ifndef _WINEQ
+     module procedure :: ed_get_chi_dummy_n3
+#endif
   end interface ed_get_spinChi
 
   interface ed_get_densChi
@@ -86,6 +89,9 @@ MODULE ED_IO
      !  * [ :f:var:`lmats` / :f:var:`lreal`]
      !
      module procedure :: ed_get_densChi_site_n3
+#ifndef _WINEQ
+     module procedure :: ed_get_chi_dummy_n3
+#endif
   end interface ed_get_densChi
 
   interface ed_get_pairChi
@@ -97,6 +103,9 @@ MODULE ED_IO
      !  * [ :f:var:`lmats` / :f:var:`lreal`]
      !
      module procedure :: ed_get_pairChi_site_n3
+#ifndef _WINEQ
+     module procedure :: ed_get_chi_dummy_n3
+#endif
   end interface ed_get_pairChi
 
   interface ed_get_exctChi
@@ -109,6 +118,9 @@ MODULE ED_IO
      !
      !
      module procedure :: ed_get_exctChi_site_n3
+#ifndef _WINEQ
+     module procedure :: ed_get_chi_dummy2_n3
+#endif
   end interface ed_get_exctChi
 
   interface ed_get_Dimp
@@ -461,13 +473,32 @@ contains
 #endif
 
 
-  !+--------------------------------------------------------------------------+!
-  ! PURPOSE: Retrieve spin.dens.pair.exct susceptibilties
-  !+--------------------------------------------------------------------------+!
+!+--------------------------------------------------------------------------+!
+! PURPOSE: Retrieve spin.dens.pair.exct susceptibilties
+!+--------------------------------------------------------------------------+!
 #if __INTEL_COMPILER
 #include "get_chi.f90"
 #else
   include "get_chi.f90"
+#endif
+
+!Trick to avoid code duplication
+#ifndef _WINEQ
+  subroutine ed_get_chi_dummy_n3(self,nlat,axis,z)
+    complex(8),dimension(:,:,:,:),intent(inout)   :: self ! [Nlat,Norb,Norb,:]
+    integer,intent(in)                            :: nlat ! Number of inequivalent impurity sites for real-space DMFT
+    character(len=*),optional                     :: axis ! Can be :f:var:`"m"` for Matsubara (default), :f:var:`"r"` for real
+    complex(8),dimension(:),optional              :: z    ! User provided array of complex frequency where to evaluate Self
+    STOP "ed_get_chi: Only single-site available without r-DMFT module"
+  end subroutine ed_get_chi_dummy_n3
+  
+  subroutine ed_get_chi_dummy2_n3(self,nlat,axis,z)
+    complex(8),dimension(:,:,:,:,:),intent(inout) :: self ! [Nlat,3,Norb,Norb,:]
+    integer,intent(in)                            :: nlat ! Number of inequivalent impurity sites for real-space DMFT
+    character(len=*),optional                     :: axis ! Can be :f:var:`"m"` for Matsubara (default), :f:var:`"r"` for real
+    complex(8),dimension(:),optional              :: z    ! User provided array of complex frequency where to evaluate Self
+    STOP "ed_get_chi: Only single-site available without r-DMFT module"
+  end subroutine ed_get_chi_dummy2_n3
 #endif
 
 

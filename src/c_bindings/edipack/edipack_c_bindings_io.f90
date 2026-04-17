@@ -257,7 +257,7 @@ subroutine get_densChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_densChi(self(1,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_denschi: Only single-site available without r-DMFT module"
+        call ed_get_densChi(self,Nsites,axis_,zeta)
      endif
   endif
   !   !
@@ -286,7 +286,7 @@ subroutine get_pairChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_pairChi(self(1,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
+        call ed_get_pairChi(self,Nsites,axis_,zeta)
      endif
   endif
   !
@@ -315,11 +315,12 @@ subroutine get_exctChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_exctChi(self(1,:,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_exctchi: Only single-site available without r-DMFT module"
+        call ed_get_exctChi(self,Nsites,axis_,zeta)
      endif
   endif
   !
 end subroutine get_exctChi_c
+
 
 
 !----------------!

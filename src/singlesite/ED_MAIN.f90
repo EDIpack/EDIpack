@@ -67,6 +67,9 @@ module ED_MAIN
      ! Finalize the Exact Diagonalization solver, clean up all the allocated memory. 
      !
      module procedure :: ed_finalize_solver_single
+#ifndef _WINEQ
+     module procedure :: ed_finalize_solver_dummy
+#endif
   end interface ed_finalize_solver
 
 
@@ -271,7 +274,13 @@ contains
   end subroutine ed_finalize_solver_single
 
 
-
+!Trick to avoid code duplication
+#ifndef _WINEQ
+  subroutine ed_finalize_solver_dummy(Nineq)
+    integer                              :: Nineq !number of inequivalent impurity sites for real-space DMFT
+    STOP "Cannot finalize solver for more than one site without R-DMFT support"
+  end subroutine ed_finalize_solver_dummy
+#endif
 
 
 
