@@ -74,6 +74,8 @@ MODULE EDIPACK
 
   USE ED_AUX_FUNX, only:                        &
        ed_set_Hloc                                                     , &
+       ed_set_A_ph                                                     , &
+       ed_set_G_ph                                                     , &
        ed_set_suffix                                                   , &
        ed_reset_suffix                                                 , &
        ed_read_ImpGMatrix                 =>   read_ImpGMatrix         , &
