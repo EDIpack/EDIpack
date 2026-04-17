@@ -31,10 +31,6 @@ subroutine finalize_solver_c(Nineq) bind(c, name='finalize_solver')
   if (Nineq == 0) then
      call ed_finalize_solver()
   else
-     if (has_ineq == 1) then
-        call ed_finalize_solver(Nineq)
-     else
-        STOP "Cannot finalize solver for more than one site without R-DMFT support"
-     endif
+     call ed_finalize_solver(Nineq)
   endif
 end subroutine finalize_solver_c
