@@ -1658,9 +1658,11 @@ Interfaces to :f:func:`ed_io/ed_get_denmat`.
 Rank-2 version.
 \endrst
 * @param denmat: 1-body density matrix
-* @param printflag: flag to print to file (`1`) or not (`0`) the RDM
+* @param dimdenmat: dimensions of the 1-body density matrix
+* @param printflag: flag to print to file (`1`) or not (`0`) the density matrix
 */                      
 void ed_get_denmat_n2(std::complex<double> *denmat, 
+                    int64_t *dimdenmat,
                     int doprint
                     );  
                     
@@ -1672,9 +1674,11 @@ Interfaces to :f:func:`ed_io/ed_get_denmat`.
 Rank-4 version.
 \endrst
 * @param denmat: 1-body density matrix
-* @param printflag: flag to print to file (`1`) or not (`0`) the RDM
+* @param dimdenmat: dimensions of the 1-body density matrix
+* @param printflag: flag to print to file (`1`) or not (`0`) the density matrix
 */                      
-void ed_get_denmat_n4(std::complex<double> *denmat, 
+void ed_get_denmat_n4(std::complex<double> *denmat,
+                    int64_t *dimdenmat,
                     int doprint
                     );  
 

@@ -365,10 +365,11 @@ end subroutine get_dimp_site_n1_c
 !     1BDM       !
 !----------------!
 
-subroutine get_denmat_n4_c(denmat,doprint) bind(c,name="ed_get_denmat_n4")
+subroutine get_denmat_n4_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n4")
   use, intrinsic :: iso_c_binding
   integer(c_int),value                          :: doprint
-  complex(c_double_complex)                     :: denmat(Nspin,Nspin,Ns,Ns)
+  integer(c_int64_t)                            :: dimdenmat(4) !Array dimensions
+  complex(c_double_complex)                     :: denmat(dimdenmat(1),dimdenmat(2),dimdenmat(3),dimdenmat(4))
   !
   if(doprint==1)then
      call ed_get_denmat(denmat,.true.)
@@ -377,10 +378,11 @@ subroutine get_denmat_n4_c(denmat,doprint) bind(c,name="ed_get_denmat_n4")
   endif
 end subroutine get_denmat_n4_c
 
-subroutine get_denmat_n2_c(denmat,doprint) bind(c,name="ed_get_denmat_n2")
+subroutine get_denmat_n2_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n2")
   use, intrinsic :: iso_c_binding
   integer(c_int),value                          :: doprint
-  complex(c_double_complex)                     :: denmat(Nspin*Ns,Nspin*Ns)
+  integer(c_int64_t)                            :: dimdenmat(2) !Array dimensions
+  complex(c_double_complex)                     :: denmat(dimdenmat(1),dimdenmat(2))
   !
   if(doprint==1)then
      call ed_get_denmat(denmat,.true.)
