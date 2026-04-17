@@ -1082,8 +1082,8 @@ contains
     ! Compute the contribution of the currect state to the local lattice probability distribution function (PDF)
     ! ,i.e. the local probability of displacement operator X_ph=(bdag+b) as a function of the displacement itself
     !
-    ! P(X) = <x| rho_ph |x> where rho_ph = Tr_fermions rho_aim
-    ! and |x> = \sum_n psi*_n(x)|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
+    ! P(X) = <x\| rho_ph \|x> where rho_ph = Tr_fermions rho_aim
+    ! and \|x> = \sum_n psi*_n(x)\|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
     real(8),dimension(:) :: vec
     real(8)              :: psi(0:DimPh-1)
     real(8)              :: x,dx
