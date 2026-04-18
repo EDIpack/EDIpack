@@ -11,6 +11,36 @@ MODULE EDIPACK_C_COMMON
   integer(c_int),bind(c, name="has_ineq") :: has_ineq=0
 #endif
 
+
+!Dummy interfaces if the real-space DMFT routines are not compiled
+#ifndef _WINEQ
+  interface ed_finalize_solver
+     module procedure :: ed_finalize_solver_dummy
+  end interface ed_finalize_solver
+  
+  interface ed_get_spinChi
+     module procedure :: ed_get_chi_dummy_n3
+  end interface ed_get_spinChi
+
+  interface ed_get_densChi
+     module procedure :: ed_get_chi_dummy_n3
+  end interface ed_get_densChi
+
+  interface ed_get_pairChi
+     module procedure :: ed_get_chi_dummy_n3
+  end interface ed_get_pairChi
+
+  interface ed_get_exctChi
+     module procedure :: ed_get_chi_dummy2_n3
+  end interface ed_get_exctChi  
+  
+  public :: ed_finalize_solver
+  public :: ed_get_spinChi
+  public :: ed_get_densChi
+  public :: ed_get_pairChi
+  public :: ed_get_exctChi
+#endif
+
 contains
 
   !integer to logical
@@ -70,7 +100,7 @@ contains
     end select
   end function get_bath_type_c
 
-  !Get Bath Type
+  !Get ED mode
   integer(c_int) function get_ed_mode_c() result(edm) bind(c, name='get_ed_mode')
     use, intrinsic :: iso_c_binding
     select case(ed_mode)
@@ -79,6 +109,32 @@ contains
     case("nonsu2");  edm = 3
     end select
   end function get_ed_mode_c
+
+
+
+!Dummy routines in the case real-space DMFT is not compiled
+#ifndef _WINEQ
+  subroutine ed_finalize_solver_dummy(Nineq)
+    integer                              :: Nineq 
+    STOP "Cannot finalize solver for more than one site without R-DMFT support"
+  end subroutine ed_finalize_solver_dummy
+  
+  subroutine ed_get_chi_dummy_n3(self,nlat,axis,z)
+    complex(8),dimension(:,:,:,:),intent(inout)   :: self
+    integer,intent(in)                            :: nlat
+    character(len=*),optional                     :: axis
+    complex(8),dimension(:),optional              :: z
+    STOP "ed_get_chi: Only single-site available without r-DMFT module"
+  end subroutine ed_get_chi_dummy_n3
+
+  subroutine ed_get_chi_dummy2_n3(self,nlat,axis,z)
+    complex(8),dimension(:,:,:,:,:),intent(inout) :: self
+    integer,intent(in)                            :: nlat
+    character(len=*),optional                     :: axis
+    complex(8),dimension(:),optional              :: z
+    STOP "ed_get_chi: Only single-site available without r-DMFT module"
+  end subroutine ed_get_chi_dummy2_n3   
+#endif
   
 
 END MODULE EDIPACK_C_COMMON
