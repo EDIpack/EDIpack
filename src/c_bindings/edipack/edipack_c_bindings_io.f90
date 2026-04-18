@@ -229,7 +229,7 @@ subroutine get_spinChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_spinChi(self(1,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_spinchi: Only single-site available without r-DMFT module"
+        call ed_get_spinChi(self,Nsites,axis_,zeta)
      endif
   endif
 end subroutine get_spinChi_c
