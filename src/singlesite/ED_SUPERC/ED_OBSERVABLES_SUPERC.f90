@@ -92,7 +92,7 @@ contains
     allocate(Prob(3**Norb))
     allocate(prob_ph(DimPh))
     allocate(pdf_ph(Lpos))
-    allocate(pdf_part(Lpos,3))
+    allocate(pdf_part(Lpos,3**Norb)) ! each orbital can be empty '0', single occupied '1' and doubly occupied '2'
     !
     Egs     = state_list%emin
     dens    = 0.d0
@@ -134,6 +134,7 @@ contains
           call build_sector(isector,sectorI)
           do i = 1,sectorI%Dim
              gs_weight=peso*abs(v_state(i))**2
+             iph = (i-1)/(sectorI%DimEl) + 1
              i_el = mod(i-1,sectorI%DimEl)+1
              m    = sectorI%H(1)%map(i_el)
              ib   = bdecomp(m,2*Ns)
@@ -169,8 +170,6 @@ contains
              enddo
              s2tot = s2tot  + (sum(sz))**2*gs_weight
              !
-             iph = (i-1)/(sectorI%DimEl) + 1
-             i_el = mod(i-1,sectorI%DimEl) + 1
              prob_ph(iph) = prob_ph(iph) + gs_weight
              dens_ph = dens_ph + (iph-1)*gs_weight
              !
@@ -186,10 +185,15 @@ contains
              end if
              !compute the lattice probability distribution function
              if(Dimph>1 .AND. iph==1) then
-                val = 1
-                !val = 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
+               val = 1
+                ! val encodes the occupation of each orbital in basis 3 (since each orbital can have occupation 0,1,2)
+                ! the ternary representation of 'val-1' gives the occupation of each orbital
+                ! val-1 mod 3 is the first orbital, (val-1)/3 mod 3 is the second and so on...
+                ! 
+                ! OLD : val= 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
                 do iorb=1,Norb
-                   val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   !val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   val = val + nt(iorb)*( 3**(iorb-1) )
                 enddo
                 call prob_distr_ph(v_state,val)
              end if
@@ -247,15 +251,111 @@ contains
     !STATUS: IMPORTED FROM NORMAL, TO BE UPDATE TO NAMBU BASIS <\psi^+_a Psi_a>
     !     !
     !     !SINGLE PARTICLE IMPURITY DENSITY MATRIX
-    ! #ifdef _DEBUG
-    !     if(ed_verbose>2)write(Logfile,"(A)")&
-    !          "DEBUG observables_superc: eval single particle density matrix <C^+_a C_b>"
-    ! #endif
+#ifdef _DEBUG
+    if(ed_verbose>2)write(Logfile,"(A)")&
+      "DEBUG observables_superc: eval single particle density matrix <C^+_a C_b>"
+#endif
+    if(allocated(full_denmat)) deallocate(full_denmat)
+    allocate(full_denmat(Nnambu,Nnambu,Ns,Ns));full_denmat=zero
+
+    do istate=1,state_list%size
+      isector = es_return_sector(state_list,istate)
+      Ei      = es_return_energy(state_list,istate)
+      v_state    =  es_return_cvec(state_list,istate)       
+#ifdef _DEBUG
+      if(ed_verbose>3)write(Logfile,"(A)")&
+           "DEBUG observables_superc: get contribution from state:"//str(istate)
+#endif
+      !
+      peso = 1.d0 ; if(finiteT)peso=exp(-beta*(Ei-Egs))
+      peso = peso/zeta_function
+      !
+      if(Mpimaster)then
+         call build_sector(isector,sectorI)
+         do i = 1,sectorI%Dim
+            gs_weight=peso*abs(v_state(i))**2
+            iph = (i-1)/(sectorI%DimEl) + 1
+            i_el = mod(i-1,sectorI%DimEl)+1
+            m    = sectorI%H(1)%map(i_el)
+            ib   = bdecomp(m,2*Ns)
+            do iorb=1,Norb
+               nup(iorb)= dble(ib(iorb))
+               ndw(iorb)= dble(ib(iorb+Ns))
+            enddo
+            !
+            !NORMAL
+            do iorb=1,Ns   
+               do jorb=1,Ns
+                  ! SPIN-UP, NORMAL, cdag_up,iorb c_up,jorb
+                  isite=iorb
+                  jsite=jorb
+                  ! diagonal
+                  if( isite==jsite )then
+                        full_denmat(1,1,iorb,jorb) = &
+                        full_denmat(1,1,iorb,jorb) + ib(isite)*peso*(v_state(i))*conjg(v_state(i))
+                  elseif( (ib(jsite)==1) .and. (ib(isite)==0) )then
+                     call c(  jsite,m,r,sgn1)
+                     call cdg(isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(1,1,iorb,jorb) = &
+                        full_denmat(1,1,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+                  !
+                  ! SPIN-DOWN, NORMAL, c_dw,iorb cdag_dw,jorb
+                  isite=iorb+Ns
+                  jsite=jorb+Ns
+                  if( isite==jsite )then
+                     full_denmat(2,2,iorb,jorb) = &
+                     full_denmat(2,2,iorb,jorb) + (1-ib(isite))*peso*(v_state(i))*conjg(v_state(i))
+                  elseif( (ib(jsite)==0) .and. (ib(isite)==1) )then
+                     call cdg(jsite,m,r,sgn1)
+                     call c(  isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(2,2,iorb,jorb) = &
+                        full_denmat(2,2,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+                  !
+                  ! UP-DW, ANOMALOUS, cdag_up,iorb cdag_dw,jorb
+                  isite=iorb
+                  jsite=jorb+Ns
+                  if( (ib(jsite)==0) .and. (ib(isite)==0) )then
+                     call cdg(jsite,m,r,sgn1)
+                     call cdg(isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(1,2,iorb,jorb) = &
+                        full_denmat(1,2,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+                  !
+                  ! DW-UP, ANOMALOUS, c_dw,iorb c_up,jorb
+                  isite=iorb+Ns
+                  jsite=jorb
+                  if( (ib(jsite)==1) .and. (ib(isite)==1) )then
+                     call c(jsite,m,r,sgn1)
+                     call c(isite,r,k,sgn2)
+                     j_el=binary_search(sectorI%H(1)%map,k)
+                     j = j_el + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(2,1,iorb,jorb) = &
+                        full_denmat(2,1,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                  endif
+               enddo
+            enddo
+         enddo 
+         call delete_sector(sectorI)
+      endif
+   enddo
+          
+
+    ! HERE COMPUTE NORMAL AND ANOMALUS 1BDM
+
     !     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     !     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
-    !     do istate=1,state_list%size
-    !        isector = es_return_sector(state_list,istate)
-    !        Ei      = es_return_energy(state_list,istate)
     ! #ifdef _DEBUG
     !        if(ed_verbose>3)write(Logfile,"(A)")&
     !             "DEBUG observables_normal: get contribution from state:"//str(istate)
@@ -358,6 +458,9 @@ contains
     ed_mag(3,:) = magZ
     ed_phisc    = abs(phisc(:,:))
     ed_argsc    = atan2(dimag(phisc(:,:)),dreal(phisc(:,:)))
+    ed_dens_ph = dens_ph
+    ed_X_ph = X_ph
+    ed_X2_ph = X2_ph
     !
     ed_imp_info = [s2tot,egs]
     !
@@ -371,6 +474,7 @@ contains
        call Bcast_MPI(MpiComm,ed_argsc)
        call Bcast_MPI(MpiComm,ed_mag)
        call Bcast_MPI(MpiComm,ed_imp_info)
+       if(allocated(full_denmat))call Bcast_MPI(MpiComm,full_denmat)
     endif
 #endif
     !
@@ -891,7 +995,7 @@ contains
        if(.not.ed_read_umatrix)then
           unit = free_unit()
           open(unit,file="Occupation_prob"//reg(ed_file_suffix)//".ed")
-          write(unit,"(125F15.9)")Uloc(1),Prob,sum(Prob)
+          write(unit,"(125F15.9)")Prob,sum(Prob)
           close(unit)
        endif
        !
@@ -1009,8 +1113,11 @@ contains
 
 
   subroutine prob_distr_ph(vec,val)
-    !Compute the local lattice probability distribution function (PDF), i.e. the local probability of displacement
-    !as a function of the displacement itself
+   ! Compute the contribution of the currect state to the local lattice probability distribution function (PDF)
+   ! ,i.e. the local probability of displacement operator X_ph=(bdag+b) as a function of the displacement itself
+   !
+   ! P(X) = <x| rho_ph |x> where rho_ph = Tr_fermions rho_aim
+   ! and |x> = \sum_n psi*_n(x)|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
     complex(8),dimension(:) :: vec
     real(8)              :: psi(0:DimPh-1)
     real(8)              :: x,dx
@@ -1032,8 +1139,11 @@ contains
        !phonon off-diagonal part
        do j_ph=iph+1,DimPh
           jstart = i_el + (j_ph-1)*sectorI%DimEl
+          ! Global PDF
           pdf_ph(i)       = pdf_ph(i)       + peso*psi(iph-1)*psi(j_ph-1)*2.d0*real( vec(istart)*conjg(vec(jstart)) )
+          ! PDF restricted to a sector of orbital occupation
           pdf_part(i,val) = pdf_part(i,val) + peso*psi(iph-1)*psi(j_ph-1)*2.d0*real( vec(istart)*conjg(vec(jstart)) )
+          !
        enddo
        !
        x = x + dx

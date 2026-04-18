@@ -30,16 +30,6 @@ MODULE ED_IO
      module procedure :: ed_get_gimp_site_n5
   end interface ed_get_gimp
 
-  interface ed_get_dimp
-     !This subroutine gets from the EDIpack library the value of the impurity phonon's Green's function calculated 
-     !on the Matsubara or real-frequency axis, with number of frequencies :f:var:`lmats` or :f:var:`lreal` .
-     !
-     !The impurity phonon's Green's function is an array having the following possible dimensions:
-     !
-     !  * [ :f:var:`lmats` / :f:var:`lreal`]
-     !
-     module procedure :: ed_get_dimp_site_n1
-  end interface ed_get_dimp
 
   interface ed_get_sigma
      !| This subrotine gets from the EDIpack library the value of the self-energy calculated 
@@ -117,8 +107,20 @@ MODULE ED_IO
      !
      !  * [ :f:var:`lmats` / :f:var:`lreal`]
      !
+     !
      module procedure :: ed_get_exctChi_site_n3
   end interface ed_get_exctChi
+
+  interface ed_get_Dimp
+     !This subroutine gets from the EDIpack library the value of the impurity phononic Green's function calculated 
+     !on the Matsubara or real-frequency axis, with number of frequencies :f:var:`lmats` or :f:var:`lreal` .
+     !
+     !The impurity phononic Green's susceptibility function is an array having the following possible dimensions:
+     !
+     !  * [ :f:var:`lmats` / :f:var:`lreal`]
+     module procedure :: ed_get_Dimp_site_n1
+  end interface ed_get_Dimp
+
 
 
   !Observables
@@ -204,6 +206,15 @@ MODULE ED_IO
      module procedure :: ed_get_exct_n2
      module procedure :: ed_get_exct_n3
   end interface ed_get_exct
+
+  interface ed_get_phon
+     !This subroutine gets from the EDIpack library the value of the following phononic observables: bdag*b , X_ph and X_ph^2
+     !where X_ph = (bdag+b)/sqrt(2)
+     !
+     !The :f:var:`self` is a real array of dimension 3
+     !
+     module procedure :: ed_get_phon_site
+  end interface ed_get_phon
 
 
   !Get Energies
@@ -345,6 +356,18 @@ MODULE ED_IO
   end interface ed_get_impurity_rdm
 
 
+  interface ed_get_denmat
+     !This subroutine returns to the user the one body density matrix (1BDM) of the Anderson model.
+     ! The 1BDM is an array having one of the following dimensions:
+     ! 
+     !  * [:math:`Ns*Nspin*Nnambu` , :math:`Ns*Nspin*Nnambu` ]
+     !  * [:math:`Nspin*Nnambu` , :math:`Nspin*Nnambu` , :math:`Ns` , :math:`Ns` ]
+     !
+     module procedure :: get_denmat_n2
+     module procedure :: get_denmat_n4
+  end interface ed_get_denmat
+
+
 
 
 
@@ -376,6 +399,7 @@ MODULE ED_IO
   public :: ed_get_dph
   public :: ed_get_sp_dm
   public :: ed_get_impurity_rdm
+  public :: ed_get_denmat
   public :: ed_get_quantum_SOC_operators
   public :: ed_get_imp_info
   public :: ed_get_evals
@@ -437,15 +461,14 @@ contains
 #endif
 
 
-  !+--------------------------------------------------------------------------+!
-  ! PURPOSE: Retrieve spin.dens.pair.exct susceptibilties
-  !+--------------------------------------------------------------------------+!
+!+--------------------------------------------------------------------------+!
+! PURPOSE: Retrieve spin.dens.pair.exct susceptibilties
+!+--------------------------------------------------------------------------+!
 #if __INTEL_COMPILER
 #include "get_chi.f90"
 #else
   include "get_chi.f90"
 #endif
-
 
   !+--------------------------------------------------------------------------+!
   ! PURPOSE: Retrieve SOC operators
@@ -467,6 +490,7 @@ contains
 #include "get_exct.f90"
 #include "get_energy.f90"
 #include "get_doubles.f90"
+#include "get_phon.f90"
 #else
   include "get_dens.f90"
   include "get_mag.f90"
@@ -475,6 +499,7 @@ contains
   include "get_exct.f90"
   include "get_energy.f90"
   include "get_doubles.f90"
+  include "get_phon.f90"
 #endif
 
 
@@ -496,6 +521,16 @@ contains
 #include "get_imp_rdm.f90"
 #else
   include "get_imp_rdm.f90"
+#endif
+
+
+  !+--------------------------------------------------------------------------+!
+  ! PURPOSE: Full 1BDM of the AIM
+  !+--------------------------------------------------------------------------+!
+#if __INTEL_COMPILER
+#include "get_denmat.f90"
+#else
+  include "get_denmat.f90"
 #endif
 
 

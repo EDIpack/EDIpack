@@ -12,25 +12,20 @@ MODULE EDIPACK_C
   !
 contains
   !
-  !Most of the Fortran-C interface is additive:
+  !The Fortran-C interface is additive:
   include "edipack/edipack_c_bindings_read_input.f90"
+  include "edipack/edipack_c_bindings_parse_umatrix.f90"
   include "edipack/edipack_c_bindings_aux_funx.f90"
   include "edipack/edipack_c_bindings_bath.f90"
   include "edipack/edipack_c_bindings_bath_fit.f90"
-  include "edipack/edipack_c_bindings_parse_umatrix.f90"
+  include "edipack/edipack_c_bindings_main.f90"
+  include "edipack/edipack_c_bindings_io.f90"
 #ifdef _WINEQ  
   include "edipack2ineq/edipack2ineq_c_bindings_aux_funx.f90"
   include "edipack2ineq/edipack2ineq_c_bindings_bath.f90"
   include "edipack2ineq/edipack2ineq_c_bindings_bath_fit.f90"
-#endif
-  !
-  !But these two which are mutually exclusive
-#ifdef _WINEQ  
-  include "edipack2ineq/edipack2ineq_c_bindings_io.f90"
   include "edipack2ineq/edipack2ineq_c_bindings_main.f90"
-#else
-  include "edipack/edipack_c_bindings_io.f90"
-  include "edipack/edipack_c_bindings_main.f90"
+  include "edipack2ineq/edipack2ineq_c_bindings_io.f90"
 #endif
   !
 END MODULE EDIPACK_C

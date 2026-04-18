@@ -74,6 +74,8 @@ MODULE EDIPACK
 
   USE ED_AUX_FUNX, only:                        &
        ed_set_Hloc                                                     , &
+       ed_set_A_ph                                                     , &
+       ed_set_G_ph                                                     , &
        ed_set_suffix                                                   , &
        ed_reset_suffix                                                 , &
        ed_read_ImpGMatrix                 =>   read_ImpGMatrix         , &
@@ -113,7 +115,8 @@ MODULE EDIPACK
        ed_get_neigen_sector   , &
        ed_set_neigen_sector   , &
        ed_get_impurity_rdm    , &
-       ed_get_sp_dm           
+       ed_get_sp_dm           , &
+       ed_get_denmat
 
 
   USE ED_RDM, only: &

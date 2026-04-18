@@ -34,9 +34,9 @@ end subroutine ed_set_Hloc_single_N4_c
 !SEARCH VARIABLE:
 subroutine search_variable(var,ntmp,converged) bind(c, name='search_variable')
   use, intrinsic :: iso_c_binding
-  real(c_double),dimension(1)         :: var(1)
-  real(c_double),dimension(1)         :: ntmp(1)
-  integer(c_int),dimension(1)         :: converged(1)
+  real(c_double),dimension(1)         :: var
+  real(c_double),dimension(1)         :: ntmp
+  integer(c_int),dimension(1)         :: converged
   logical                             :: bool
   converged(1)=0
   call ed_search_variable(var(1),ntmp(1),bool)
@@ -45,6 +45,25 @@ end subroutine search_variable
 
 
 
+subroutine ed_set_A_ph_c(A_new) bind(c, name='ed_set_A_ph')
+  !
+  !Sets the phonon displacement field
+  !
+  use, intrinsic :: iso_c_binding
+  real(c_double)         :: A_new(1)
+  
+  call ed_set_A_ph(A_new(1))
+
+end subroutine ed_set_A_ph_c
 
 
+subroutine ed_set_G_ph_c(G_new) bind(c, name='ed_set_G_ph')
+  !
+  !Sets the electron-phonon coupling matrix
+  !
+  use, intrinsic :: iso_c_binding
+  complex(c_double_complex)         :: G_new(Norb,Norb)
+  
+  call ed_set_G_ph(G_new)
 
+end subroutine ed_set_G_ph_c

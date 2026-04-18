@@ -92,7 +92,7 @@ contains
     allocate(Prob(3**Norb))
     allocate(prob_ph(DimPh))
     allocate(pdf_ph(Lpos))
-    allocate(pdf_part(Lpos,3))
+    allocate(pdf_part(Lpos,3**Norb)) ! each orbital can be empty '0', single occupied '1' and doubly occupied '2'
     !
     Egs     = state_list%emin
     dens    = 0.d0
@@ -176,11 +176,14 @@ contains
              !
              !<X> and <X^2> with X=(b+bdg)/sqrt(2)
              if(iph<DimPh)then
+               ! only bdag
                 j= i_el + (iph)*sectorI%DimEl
                 X_ph = X_ph + sqrt(2.d0*dble(iph))*(v_state(i)*v_state(j))*peso
              end if
+             ! bdag*b+b*bdag = 1+2*bdag*b  contribution to X^2
              X2_ph = X2_ph + 0.5d0*(1+2*(iph-1))*gs_weight
              if(iph<DimPh-1)then
+                ! only bdag*bdag contribution to X^2
                 j= i_el + (iph+1)*sectorI%DimEl
                 X2_ph = X2_ph + sqrt(dble((iph)*(iph+1)))*(v_state(i)*v_state(j))*peso
              end if
@@ -188,9 +191,14 @@ contains
              !compute the lattice probability distribution function
              if(Dimph>1 .AND. iph==1) then
                 val = 1
-                !val = 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
+                ! val encodes the occupation of each orbital in basis 3 (since each orbital can have occupation 0,1,2)
+                ! the ternary representation of 'val-1' gives the occupation of each orbital
+                ! val-1 mod 3 is the first orbital, (val-1)/3 mod 3 is the second and so on...
+                ! 
+                ! OLD : val= 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
                 do iorb=1,Norb
-                   val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   !val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   val = val + nt(iorb)*( 3**(iorb-1) )
                 enddo
                 call prob_distr_ph(v_state,val)
              end if
@@ -278,6 +286,8 @@ contains
 #endif
     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
+    if(allocated(full_denmat)) deallocate(full_denmat)
+    allocate(full_denmat(Nspin,Nspin,Ns,Ns));full_denmat=zero
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
@@ -336,6 +346,31 @@ contains
                    enddo
                 enddo
              endif
+             do ispin=1,Nspin
+               do iorb=1,Ns
+                  do jorb=1,Ns
+                  ! diagonal
+                  if(iorb==jorb )then
+                     full_denmat(ispin,ispin,iorb,jorb) = &
+                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*v_state(i)
+                  elseif((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
+                     iud(1) = sectorI%H(1)%map(Indices(1))
+                     iud(2) = sectorI%H(2)%map(Indices(2))
+                     call c(jorb,iud(ispin),r,sgn1)
+                     call cdg(iorb,r,k,sgn2)
+                     Jndices = Indices
+                     Jndices(1+(ispin-1)*Ns_Ud) = &
+                           binary_search(sectorI%H(1+(ispin-1)*Ns_Ud)%map,k)
+                     call indices2state(Jndices,[sectorI%DimUps,sectorI%DimDws],j)
+                     !
+                     j = j + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(ispin,ispin,iorb,jorb) = &
+                        full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+                  endif
+                  enddo
+               enddo
+             enddo
              !
              !
           enddo
@@ -380,6 +415,9 @@ contains
     enddo
     !
     ed_imp_info=[s2tot,egs]
+    ed_dens_ph = dens_ph
+    ed_X_ph = X_ph
+    ed_X2_ph = X2_ph
     !
     !
 #ifdef _MPI
@@ -392,6 +430,7 @@ contains
        call Bcast_MPI(MpiComm,ed_exct)
        call Bcast_MPI(MpiComm,ed_imp_info)
        if(allocated(single_particle_density_matrix))call Bcast_MPI(MpiComm,single_particle_density_matrix)
+       if(allocated(full_denmat))call Bcast_MPI(MpiComm,full_denmat)
     endif
 #endif
     !
@@ -915,7 +954,7 @@ contains
        !
        unit = free_unit()
        open(unit,file="Occupation_prob"//reg(ed_file_suffix)//".ed")
-       write(unit,"(125F15.9)")Uloc_internal(1),Prob,sum(Prob)
+       write(unit,"(125F15.9)")Prob,sum(Prob)
        close(unit)
        !
        !N_ph probability:
@@ -1032,7 +1071,7 @@ contains
     dx = (xmax-xmin)/dble(Lpos)
     x = xmin
     do i=1,Lpos
-       write(unit,"(5F15.9)") x,pdf_ph(i),pdf_part(i,:)
+       write(unit,"(50F15.9)") x,pdf_ph(i),pdf_part(i,:)
        x = x + dx
     enddo
     close(unit)
@@ -1040,8 +1079,11 @@ contains
 
 
   subroutine prob_distr_ph(vec,val)
-    !Compute the local lattice probability distribution function (PDF), i.e. the local probability of displacement
-    !as a function of the displacement itself
+    ! Compute the contribution of the currect state to the local lattice probability distribution function (PDF)
+    ! ,i.e. the local probability of displacement operator X_ph=(bdag+b) as a function of the displacement itself
+    !
+    ! P(X) = <x\| rho_ph \|x> where rho_ph = Tr_fermions rho_aim
+    ! and \|x> = \sum_n psi*_n(x)\|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
     real(8),dimension(:) :: vec
     real(8)              :: psi(0:DimPh-1)
     real(8)              :: x,dx
@@ -1059,11 +1101,11 @@ contains
           !
           do j_ph=1,DimPh
              jstart = i_el + (j_ph-1)*sectorI%DimEl
-             !
+             ! Global PDF
              pdf_ph(i) = pdf_ph(i) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*vec(jstart)
-             ! if(ph_type==1 .and. Norb==2 .and. val<4) then	!all this conditions should disappear soon or later...
+             ! PDF restricted to a sector of orbital occupation
              pdf_part(i,val) = pdf_part(i,val) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*vec(jstart)
-             ! endif
+             !
           enddo
        enddo
        !
