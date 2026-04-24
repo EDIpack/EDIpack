@@ -216,6 +216,17 @@ MODULE ED_IO
      module procedure :: ed_get_phon_site
   end interface ed_get_phon
 
+  interface ed_get_ephon
+     !This subroutine gets from the EDIpack library the value of the energy contributions coming from phonons: ed_Eph, ed_Eeph
+     !where:
+     !  * ed_Eph = w0_ph*badg*b
+     !  * ed_Eeph = \sum_{\sigma, iorb, jorb} (g_{ph})_{iorb jorb} c^\dagger_{iorb \sigma} c_{jorb \sigma} (b^\dagger + b)
+     !
+     ! The :f:var:`self` is a real array of dimension 2
+     !
+     module procedure :: ed_get_ephon_site
+  end interface ed_get_ephon
+
 
   !Get Energies
   interface ed_get_eimp
