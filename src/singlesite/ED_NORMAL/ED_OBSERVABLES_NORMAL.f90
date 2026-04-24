@@ -48,7 +48,7 @@ MODULE ED_OBSERVABLES_NORMAL
   integer                            :: iup,idw
   integer                            :: jup,jdw
   integer                            :: mup,mdw
-  integer                            :: iph,i_el,isectorDim
+  integer                            :: iph,i_el,j_el,isectorDim
   real(8)                            :: sgn,sgn1,sgn2,sg1,sg2,sg3,sg4
   real(8)                            :: gs_weight
   !
@@ -475,6 +475,7 @@ contains
     ed_Dund    = 0.d0
     ed_Dse     = 0.d0
     ed_Dph     = 0.d0
+    ed_Eeph    = 0.d0
     !
     !
     do istate=1,state_list%size
@@ -529,7 +530,8 @@ contains
                          call c(jorb,mup,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jup = binary_search(sectorI%H(1)%map,k2)
-                         j   = jup + (idw-1)*sectorI%DimUp
+                         j_el   = jup + (idw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Eknot = ed_Eknot + &
                               (impHloc(1,1,iorb,jorb))*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
@@ -542,7 +544,8 @@ contains
                          call c(jorb,mdw,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jdw = binary_search(sectorI%H(2)%map,k2)
-                         j   = iup + (jdw-1)*sectorI%DimUp
+                         j_el   = iup + (jdw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Eknot = ed_Eknot + &
                               (impHloc(Nspin,Nspin,iorb,jorb))*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
@@ -566,7 +569,8 @@ contains
                             call c(jorb,mup,k3,sg3)  !UP
                             call cdg(iorb,k3,k4,sg4) !UP
                             jup=binary_search(sectorI%H(1)%map,k4)
-                            j = jup + (jdw-1)*sectorI%DimUp
+                            j_el   = jup + (idw-1)*sectorI%DimUp
+                            j = j_el + (iph-1)*sectorI%DimEl
                             !
                             ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                             ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
@@ -592,7 +596,8 @@ contains
                             call c(jorb,mup,k3,sg3)       !c_jorb_up
                             call cdg(iorb,k3,k4,sg4)      !c^+_iorb_up
                             jup = binary_search(sectorI%H(1)%map,k4)
-                            j = jup + (jdw-1)*sectorI%DimUp
+                            j_el   = jup + (jdw-1)*sectorI%DimUp
+                            j = j_el + (iph-1)*sectorI%DimEl
                             !
                             ed_Epot = ed_Epot + Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                             ed_Dph = ed_Dph + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
@@ -615,7 +620,8 @@ contains
                          call c(jorb,mup,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jup = binary_search(sectorI%H(1)%map,k2)
-                         j   = jup + (idw-1)*sectorI%DimUp
+                         j_el   = jup + (idw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Epot = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
                       !
@@ -627,7 +633,8 @@ contains
                          call c(jorb,mdw,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jdw = binary_search(sectorI%H(2)%map,k2)
-                         j   = iup + (jdw-1)*sectorI%DimUp
+                         j_el   = iup + (jdw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Epot = ed_Epot + mfHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
                    enddo
@@ -700,7 +707,8 @@ contains
                           STOP "H_sundry: impossible operator"
                        endif
                        
-                       j = jup + (jdw-1)*sectorI%DimUp
+                       j_el = jup + (jdw-1)*sectorI%DimUp
+                       j = j_el + (iph-1)*sectorI%DimEl
                        !
                        ed_Epot = ed_Epot + coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                        !
@@ -756,6 +764,58 @@ contains
                    enddo
                 endif
              endif
+             !
+             ! Electron-Phonon coupling term
+             if(DimPh>1)then 
+                !Diagonal part
+                do iorb=1,Norb
+                   ed_Eeph = ed_Eeph + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+                enddo
+                ! UP
+                do iorb=1,Norb
+                   do jorb=1,Norb
+                      ! g_ij cdag_i,up c_j,up (bdag + b)
+                      if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. nup(jorb)==1 .and. nup(iorb)==0 )then
+                         call c( jorb,mup,k1,sg1)
+                         call cdg(iorb,k1,k2,sg2)
+                         jup = binary_search(Hsector%H(1)%map,k2)
+                         j_el = jup + (idw-1)*sectorI%DimUp
+                         ! N.B.here iph = n+1
+                         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
+                            j = j_el + (iph)*DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+                         endif
+                         if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
+                            j = j_el + (iph-2)*DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+                         endif
+                      endif
+                   end do
+                end do
+               !
+               ! DW
+               do iorb=1,Norb
+                  do jorb=1,Norb
+                     ! g_ij cdag_i,dw c_j,dw (bdag + b)
+                     if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. ndw(jorb)==1 .and. ndw(iorb)==0 )then
+                        call c( jorb+Ns,mdw,k1,sg1)
+                        call cdg(iorb+Ns,k1,k2,sg2)
+                        jdw = binary_search(Hsector%H(2)%map,k2)
+                        j_el = iup + (jdw-1)*sectorI%DimUp
+                        ! N.B.here iph = n+1
+                        if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
+                           j = j_el + (iph)*DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+                        endif
+                        if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
+                           j = j_el + (iph-2)*DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+                        endif
+                     endif
+                  end do
+               end do
+             endif
+             !
           enddo
           call delete_sector(sectorI)         
        endif
@@ -769,11 +829,11 @@ contains
 #endif
 #ifdef _MPI
     if(MpiStatus)then
-       call Bcast_MPI(MpiComm,ed_Epot)
        call Bcast_MPI(MpiComm,ed_Eknot)
        call Bcast_MPI(MpiComm,ed_Ehartree)
        call Bcast_MPI(MpiComm,ed_Dust)
        call Bcast_MPI(MpiComm,ed_Dund)
+       call Bcast_MPI(MpiComm,ed_Eeph)
     endif
 #endif
     !
@@ -787,6 +847,7 @@ contains
        write(LOGfile,"(A,10f18.12)")"<Ehf>   =",ed_Ehartree    
        write(LOGfile,"(A,10f18.12)")"Dust    =",ed_Dust
        write(LOGfile,"(A,10f18.12)")"Dund    =",ed_Dund
+       write(LOGfile,"(A,10f18.12)")"Eeph    =",ed_Eeph
     endif
     !
     if(MPIMASTER)then
@@ -1046,12 +1107,13 @@ contains
          reg(txtfy(5))//"<Dst>",&
          reg(txtfy(6))//"<Dnd>",&
          reg(txtfy(7))//"<Dse>",&
-         reg(txtfy(8))//"<Dph>"
+         reg(txtfy(8))//"<Dph>",&
+         reg(txtfy(9))//"<Eeph>"
     close(unit)
     !
     unit = free_unit()
     open(unit,file="energy_last"//reg(ed_file_suffix)//".ed")
-    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph
+    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph
     close(unit)
   end subroutine write_energy
 

@@ -250,6 +250,7 @@ MODULE ED_VARS_GLOBAL
   real(8)                                            :: ed_Ehartree
   real(8)                                            :: ed_Eknot
   real(8)                                            :: ed_Dust,ed_Dund,ed_Dse,ed_Dph
+  real(8)                                            :: ed_Eeph
   real(8)                                            :: ed_dens_ph
   real(8)                                            :: ed_X_ph
   real(8)                                            :: ed_X2_ph

@@ -522,6 +522,7 @@ contains
     ed_Dund    = 0.d0
     ed_Dse     = 0.d0
     ed_Dph     = 0.d0
+    ed_Eeph    = 0.d0
     !
     !Get diagonal part of Hloc
     do ispin=1,Nspin
@@ -801,6 +802,55 @@ contains
                    enddo
                 endif
              endif
+             !
+             ! Electron-Phonon coupling term
+             if(DimPh>1)then
+                !Diagonal part
+                do iorb=1,Norb
+                   ed_Eeph = ed_Eeph + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+                enddo
+                ! UP
+                do iorb=1,Norb
+                   do jorb=1,Norb
+                      ! g_ij cdag_i,up c_j,up (bdag + b)
+                      if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. nup(jorb)==1 .and. nup(iorb)==0 )then
+                         call c(  jorb, m,k1,sg1)
+                         call cdg(iorb,k1,k2,sg2)
+                         j_el = binary_search(Hsector%H(1)%map,k2)
+                         ! N.B.here iph = n+1
+                         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
+                           j = j_el + (iph)*DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+                         endif
+                         if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
+                            j = j_el + (iph-2)*DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+                         endif
+                      endif
+                   end do
+                end do
+                !
+                ! DW
+                do iorb=1,Norb
+                   do jorb=1,Norb
+                      ! g_ij cdag_i,dw c_j,dw (bdag + b)
+                      if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. ndw(jorb)==1 .and. ndw(iorb)==0 )then
+                         call c(  jorb+Ns, m,k1,sg1)
+                         call cdg(iorb+Ns,k1,k2,sg2)
+                         j_el = binary_search(Hsector%H(1)%map,k2)
+                         ! N.B.here iph = n+1
+                         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
+                            j = j_el + (iph)*DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+                         endif
+                         if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
+                            j = j_el + (iph-2)*DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+                         endif
+                      endif
+                   end do
+                end do
+             endif 
           enddo
           call delete_sector(sectorI)
        endif
@@ -822,6 +872,7 @@ contains
        call Bcast_MPI(MpiComm,ed_Dund)
        call Bcast_MPI(MpiComm,ed_Dse)
        call Bcast_MPI(MpiComm,ed_Dph)
+       call Bcast_MPI(MpiComm,ed_Eeph)
     endif
 #endif
     !
@@ -837,6 +888,7 @@ contains
        write(LOGfile,"(A,10f18.12)")"Dund    =",ed_Dund
        write(LOGfile,"(A,10f18.12)")"Dse     =",ed_Dse
        write(LOGfile,"(A,10f18.12)")"Dph     =",ed_Dph
+       write(LOGfile,"(A,10f18.12)")"Eeph    =",ed_Eeph
     endif
     if(MPIMASTER)then
        call write_energy()
@@ -1083,12 +1135,13 @@ contains
          reg(txtfy(5))//"<Dst>",&
          reg(txtfy(6))//"<Dnd>",&
          reg(txtfy(7))//"<Dse>",&
-         reg(txtfy(8))//"<Dph>"
+         reg(txtfy(8))//"<Dph>",&
+         reg(txtfy(9))//"<Eeph>"
     close(unit)
     !
     unit = free_unit()
     open(unit,file="energy_last"//reg(ed_file_suffix)//".ed")
-    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph
+    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph
     close(unit)
   end subroutine write_energy
 
