@@ -646,6 +646,7 @@ subroutine local_energy_nonsu2()
   ed_Dse     = 0.d0
   ed_Dph     = 0.d0
   ed_Eeph    = 0.d0
+  ed_Eph    = 0.d0
   !
   !Get diagonal part of Hloc
   do ispin=1,Nspin
@@ -927,6 +928,7 @@ subroutine local_energy_nonsu2()
            !
            ! Electron-Phonon coupling term
            if(DimPh>1)then
+              ed_Eph = ed_Eph + (iph-1)*w0_ph*gs_weight
               !Diagonal part
               do iorb=1,Norb
                  ed_Eeph = ed_Eeph + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
@@ -995,6 +997,7 @@ subroutine local_energy_nonsu2()
      call Bcast_MPI(MpiComm,ed_Dse)
      call Bcast_MPI(MpiComm,ed_Dph)
      call Bcast_MPI(MpiComm,ed_Eeph)
+     call Bcast_MPI(MpiComm,ed_Eph)
   endif
 #endif
   !
@@ -1011,6 +1014,7 @@ subroutine local_energy_nonsu2()
      write(LOGfile,"(A,10f18.12)")"Dse     =",ed_Dse
      write(LOGfile,"(A,10f18.12)")"Dph     =",ed_Dph
      write(LOGfile,"(A,10f18.12)")"Eeph    =",ed_Eeph
+     write(LOGfile,"(A,10f18.12)")"Eph     =",ed_Eph
   endif
   !
   if(MPIMASTER)then
@@ -1328,12 +1332,13 @@ end subroutine local_energy_nonsu2
          reg(txtfy(6))//"<Dnd>",&
          reg(txtfy(7))//"<Dse>",&
          reg(txtfy(8))//"<Dph>",&
-         reg(txtfy(9))//"<Eeph>"
+         reg(txtfy(9))//"<Eeph>",&
+         reg(txtfy(10))//"<Eph>"
     close(unit)
     !
     unit = free_unit()
     open(unit,file="energy_last"//reg(ed_file_suffix)//".ed")
-    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph
+    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph,ed_Eph
     close(unit)
   end subroutine write_energy
 

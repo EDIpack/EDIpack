@@ -476,6 +476,7 @@ contains
     ed_Dse     = 0.d0
     ed_Dph     = 0.d0
     ed_Eeph    = 0.d0
+    ed_Eph    = 0.d0
     !
     !
     do istate=1,state_list%size
@@ -767,6 +768,7 @@ contains
              !
              ! Electron-Phonon coupling term
              if(DimPh>1)then 
+                ed_Eph = ed_Eph + (iph-1)*w0_ph*gs_weight
                 !Diagonal part
                 do iorb=1,Norb
                    ed_Eeph = ed_Eeph + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
@@ -834,6 +836,7 @@ contains
        call Bcast_MPI(MpiComm,ed_Dust)
        call Bcast_MPI(MpiComm,ed_Dund)
        call Bcast_MPI(MpiComm,ed_Eeph)
+       call Bcast_MPI(MpiComm,ed_Eph)
     endif
 #endif
     !
@@ -848,6 +851,7 @@ contains
        write(LOGfile,"(A,10f18.12)")"Dust    =",ed_Dust
        write(LOGfile,"(A,10f18.12)")"Dund    =",ed_Dund
        write(LOGfile,"(A,10f18.12)")"Eeph    =",ed_Eeph
+       write(LOGfile,"(A,10f18.12)")"Eph     =",ed_Eph
     endif
     !
     if(MPIMASTER)then
@@ -1108,12 +1112,13 @@ contains
          reg(txtfy(6))//"<Dnd>",&
          reg(txtfy(7))//"<Dse>",&
          reg(txtfy(8))//"<Dph>",&
-         reg(txtfy(9))//"<Eeph>"
+         reg(txtfy(9))//"<Eeph>",&
+         reg(txtfy(10))//"<Eph>"
     close(unit)
     !
     unit = free_unit()
     open(unit,file="energy_last"//reg(ed_file_suffix)//".ed")
-    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph
+    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph,ed_Eph
     close(unit)
   end subroutine write_energy
 
