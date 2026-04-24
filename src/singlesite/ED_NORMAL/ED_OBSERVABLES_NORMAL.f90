@@ -780,16 +780,16 @@ contains
                       if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. nup(jorb)==1 .and. nup(iorb)==0 )then
                          call c( jorb,mup,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
-                         jup = binary_search(Hsector%H(1)%map,k2)
+                         jup = binary_search(sectorI%H(1)%map,k2)
                          j_el = jup + (idw-1)*sectorI%DimUp
                          ! N.B.here iph = n+1
                          if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
-                            j = j_el + (iph)*DimEl
-                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+                            j = j_el + (iph)*sectorI%DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*(v_state(j))*peso
                          endif
                          if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
-                            j = j_el + (iph-2)*DimEl
-                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+                            j = j_el + (iph-2)*sectorI%DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*(v_state(j))*peso
                          endif
                       endif
                    end do
@@ -802,16 +802,16 @@ contains
                      if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. ndw(jorb)==1 .and. ndw(iorb)==0 )then
                         call c( jorb+Ns,mdw,k1,sg1)
                         call cdg(iorb+Ns,k1,k2,sg2)
-                        jdw = binary_search(Hsector%H(2)%map,k2)
+                        jdw = binary_search(sectorI%H(2)%map,k2)
                         j_el = iup + (jdw-1)*sectorI%DimUp
                         ! N.B.here iph = n+1
                         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
-                           j = j_el + (iph)*DimEl
-                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+                           j = j_el + (iph)*sectorI%DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*(v_state(j))*peso
                         endif
                         if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
-                           j = j_el + (iph-2)*DimEl
-                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+                           j = j_el + (iph-2)*sectorI%DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*(v_state(j))*peso
                         endif
                      endif
                   end do
