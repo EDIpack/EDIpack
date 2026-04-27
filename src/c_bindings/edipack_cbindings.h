@@ -1181,6 +1181,19 @@ void ed_get_eimp_n2(std::complex<double> *self, int Nlat);
 
 /*!                                         
 \rst
+This function obtains the phononic observables.
+Interfaces to :f:func:`ed_io/ed_get_phon`. 
+Single-site DMFT version
+\endrst
+*
+* @param self: energy array
+*/  
+void ed_get_phon(std::complex<double> *self);
+
+
+
+/*!                                         
+\rst
 This function obtains the phononic contributions to the energy.
 Interfaces to :f:func:`ed_io/ed_get_ephon`. 
 Single-site DMFT version

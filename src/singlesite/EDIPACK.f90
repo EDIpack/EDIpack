@@ -103,6 +103,7 @@ MODULE EDIPACK
        ed_get_exct            , &
        ed_get_mag             , &
        ed_get_docc            , &
+       ed_get_phon            , &
        ed_get_eimp            , &
        ed_get_ephon           , &
        ed_get_epot            , &

@@ -49,15 +49,6 @@ subroutine ed_get_eimp_n1_c(self) bind(c,name="ed_get_eimp_n1")
   call ed_get_eimp(self)
 end subroutine ed_get_eimp_n1_c
 
-
-!phonon energy
-subroutine ed_get_ephon_c(self) bind(c,name="ed_get_ephon")
-  use, intrinsic :: iso_c_binding
-  real(c_double) :: self(2)
-  call ed_get_ephon(self)
-end subroutine ed_get_ephon_c
-
-
 !---------!
 !GET SIGMA!
 !---------!
@@ -402,6 +393,19 @@ subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="get_dimp_sit
   endif
 end subroutine get_dimp_site_n1_c
 
+!phonon observables
+subroutine ed_get_phon_c(self) bind(c,name="ed_get_phon")
+  use, intrinsic :: iso_c_binding
+  real(c_double) :: self(3)
+  call ed_get_phon(self)
+end subroutine ed_get_phon_c
+
+!phonon energy
+subroutine ed_get_ephon_c(self) bind(c,name="ed_get_ephon")
+  use, intrinsic :: iso_c_binding
+  real(c_double) :: self(2)
+  call ed_get_ephon(self)
+end subroutine ed_get_ephon_c
 
 !----------------!
 !     1BDM       !

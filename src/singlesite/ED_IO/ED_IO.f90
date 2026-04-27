@@ -396,6 +396,7 @@ MODULE ED_IO
   public :: ed_get_mag
   public :: ed_get_docc
   public :: ed_get_phi
+  public :: ed_get_phon
   public :: ed_get_argphi
   public :: ed_get_exct
   public :: ed_get_eimp
