@@ -87,6 +87,11 @@ contains
     !    cg_grad=1
     ! endif
     !
+    
+    if(rdm_flag .and. (Nph > 0))then
+      stop "ED ERROR: RDM_FLAG=T and Nph>0. This is not yet supported."
+    endif
+    
     if(Norb==1)then
        chiexct_flag    =.false.
        ed_print_chiexct=.false.
@@ -673,6 +678,7 @@ contains
     write(Logfile,"(A)")"DEBUG setup_global_superc"
 #endif
     isector=0
+    Nnambu=2
     do isz=-Ns,Ns
        sz=abs(isz)
        isector=isector+1
@@ -831,7 +837,7 @@ contains
              getmaxtwoJz(in)=maxtwoJz
              getSector(in,twoJz)=isector
              dim = get_nonsu2_sector_dimension_Jz(in,twoJz)
-             getDim(isector)=dim
+             getDim(isector)=dim*DimPh
              neigen_sector(isector) = min(dim,lanc_nstates_sector)
           enddo
        enddo
@@ -841,7 +847,7 @@ contains
           getSector(in,1)=isector
           getN(isector)=in
           dim = get_nonsu2_sector_dimension(in)
-          getDim(isector)=dim
+          getDim(isector)=dim*DimPh
           neigen_sector(isector) = min(dim,lanc_nstates_sector)
        enddo
     endif

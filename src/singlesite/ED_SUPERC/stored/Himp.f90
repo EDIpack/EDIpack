@@ -1,5 +1,7 @@
   do i=MpiIstart,MpiIend
-     m  = Hsector%H(1)%map(i)
+     i_el = mod(i-1,DimEl) + 1
+     iph = (i-1)/DimEl + 1
+     m  = Hsector%H(1)%map(i_el)
      ib = bdecomp(m,2*Ns)
      !
      do iorb=1,Norb
@@ -39,7 +41,8 @@
            if (Jcondition) then
               call c(jorb,m,k1,sg1)
               call cdg(iorb,k1,k2,sg2)
-              j    = binary_search(Hsector%H(1)%map,k2)
+              j_el    = binary_search(Hsector%H(1)%map,k2)
+              j = j_el + (iph-1)*DimEl
               htmp = conjg(impHloc(1,1,iorb,jorb)+mfHloc(1,1,iorb,jorb))*sg1*sg2
               !
               select case(MpiStatus)
@@ -59,7 +62,8 @@
            if (Jcondition) then
               call c(jorb+Ns,m,k1,sg1)
               call cdg(iorb+Ns,k1,k2,sg2)
-              j    = binary_search(Hsector%H(1)%map,k2)
+              j_el    = binary_search(Hsector%H(1)%map,k2)
+              j = j_el + (iph-1)*DimEl
               htmp = conjg(impHloc(Nspin,Nspin,iorb,jorb))*sg1*sg2
               htmp = htmp + conjg(mfHloc(2,2,iorb,jorb))*sg1*sg2  !Needed because these terms come from the anticommutator
               !
@@ -86,7 +90,8 @@
             if(Jcondition)then
                call c(iorb,m,k1,sg1)
                call c(jorb+Ns,k1,k2,sg2)
-               j=binary_search(Hsector%H(1)%map,k2)
+               j_el=binary_search(Hsector%H(1)%map,k2)
+               j = j_el + (iph-1)*DimEl
                htmp=one*impHloc_anomalous(1,1,iorb,jorb)*sg1*sg2
                if(iorb == jorb) htmp= htmp + one*pair_field(iorb)*sg1*sg2
                !
@@ -103,7 +108,8 @@
             if(Jcondition)then
                call cdg(jorb+Ns,m,k1,sg1)
                call cdg(iorb,k1,k2,sg2)
-               j=binary_search(Hsector%H(1)%map,k2)
+               j_el=binary_search(Hsector%H(1)%map,k2)
+               j = j_el + (iph-1)*DimEl
                htmp=one*conjg(impHloc_anomalous(1,1,iorb,jorb))*sg1*sg2
                if(iorb == jorb) htmp = htmp + one*pair_field(iorb)*sg1*sg2
                !

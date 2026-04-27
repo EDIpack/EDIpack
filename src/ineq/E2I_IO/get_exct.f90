@@ -49,3 +49,5 @@ subroutine ed_get_exct_n4(self,Nlat)
   call assert_shape(self,[Nlat,4,Norb,Norb],'ed_get_exct','exct')
   self = exct_ineq
 end subroutine ed_get_exct_n4
+
+

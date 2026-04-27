@@ -296,3 +296,4 @@ TARGET_LINK_LIBRARIES(${EDI_C} PRIVATE ${SCIFOR_LDFLAGS})
 # - test: compiles and launches the test in ${LIB_TEST} directory 
 INCLUDE(${CMAKE_MODULE_PATH}/PostConfig.cmake)
 
+

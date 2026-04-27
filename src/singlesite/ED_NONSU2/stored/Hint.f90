@@ -1,5 +1,7 @@
   do i=MpiIstart,MpiIend
-     m  = Hsector%H(1)%map(i)
+     i_el = mod(i-1,DimEl) + 1
+     iph = (i-1)/DimEl + 1
+     m  = Hsector%H(1)%map(i_el)
      ib = bdecomp(m,2*Ns)
      !
      do iorb=1,Norb
@@ -72,7 +74,8 @@
                  call c(iorb+Ns,k1,k2,sg2)
                  call cdg(jorb+Ns,k2,k3,sg3)
                  call cdg(iorb,k3,k4,sg4)
-                 j=binary_search(Hsector%H(1)%map,k4)
+                 j_el=binary_search(Hsector%H(1)%map,k4)
+                 j = j_el + (iph-1)*DimEl
                  htmp = one*Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4
                  !
                  select case(MpiStatus)
@@ -104,7 +107,8 @@
                  call c(jorb+Ns,k1,k2,sg2)
                  call cdg(iorb+Ns,k2,k3,sg3)
                  call cdg(iorb,k3,k4,sg4)
-                 j=binary_search(Hsector%H(1)%map,k4)
+                 j_el=binary_search(Hsector%H(1)%map,k4)
+                 j = j_el + (iph-1)*DimEl
                  htmp = one*Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4
                  !
                  select case(MpiStatus)
@@ -121,6 +125,7 @@
      
      !Sundry Coulomb terms
      if(allocated(coulomb_sundry))then
+      
         do iline=1,size(coulomb_sundry)
            orbvec_dag  = [coulomb_sundry(iline)%cd_i(1), coulomb_sundry(iline)%cd_j(1)]
            orbvec      = [coulomb_sundry(iline)%c_k(1),  coulomb_sundry(iline)%c_l(1) ]
@@ -158,7 +163,9 @@
              if (.not. Jcondition) cycle                 !this gives zero, no hamiltonian element added
            endif
            !
-           j=binary_search(Hsector%H(1)%map,k4)
+           j_el=binary_search(Hsector%H(1)%map,k4)
+           j = j_el + (iph-1)*DimEl
+
            if (j == 0)then
               STOP "H_sundry: impossible operator"
            endif

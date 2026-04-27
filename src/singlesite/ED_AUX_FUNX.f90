@@ -29,6 +29,21 @@ MODULE ED_AUX_FUNX
      module procedure :: ed_set_Hloc_single_N4
   end interface ed_set_Hloc
 
+  !> ED SET Gph
+  interface ed_set_G_ph
+     !This subroutine sets the coupling g_iorb,jorb to phononic displacement operator
+     ! H_eph = \sum_sigma \sum_iorb,jorb g_iorb,jorb cdag_iorb,sigma c_jorb,sigma (bdag + b)
+     ! The input matrix can have different shapes:
+     ! if diagonal it fills the diagonal part of G_PH
+     ! if hermitian matrix fills the G_PH matrix
+     !
+     !   * [|Norb| ]: diagonal case, rank-1 array
+     !   * [ |Norb| , |Norb| ]: full-matrix case, rank-2 array
+     !
+     module procedure :: ed_set_G_ph_N1
+     module procedure :: ed_set_G_ph_N2
+  end interface ed_set_G_ph
+
   interface so2nn_reshape
      module procedure d_nso2nn
      module procedure c_nso2nn
@@ -72,6 +87,10 @@ MODULE ED_AUX_FUNX
 
   !SET local Impurity Hamiltonian (excluded the interaction part)
   public :: ed_set_Hloc
+  !
+  !SET the displacement field coupled to the phononic (bdag+b) operator
+  public :: ed_set_A_ph
+  public :: ed_set_G_ph
   !
   !FERMIONIC OPERATORS IN BITWISE OPERATIONS
   public :: c,cdg
@@ -255,6 +274,50 @@ contains
   end subroutine ed_set_Hloc_single_N4
 
   
+  !##################################################################
+  !##################################################################
+  !             PHONONIC SETTER FUNCTIONS
+  !##################################################################
+  !##################################################################
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE  : SET the displacement field coupled to the phononic (bdag+b) operator
+  !+------------------------------------------------------------------+
+
+  subroutine ed_set_A_ph(A_new)
+    real(8), intent(in)  :: A_new
+    A_ph = A_new
+    !
+  end subroutine ed_set_A_ph
+
+  !+------------------------------------------------------------------+
+  !PURPOSE  : SET the electron-phonon coupling matrix
+  !+------------------------------------------------------------------+
+
+  subroutine ed_set_G_ph_N1(G_new)
+   ! set G from diagonal af shape (Norb)
+   complex(8), dimension(Norb) :: G_new
+   integer :: iorb
+   !
+   if(allocated(G_ph)) deallocate(G_ph)
+   allocate(G_ph(Norb,Norb))
+   !
+   do iorb=1,Norb
+      G_ph(iorb,iorb) = G_new(iorb)
+   enddo
+   !
+  end subroutine ed_set_G_ph_N1
+
+  subroutine ed_set_G_ph_N2(G_new)
+   ! set G from hermitian matrix of shape (Norb,Norb)
+   complex(8), dimension(Norb,Norb) :: G_new
+   !
+   if(allocated(G_ph)) deallocate(G_ph)
+   G_ph = G_new
+   !
+  end subroutine ed_set_G_ph_N2
+
 
 
   !##################################################################

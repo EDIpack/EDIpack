@@ -49,6 +49,15 @@ subroutine ed_get_eimp_n1_c(self) bind(c,name="ed_get_eimp_n1")
   call ed_get_eimp(self)
 end subroutine ed_get_eimp_n1_c
 
+
+!phonon energy
+subroutine ed_get_ephon_c(self) bind(c,name="ed_get_ephon")
+  use, intrinsic :: iso_c_binding
+  real(c_double) :: self(2)
+  call ed_get_ephon(self)
+end subroutine ed_get_ephon_c
+
+
 !---------!
 !GET SIGMA!
 !---------!
@@ -223,13 +232,21 @@ subroutine get_spinChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_spinChi(self(1,:,:,:),axis_)
      else
-        STOP "ed_get_spinchi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_spinChi(self,Nsites,axis_)
+        else
+            STOP "ed_get_spinChi: Only single-site available without r-DMFT module"
+        endif
      endif
   else
      if (latticeflag==0)then
         call ed_get_spinChi(self(1,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_spinchi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_spinChi(self,Nsites,axis_,zeta)
+        else
+            STOP "ed_get_spinChi: Only single-site available without r-DMFT module"
+        endif
      endif
   endif
 end subroutine get_spinChi_c
@@ -251,13 +268,21 @@ subroutine get_densChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_densChi(self(1,:,:,:),axis_)
      else
-        STOP "ed_get_denschi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_densChi(self,Nsites,axis_)
+        else
+            STOP "ed_get_densChi: Only single-site available without r-DMFT module"
+        endif
      endif
   else
      if (latticeflag==0)then
         call ed_get_densChi(self(1,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_denschi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_densChi(self,Nsites,axis_,zeta)
+        else
+            STOP "ed_get_densChi: Only single-site available without r-DMFT module"
+        endif
      endif
   endif
   !   !
@@ -280,13 +305,21 @@ subroutine get_pairChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_pairChi(self(1,:,:,:),axis_)
      else
-        STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_pairChi(self,Nsites,axis_)
+        else
+            STOP "ed_get_pairChi: Only single-site available without r-DMFT module"
+        endif
      endif
   else
      if (latticeflag==0)then
         call ed_get_pairChi(self(1,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_pairchi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_pairChi(self,Nsites,axis_,zeta)
+        else
+            STOP "ed_get_pairChi: Only single-site available without r-DMFT module"
+        endif
      endif
   endif
   !
@@ -309,17 +342,26 @@ subroutine get_exctChi_c(self,zeta,dim_zeta,zetaflag,axis,Nsites,latticeflag) bi
      if (latticeflag==0)then
         call ed_get_exctChi(self(1,:,:,:,:),axis_)
      else
-        STOP "ed_get_exctchi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_exctChi(self,Nsites,axis_)
+        else
+            STOP "ed_get_exctChi: Only single-site available without r-DMFT module"
+        endif
      endif
   else
      if (latticeflag==0)then
         call ed_get_exctChi(self(1,:,:,:,:),axis_,zeta)
      else
-        STOP "ed_get_exctchi: Only single-site available without r-DMFT module"
+        if (has_ineq==1) then 
+            call ed_get_exctChi(self,Nsites,axis_,zeta)
+        else
+            STOP "ed_get_exctChi: Only single-site available without r-DMFT module"
+        endif
      endif
   endif
   !
 end subroutine get_exctChi_c
+
 
 
 !----------------!
@@ -338,3 +380,55 @@ subroutine ed_get_impurity_rdm_c(rdm,doprint) bind(c,name='ed_get_impurity_rdm')
   endif
   !
 end subroutine ed_get_impurity_rdm_c
+
+
+!----------------!
+!     PHONONS    !
+!----------------!
+
+subroutine get_dimp_site_n1_c(dimp,axis,zeta,dz,zflag) bind(c,name="get_dimp_site_n1")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: dz,axis,zflag
+  character(len=1)                              :: axis_
+  complex(c_double_complex)                     :: zeta(dz)
+  complex(c_double_complex)                     :: dimp(dz)
+  !
+  axis_="m"
+  if(axis==1)axis_="r"
+  if(zflag==1)then
+     call ed_get_dimp(dimp,axis_,zeta)
+  else
+     call ed_get_dimp(dimp,axis_)
+  endif
+end subroutine get_dimp_site_n1_c
+
+
+!----------------!
+!     1BDM       !
+!----------------!
+
+subroutine get_denmat_n4_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n4")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: doprint
+  integer(c_int64_t)                            :: dimdenmat(4) !Array dimensions
+  complex(c_double_complex)                     :: denmat(dimdenmat(1),dimdenmat(2),dimdenmat(3),dimdenmat(4))
+  !
+  if(doprint==1)then
+     call ed_get_denmat(denmat,.true.)
+  else
+     call ed_get_denmat(denmat,.false.)
+  endif
+end subroutine get_denmat_n4_c
+
+subroutine get_denmat_n2_c(denmat,dimdenmat,doprint) bind(c,name="ed_get_denmat_n2")
+  use, intrinsic :: iso_c_binding
+  integer(c_int),value                          :: doprint
+  integer(c_int64_t)                            :: dimdenmat(2) !Array dimensions
+  complex(c_double_complex)                     :: denmat(dimdenmat(1),dimdenmat(2))
+  !
+  if(doprint==1)then
+     call ed_get_denmat(denmat,.true.)
+  else
+     call ed_get_denmat(denmat,.false.)
+  endif
+end subroutine get_denmat_n2_c

@@ -48,7 +48,7 @@ MODULE ED_OBSERVABLES_NORMAL
   integer                            :: iup,idw
   integer                            :: jup,jdw
   integer                            :: mup,mdw
-  integer                            :: iph,i_el,isectorDim
+  integer                            :: iph,i_el,j_el,isectorDim
   real(8)                            :: sgn,sgn1,sgn2,sg1,sg2,sg3,sg4
   real(8)                            :: gs_weight
   !
@@ -92,7 +92,7 @@ contains
     allocate(Prob(3**Norb))
     allocate(prob_ph(DimPh))
     allocate(pdf_ph(Lpos))
-    allocate(pdf_part(Lpos,3))
+    allocate(pdf_part(Lpos,3**Norb)) ! each orbital can be empty '0', single occupied '1' and doubly occupied '2'
     !
     Egs     = state_list%emin
     dens    = 0.d0
@@ -176,11 +176,14 @@ contains
              !
              !<X> and <X^2> with X=(b+bdg)/sqrt(2)
              if(iph<DimPh)then
+               ! only bdag
                 j= i_el + (iph)*sectorI%DimEl
                 X_ph = X_ph + sqrt(2.d0*dble(iph))*(v_state(i)*v_state(j))*peso
              end if
+             ! bdag*b+b*bdag = 1+2*bdag*b  contribution to X^2
              X2_ph = X2_ph + 0.5d0*(1+2*(iph-1))*gs_weight
              if(iph<DimPh-1)then
+                ! only bdag*bdag contribution to X^2
                 j= i_el + (iph+1)*sectorI%DimEl
                 X2_ph = X2_ph + sqrt(dble((iph)*(iph+1)))*(v_state(i)*v_state(j))*peso
              end if
@@ -188,9 +191,14 @@ contains
              !compute the lattice probability distribution function
              if(Dimph>1 .AND. iph==1) then
                 val = 1
-                !val = 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
+                ! val encodes the occupation of each orbital in basis 3 (since each orbital can have occupation 0,1,2)
+                ! the ternary representation of 'val-1' gives the occupation of each orbital
+                ! val-1 mod 3 is the first orbital, (val-1)/3 mod 3 is the second and so on...
+                ! 
+                ! OLD : val= 1 + Nr. of polarized orbitals (full or empty) makes sense only for 2 orbs
                 do iorb=1,Norb
-                   val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   !val = val + abs(nint(sign((nt(iorb) - 1.d0),real(g_ph(iorb,iorb)))))
+                   val = val + nt(iorb)*( 3**(iorb-1) )
                 enddo
                 call prob_distr_ph(v_state,val)
              end if
@@ -278,6 +286,8 @@ contains
 #endif
     if(allocated(single_particle_density_matrix)) deallocate(single_particle_density_matrix)
     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
+    if(allocated(full_denmat)) deallocate(full_denmat)
+    allocate(full_denmat(Nspin,Nspin,Ns,Ns));full_denmat=zero
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
@@ -336,6 +346,31 @@ contains
                    enddo
                 enddo
              endif
+             do ispin=1,Nspin
+               do iorb=1,Ns
+                  do jorb=1,Ns
+                  ! diagonal
+                  if(iorb==jorb )then
+                     full_denmat(ispin,ispin,iorb,jorb) = &
+                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*v_state(i)
+                  elseif((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
+                     iud(1) = sectorI%H(1)%map(Indices(1))
+                     iud(2) = sectorI%H(2)%map(Indices(2))
+                     call c(jorb,iud(ispin),r,sgn1)
+                     call cdg(iorb,r,k,sgn2)
+                     Jndices = Indices
+                     Jndices(1+(ispin-1)*Ns_Ud) = &
+                           binary_search(sectorI%H(1+(ispin-1)*Ns_Ud)%map,k)
+                     call indices2state(Jndices,[sectorI%DimUps,sectorI%DimDws],j)
+                     !
+                     j = j + (iph-1)*sectorI%DimEl
+                     !
+                     full_denmat(ispin,ispin,iorb,jorb) = &
+                        full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+                  endif
+                  enddo
+               enddo
+             enddo
              !
              !
           enddo
@@ -380,6 +415,9 @@ contains
     enddo
     !
     ed_imp_info=[s2tot,egs]
+    ed_dens_ph = dens_ph
+    ed_X_ph = X_ph
+    ed_X2_ph = X2_ph
     !
     !
 #ifdef _MPI
@@ -392,6 +430,7 @@ contains
        call Bcast_MPI(MpiComm,ed_exct)
        call Bcast_MPI(MpiComm,ed_imp_info)
        if(allocated(single_particle_density_matrix))call Bcast_MPI(MpiComm,single_particle_density_matrix)
+       if(allocated(full_denmat))call Bcast_MPI(MpiComm,full_denmat)
     endif
 #endif
     !
@@ -436,6 +475,8 @@ contains
     ed_Dund    = 0.d0
     ed_Dse     = 0.d0
     ed_Dph     = 0.d0
+    ed_Eeph    = 0.d0
+    ed_Eph    = 0.d0
     !
     !
     do istate=1,state_list%size
@@ -490,7 +531,8 @@ contains
                          call c(jorb,mup,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jup = binary_search(sectorI%H(1)%map,k2)
-                         j   = jup + (idw-1)*sectorI%DimUp
+                         j_el   = jup + (idw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Eknot = ed_Eknot + &
                               (impHloc(1,1,iorb,jorb))*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
@@ -503,7 +545,8 @@ contains
                          call c(jorb,mdw,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jdw = binary_search(sectorI%H(2)%map,k2)
-                         j   = iup + (jdw-1)*sectorI%DimUp
+                         j_el   = iup + (jdw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Eknot = ed_Eknot + &
                               (impHloc(Nspin,Nspin,iorb,jorb))*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
@@ -527,7 +570,8 @@ contains
                             call c(jorb,mup,k3,sg3)  !UP
                             call cdg(iorb,k3,k4,sg4) !UP
                             jup=binary_search(sectorI%H(1)%map,k4)
-                            j = jup + (jdw-1)*sectorI%DimUp
+                            j_el   = jup + (idw-1)*sectorI%DimUp
+                            j = j_el + (iph-1)*sectorI%DimEl
                             !
                             ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                             ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
@@ -553,7 +597,8 @@ contains
                             call c(jorb,mup,k3,sg3)       !c_jorb_up
                             call cdg(iorb,k3,k4,sg4)      !c^+_iorb_up
                             jup = binary_search(sectorI%H(1)%map,k4)
-                            j = jup + (jdw-1)*sectorI%DimUp
+                            j_el   = jup + (jdw-1)*sectorI%DimUp
+                            j = j_el + (iph-1)*sectorI%DimEl
                             !
                             ed_Epot = ed_Epot + Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                             ed_Dph = ed_Dph + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
@@ -576,7 +621,8 @@ contains
                          call c(jorb,mup,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jup = binary_search(sectorI%H(1)%map,k2)
-                         j   = jup + (idw-1)*sectorI%DimUp
+                         j_el   = jup + (idw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Epot = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
                       !
@@ -588,7 +634,8 @@ contains
                          call c(jorb,mdw,k1,sg1)
                          call cdg(iorb,k1,k2,sg2)
                          jdw = binary_search(sectorI%H(2)%map,k2)
-                         j   = iup + (jdw-1)*sectorI%DimUp
+                         j_el   = iup + (jdw-1)*sectorI%DimUp
+                         j = j_el + (iph-1)*sectorI%DimEl
                          ed_Epot = ed_Epot + mfHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*(v_state(j))*peso
                       endif
                    enddo
@@ -661,7 +708,8 @@ contains
                           STOP "H_sundry: impossible operator"
                        endif
                        
-                       j = jup + (jdw-1)*sectorI%DimUp
+                       j_el = jup + (jdw-1)*sectorI%DimUp
+                       j = j_el + (iph-1)*sectorI%DimEl
                        !
                        ed_Epot = ed_Epot + coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                        !
@@ -717,6 +765,59 @@ contains
                    enddo
                 endif
              endif
+             !
+             ! Electron-Phonon coupling term
+             if(DimPh>1)then 
+                ed_Eph = ed_Eph + (iph-1)*w0_ph*gs_weight
+                !Diagonal part
+                do iorb=1,Norb
+                   ed_Eeph = ed_Eeph + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+                enddo
+                ! UP
+                do iorb=1,Norb
+                   do jorb=1,Norb
+                      ! g_ij cdag_i,up c_j,up (bdag + b)
+                      if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. nup(jorb)==1 .and. nup(iorb)==0 )then
+                         call c( jorb,mup,k1,sg1)
+                         call cdg(iorb,k1,k2,sg2)
+                         jup = binary_search(sectorI%H(1)%map,k2)
+                         j_el = jup + (idw-1)*sectorI%DimUp
+                         ! N.B.here iph = n+1
+                         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
+                            j = j_el + (iph)*sectorI%DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*(v_state(j))*peso
+                         endif
+                         if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
+                            j = j_el + (iph-2)*sectorI%DimEl
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*(v_state(j))*peso
+                         endif
+                      endif
+                   end do
+                end do
+               !
+               ! DW
+               do iorb=1,Norb
+                  do jorb=1,Norb
+                     ! g_ij cdag_i,dw c_j,dw (bdag + b)
+                     if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. ndw(jorb)==1 .and. ndw(iorb)==0 )then
+                        call c( jorb+Ns,mdw,k1,sg1)
+                        call cdg(iorb+Ns,k1,k2,sg2)
+                        jdw = binary_search(sectorI%H(2)%map,k2)
+                        j_el = iup + (jdw-1)*sectorI%DimUp
+                        ! N.B.here iph = n+1
+                        if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
+                           j = j_el + (iph)*sectorI%DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*(v_state(j))*peso
+                        endif
+                        if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
+                           j = j_el + (iph-2)*sectorI%DimEl
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*(v_state(j))*peso
+                        endif
+                     endif
+                  end do
+               end do
+             endif
+             !
           enddo
           call delete_sector(sectorI)         
        endif
@@ -730,11 +831,12 @@ contains
 #endif
 #ifdef _MPI
     if(MpiStatus)then
-       call Bcast_MPI(MpiComm,ed_Epot)
        call Bcast_MPI(MpiComm,ed_Eknot)
        call Bcast_MPI(MpiComm,ed_Ehartree)
        call Bcast_MPI(MpiComm,ed_Dust)
        call Bcast_MPI(MpiComm,ed_Dund)
+       call Bcast_MPI(MpiComm,ed_Eeph)
+       call Bcast_MPI(MpiComm,ed_Eph)
     endif
 #endif
     !
@@ -748,6 +850,8 @@ contains
        write(LOGfile,"(A,10f18.12)")"<Ehf>   =",ed_Ehartree    
        write(LOGfile,"(A,10f18.12)")"Dust    =",ed_Dust
        write(LOGfile,"(A,10f18.12)")"Dund    =",ed_Dund
+       write(LOGfile,"(A,10f18.12)")"Eeph    =",ed_Eeph
+       write(LOGfile,"(A,10f18.12)")"Eph     =",ed_Eph
     endif
     !
     if(MPIMASTER)then
@@ -915,7 +1019,7 @@ contains
        !
        unit = free_unit()
        open(unit,file="Occupation_prob"//reg(ed_file_suffix)//".ed")
-       write(unit,"(125F15.9)")Uloc_internal(1),Prob,sum(Prob)
+       write(unit,"(125F15.9)")Prob,sum(Prob)
        close(unit)
        !
        !N_ph probability:
@@ -1007,12 +1111,14 @@ contains
          reg(txtfy(5))//"<Dst>",&
          reg(txtfy(6))//"<Dnd>",&
          reg(txtfy(7))//"<Dse>",&
-         reg(txtfy(8))//"<Dph>"
+         reg(txtfy(8))//"<Dph>",&
+         reg(txtfy(9))//"<Eeph>",&
+         reg(txtfy(10))//"<Eph>"
     close(unit)
     !
     unit = free_unit()
     open(unit,file="energy_last"//reg(ed_file_suffix)//".ed")
-    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph
+    write(unit,"(90F15.9)")ed_Epot,ed_Epot-ed_Ehartree,ed_Eknot,ed_Ehartree,ed_Dust,ed_Dund,ed_Dse,ed_Dph,ed_Eeph,ed_Eph
     close(unit)
   end subroutine write_energy
 
@@ -1032,7 +1138,7 @@ contains
     dx = (xmax-xmin)/dble(Lpos)
     x = xmin
     do i=1,Lpos
-       write(unit,"(5F15.9)") x,pdf_ph(i),pdf_part(i,:)
+       write(unit,"(50F15.9)") x,pdf_ph(i),pdf_part(i,:)
        x = x + dx
     enddo
     close(unit)
@@ -1040,8 +1146,11 @@ contains
 
 
   subroutine prob_distr_ph(vec,val)
-    !Compute the local lattice probability distribution function (PDF), i.e. the local probability of displacement
-    !as a function of the displacement itself
+    ! Compute the contribution of the currect state to the local lattice probability distribution function (PDF)
+    ! ,i.e. the local probability of displacement operator X_ph=(bdag+b) as a function of the displacement itself
+    !
+    ! P(X) = <x\| rho_ph \|x> where rho_ph = Tr_fermions rho_aim
+    ! and \|x> = \sum_n psi*_n(x)\|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
     real(8),dimension(:) :: vec
     real(8)              :: psi(0:DimPh-1)
     real(8)              :: x,dx
@@ -1059,11 +1168,11 @@ contains
           !
           do j_ph=1,DimPh
              jstart = i_el + (j_ph-1)*sectorI%DimEl
-             !
+             ! Global PDF
              pdf_ph(i) = pdf_ph(i) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*vec(jstart)
-             ! if(ph_type==1 .and. Norb==2 .and. val<4) then	!all this conditions should disappear soon or later...
+             ! PDF restricted to a sector of orbital occupation
              pdf_part(i,val) = pdf_part(i,val) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*vec(jstart)
-             ! endif
+             !
           enddo
        enddo
        !
