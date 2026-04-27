@@ -49,6 +49,15 @@ subroutine ed_get_eimp_n1_c(self) bind(c,name="ed_get_eimp_n1")
   call ed_get_eimp(self)
 end subroutine ed_get_eimp_n1_c
 
+
+!phonon energy
+subroutine ed_get_ephon_c(self) bind(c,name="ed_get_ephon")
+  use, intrinsic :: iso_c_binding
+  real(c_double) :: self(2)
+  call ed_get_ephon(self)
+end subroutine ed_get_ephon_c
+
+
 !---------!
 !GET SIGMA!
 !---------!
