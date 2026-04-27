@@ -4,10 +4,12 @@ EDIpack
 A massively parallel Exact Diagonalization solver for Quantum Impurity problems.
 ***************************************************************************************************************
 
-..
-   .. warning::
-      The documentation is under construction
+.. sidebar:: EDIpack |PROJECT_VERSION|
 
+      .. image:: _static/pictures/logo_github.png
+         :width: 75%
+         :align: center
+         :target: https://github.com/EDIpack/EDIpack
 
 EDIpack_ is a Lanczos based Exact Diagonalization method 
 for the solution of generic Quantum Impurity problems,  exploiting MPI
