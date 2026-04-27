@@ -219,8 +219,8 @@ MODULE ED_IO
   interface ed_get_ephon
      !This subroutine gets from the EDIpack library the value of the energy contributions coming from phonons: ed_Eph, ed_Eeph where:
      !
-     !  * :f:var:`ed_Eph`  = :math:`\\omega^{\\mathrm{PH}}_{0} b^{\\dagger} b`
-     !  * :f:var:`ed_Eeph` = :math:`\\sum_{\\sigma, i, j} (g^{\\mathrm{PH}})_{i\\, j} \\, c^{\\dagger}_{i \\sigma} c_{j \\sigma} \\, (b^{\\dagger} + b)`
+     !  * :f:var:`ed_Eph`  = :math:`\omega^{\mathrm{PH}}_{0} b^{\dagger} b`
+     !  * :f:var:`ed_Eeph` = :math:`\sum_{\sigma, i, j} (g^{\mathrm{PH}})_{i, j} c^{\dagger}_{i \sigma} c_{j \sigma} (b^{\dagger} + b)`
      !
      ! The :f:var:`self` is a real array of dimension 2
      !
