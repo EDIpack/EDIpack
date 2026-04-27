@@ -217,10 +217,10 @@ MODULE ED_IO
   end interface ed_get_phon
 
   interface ed_get_ephon
-     !This subroutine gets from the EDIpack library the value of the energy contributions coming from phonons: ed_Eph, ed_Eeph
-     !where:
-     !  * ed_Eph = w0_ph*badg*b
-     !  * ed_Eeph = \sum_{\sigma, iorb, jorb} (g_{ph})_{iorb jorb} c^\dagger_{iorb \sigma} c_{jorb \sigma} (b^\dagger + b)
+     !This subroutine gets from the EDIpack library the value of the energy contributions coming from phonons: ed_Eph, ed_Eeph where:
+     !
+     !  * :f:var:`ed_Eph`  = :math:`\\omega^{\\mathrm{PH}}_{0} b^{\\dagger} b`
+     !  * :f:var:`ed_Eeph` = :math:`\\sum_{\\sigma, i, j} (g^{\\mathrm{PH}})_{i\\, j} \\, c^{\\dagger}_{i \\sigma} c_{j \\sigma} \\, (b^{\\dagger} + b)`
      !
      ! The :f:var:`self` is a real array of dimension 2
      !
@@ -399,6 +399,7 @@ MODULE ED_IO
   public :: ed_get_argphi
   public :: ed_get_exct
   public :: ed_get_eimp
+  public :: ed_get_ephon
   public :: ed_get_epot
   public :: ed_get_eint 
   public :: ed_get_ehartree
