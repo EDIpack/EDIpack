@@ -1,8 +1,6 @@
-EDIpack
+Welcome
 ################
 
-A massively parallel Exact Diagonalization solver for Quantum Impurity problems.
-***************************************************************************************************************
 
 .. sidebar:: EDIpack |PROJECT_VERSION|
 
@@ -11,63 +9,30 @@ A massively parallel Exact Diagonalization solver for Quantum Impurity problems.
          :align: center
          :target: https://github.com/EDIpack/EDIpack
 
-EDIpack_ is a Lanczos based Exact Diagonalization method 
-for the solution of generic Quantum Impurity problems,  exploiting MPI
-distributed memory parallelization.
+**EDIpack** is an Exact Diagonalization solver for the solution of generic 
+Quantum Impurity problems, exploiting MPI distributed memory parallelization.
 
-This version enables the solution of
-multi-orbital quantum impurity models with different conserved
-quantum numbers :math:`\vec{Q}`:
-
-* :math:`\vec{Q}=[\vec{N}_\uparrow,\vec{N}_\downarrow]` for which
-  either the number of total or orbital spin up and down electrons is
-  conserved: **NORMAL** 
-
-* :math:`\vec{Q}=S_z`  with conserved total magnetization:  **SUPERConducting**  
-
-* :math:`\vec{Q}=N_{\rm tot}`  where spin degrees freedom is not fully conserved:  **NON-SU(2)**
-
-The choice of the symmetry is possible through the input variable `ed_mode=normal,superc,nonsu2`
-
-.. note::
-   The `superc` mode deals with local *s*-wave pairing although in 
-   diagonal and off-diagonal orbital channels. The actual
-   implementation does not support long-range magnetic ordering.
-   
-.. note::
-   The `nonsu2` operational mode deals with any situation in which
-   spin symmetry group is not fully conserved, for instance in
-   presence of local Spin-Orbit Coupling :math:`\vec{L} \cdot \vec{S}`,
-   in-plane magnetization :math:`\langle S_x\rangle\gt0`  or in-plane
-   triplet excitonic condensation, see `PhysRevB.107.115117`_. 
-
-.. _PhysRevB.107.115117: https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.115117
+List of Features
+"""""""""""""""""""
+* Published in `SciPost Physics Codebases <https://scipost.org/SciPostPhysCodeb.58>`_
+* Support for zero and low temperature calculations
+* Support for multiple star bath geometries
+* Support for superconductive systems
+* Support for systems where spin degrees freedom is not fully conserved
+* One and two-particle response function on imaginary frequency, real frequency and imaginary time axes
+* Support for reduce density matrices
+* Support for Holstein phonon modes
+* Support for inequivalent impurity sites through a Real-Space DMFT module
+* APIs for FORTRAN, C++, Python and Julia
+* Interoperability with the TRIQS software suite through a fully-featured thin compatibility layer
 
 
-In the actual development stage both the `normal` and `superc` modes
-include **electron-phonon** coupling to Holstein phonons. 
-
-|edipack| is designed to obtain the lowest part of the
-spectrum of the quantum impurity problem., While this makes the
-software naturally works at **zero temperature**, it also supports the
-determination of **low temperatures** properties.   
- 
-The diagonalization algorithm is based on a massively
-parallel execution of matrix-vector products, required in the context
-of Lanczos-Arnoldi linear procedures.
-However, substantial modifications have been introduced in this
-version to address the *Superconducting* and *non-SU(2)* channels.  
-
-.. _EDIPACK: https://github.com/edipack/EDIpack
-.. _j.cpc.2021.108261: https://doi.org/10.1016/j.cpc.2021.108261
-
-
-Corresponding Authors
-"""""""""""""""""""""""""""""""""""""""""""""""""
+Authors
+""""""""""
 
 The `EDIpack` libraries have been developed as a
 collective effort by different authors, each contributing to diverse
-aspects of the library. The main corresponding authors are:
+aspects of the library. The main authors are:
 
 * `Adriano Amaricci`_ (leading author)
   

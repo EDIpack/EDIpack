@@ -29,7 +29,7 @@ from sphinx.application import Sphinx
 # -- Project information -----------------------------------------------------
 
 project = u'EDIpack'
-copyright = u'2024, Lorenzo Crippa and Adriano Amaricci'
+copyright = u'2026, Lorenzo Crippa and Adriano Amaricci'
 author = u'Lorenzo Crippa and Adriano Amaricci'
 
 # The short X.Y version
