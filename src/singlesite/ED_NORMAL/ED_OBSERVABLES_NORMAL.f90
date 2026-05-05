@@ -800,8 +800,8 @@ contains
                   do jorb=1,Norb
                      ! g_ij cdag_i,dw c_j,dw (bdag + b)
                      if( g_ph(iorb,jorb)/= (0.d0,0.d0) .and. ndw(jorb)==1 .and. ndw(iorb)==0 )then
-                        call c( jorb+Ns,mdw,k1,sg1)
-                        call cdg(iorb+Ns,k1,k2,sg2)
+                        call c( jorb,mdw,k1,sg1)
+                        call cdg(iorb,k1,k2,sg2)
                         jdw = binary_search(sectorI%H(2)%map,k2)
                         j_el = iup + (jdw-1)*sectorI%DimUp
                         ! N.B.here iph = n+1
