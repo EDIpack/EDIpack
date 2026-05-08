@@ -408,7 +408,7 @@ int  get_bath_dimension_symmetries(int Nsym);
 \rst
 This function updates a variable (usually the chemical potential) trying to 
 achieve a desired density set by :f:var:`nread`.
-Interfaces to :f:func:`ed_search-variable`.
+Interfaces to :f:func:`ed_search_variable`.
 \endrst
 *
 * @param var: the variable to be adjusted
@@ -423,21 +423,23 @@ void search_variable(double *var,
                     
 /*!
 \rst
-This function sets the phonon displacement field
+This function sets the phonon displacement field.
+Interfaces to :f:func:`ed_set_A_ph`.
 \endrst
 *
 * @param A_new: the new displacement field
 */ 
-void ed_set_A_ph_c(double *A_new);
+void ed_set_A_ph(double *A_new);
 
 /*!
 \rst
-This function sets the electron-phonon coupling
+This function sets the electron-phonon coupling.
+Interfaces to :f:func:`ed_set_G_ph`.
 \endrst
 *
 * @param G_new: the new coupling matrix
 */ 
-void ed_set_G_ph_c(std::complex<double> *G_new);
+void ed_set_G_ph(std::complex<double> *G_new);
 
 
 /*!

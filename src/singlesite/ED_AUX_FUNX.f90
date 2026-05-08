@@ -32,10 +32,10 @@ MODULE ED_AUX_FUNX
   !> ED SET Gph
   interface ed_set_G_ph
      !This subroutine sets the coupling g_iorb,jorb to phononic displacement operator
-     ! H_eph = \sum_sigma \sum_iorb,jorb g_iorb,jorb cdag_iorb,sigma c_jorb,sigma (bdag + b)
-     ! The input matrix can have different shapes:
-     ! if diagonal it fills the diagonal part of G_PH
-     ! if hermitian matrix fills the G_PH matrix
+     !:math:`H_{eph} = \sum_{\sigma} \sum_{i,j} g_{i,j} c^{\dagger}_{i,\sigma} c_{j,\sigma} (b^{\dagger} + b)` 
+     !where :math:`i,j` are orbitals. The input matrix can have different shapes:
+     !if diagonal it fills the diagonal part of G_PH
+     !if hermitian matrix fills the G_PH matrix
      !
      !   * [|Norb| ]: diagonal case, rank-1 array
      !   * [ |Norb| , |Norb| ]: full-matrix case, rank-2 array
@@ -286,6 +286,7 @@ contains
   !+------------------------------------------------------------------+
 
   subroutine ed_set_A_ph(A_new)
+    !This subroutine sets the phonon mode displacement field.
     real(8), intent(in)  :: A_new
     A_ph = A_new
     !
