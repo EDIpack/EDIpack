@@ -369,10 +369,10 @@ MODULE ED_IO
 
   interface ed_get_denmat
      !This subroutine returns to the user the one body density matrix (1BDM) of the Anderson model.
-     ! The 1BDM is an array having one of the following dimensions:
+     !The 1BDM is an array having one of the following dimensions:
      ! 
-     !  * [:math:`Ns*Nspin*Nnambu` , :math:`Ns*Nspin*Nnambu` ]
-     !  * [:math:`Nspin*Nnambu` , :math:`Nspin*Nnambu` , :math:`Ns` , :math:`Ns` ]
+     !  * [:f:var:`Ns` :math:`\cdot` :f:var:`Nspin` :math:`\cdot` :f:var:`Nnambu` , :f:var:`Ns` :math:`\cdot` :f:var:`Nspin` :math:`\cdot` :f:var:`Nnambu` ]
+     !  * [:f:var:`Nspin` :math:`\cdot` :f:var:`Nnambu` , :f:var:`Nspin` :math:`\cdot` :f:var:`Nnambu` , :f:var:`Ns` , :f:var:`Ns` ]
      !
      module procedure :: get_denmat_n2
      module procedure :: get_denmat_n4

@@ -122,7 +122,7 @@ and files, with links to the source.
    
 
 .. toctree::
-   :caption: EDIpack
+   :caption: Core Library
    :maxdepth: 2
    :hidden:
       

@@ -133,7 +133,7 @@ MODULE ED_VARS_GLOBAL
 
   !SIZE OF THE PROBLEM
   !=========================================================
-  integer,save                                       :: Ns       !Number of levels per spin
+  integer,save                                       :: Ns       !Number of electronic levels in the impurity problem (per spin)
   integer                                            :: Nlevels
   integer,save                                       :: Nsectors !Number of sectors
   integer,save                                       :: Ns_orb
