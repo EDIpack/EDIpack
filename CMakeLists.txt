@@ -7,7 +7,7 @@ SET(EDI ${PROJECT_NAME})
 SET(EDI2INEQ edipack2ineq)
 SET(EDI_C edipack_cbindings)
 SET(EDI2INEQ_C edipack2ineq_cbindings)
-SET(VERSION 5.4.3)
+SET(VERSION 6.0.0)
 
 
 MESSAGE(STATUS "OS: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION}")
@@ -295,4 +295,5 @@ TARGET_LINK_LIBRARIES(${EDI_C} PRIVATE ${SCIFOR_LDFLAGS})
 # - doc: creates documentation using sphinx (if found)
 # - test: compiles and launches the test in ${LIB_TEST} directory 
 INCLUDE(${CMAKE_MODULE_PATH}/PostConfig.cmake)
+
 

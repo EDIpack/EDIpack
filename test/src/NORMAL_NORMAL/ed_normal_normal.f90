@@ -7,9 +7,11 @@ program ed_normal_normal
   USE COMMON
   implicit none
   integer                :: i,js,Nso,Nmomenta
-  integer                :: Nb,iorb,jorb,ispin,jspin
+  integer                :: Nb,iorb,jorb,ispin,jspin,Ns_full
   complex(8),allocatable :: Smats(:,:,:,:,:)
   complex(8),allocatable :: Hloc(:,:,:,:)
+  complex(8),allocatable :: denmat4(:,:,:,:)
+  complex(8),allocatable :: denmat2(:,:)
 
   !variables for the model:
   real(8)                :: Delta
@@ -96,6 +98,15 @@ contains
     call ed_get_doubles(doubles)
     call ed_get_imp_info(imp)
     call ed_get_evals(evals)
+    ! In NORMAL mode full_denmat covers all (impurity+bath) sites:
+    ! shape [Nspin,Nspin,Ns,Ns] with Ns=(Nbath+1)*Norb for normal bath
+    Ns_full = (Nbath+1)*Norb
+    if(allocated(denmat4))deallocate(denmat4)
+    if(allocated(denmat2))deallocate(denmat2)
+    allocate(denmat4(Nspin,Nspin,Ns_full,Ns_full))
+    allocate(denmat2(Nspin*Ns_full,Nspin*Ns_full))
+    call ed_get_denmat(denmat4)
+    call ed_get_denmat(denmat2)
     ! call ed_get_impurity_rdm(rdm)
     do i=1,Nmomenta
        do iorb=1,Norb
@@ -109,6 +120,7 @@ contains
        stop "Results saved to *.check files"
     endif
     call test_results()
+    call test_denmat_checks()
   end subroutine run_test
 
 
@@ -173,9 +185,69 @@ contains
     call save_array("energy.check",energy)
     call save_array("doubles.check",doubles)
     call save_array("imp.check",imp)
-    call save_array("Sigma_momenta.check",Smom)    
+    call save_array("Sigma_momenta.check",Smom)
     ! call save_array("rdm.check",rdm)
   end subroutine save_results
+
+
+  subroutine test_denmat_checks()
+    !
+    ! Verify the one-body density matrix getters in NORMAL mode (Nspin=1, SU2).
+    ! full_denmat covers impurity orbitals only: shape [Nspin,Nspin,Norb,Norb].
+    ! Four in-memory checks (no reference files needed):
+    !   1. Diagonal elements are purely real
+    !   2. Density check: dens(io) = <nup>+<ndw> = 2*dm4(1,1,io,io) (SU2 symmetry)
+    !   3. dm4 is Hermitian: dm4(is,js,io,jo) == conj(dm4(js,is,jo,io))
+    !   4. n2 getter matches block-interleaved reshape of n4:
+    !         dm2(io+(is-1)*Norb, jo+(js-1)*Norb) == dm4(is,js,io,jo)
+    !
+    complex(8),dimension(Nspin,Nspin,Ns_full,Ns_full) :: dm4_hc
+    complex(8),dimension(Nspin*Ns_full,Nspin*Ns_full) :: dm2_from_dm4
+    integer :: is,js,io,jo
+    !
+    write(*,*)
+    write(*,"(A50)") "Summary DENMAT CHECKS:"
+    !
+    ! 1. Diagonal imaginary parts vanish
+    do io=1,Ns_full
+       call assert(dimag(denmat4(1,1,io,io)),0.d0, &
+            "denmat4: Im[dm(1,1,"//str(io)//","//str(io)//")]")
+    enddo
+    !
+    ! 2. Density check: dens(io) = <nup>+<ndw> = 2*dm4(1,1,io,io) (by SU2 symmetry).
+    !    Loose tolerance: dm4 and dens are accumulated via independent sums so
+    !    floating-point rounding can cause O(1e-9) disagreement.
+    do io=1,Norb
+       call assert(2.d0*dreal(denmat4(1,1,io,io)),dens(io), &
+            "denmat4 vs dens: 2*Re[dm(1,1,"//str(io)//","//str(io)//")]==dens",tol=1.d-8)
+    enddo
+    !
+    ! 3. Hermiticity of dm4
+    do is=1,Nspin
+       do js=1,Nspin
+          do io=1,Ns_full
+             do jo=1,Ns_full
+                dm4_hc(is,js,io,jo) = conjg(denmat4(js,is,jo,io))
+             enddo
+          enddo
+       enddo
+    enddo
+    call assert(denmat4,dm4_hc,"denmat4: Hermitian")
+    !
+    ! 4. n2 variant is the block-interleaved reshape of n4:
+    !    dm2(io+(is-1)*Norb, jo+(js-1)*Norb) = dm4(is,js,io,jo)
+    do is=1,Nspin
+       do js=1,Nspin
+          do io=1,Ns_full
+             do jo=1,Ns_full
+                dm2_from_dm4(io+(is-1)*Norb,jo+(js-1)*Norb) = denmat4(is,js,io,jo)
+             enddo
+          enddo
+       enddo
+    enddo
+    call assert(denmat2,dm2_from_dm4,"denmat: n2 vs n4 consistency")
+    !
+  end subroutine test_denmat_checks
 
 
   subroutine set_twobody_hk()

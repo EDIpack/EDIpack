@@ -13,7 +13,7 @@
      ! Diagonal terms: Sum_iorb g_iorb,iorb n_iorb
      htmp_el = zero
      do iorb=1,Norb
-        htmp_el = htmp_el + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb) -1.d0)
+        htmp_el = htmp_el + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
      enddo
      !
      if(iph < DimPh) then ! N* bdg|iph>
