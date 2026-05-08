@@ -14,7 +14,6 @@ Quantum Impurity problems, exploiting MPI distributed memory parallelization.
 
 List of Features
 """""""""""""""""""
-* Published in `SciPost Physics Codebases <https://scipost.org/SciPostPhysCodeb.58>`_
 * Support for zero and low temperature calculations
 * Support for multiple star bath geometries
 * Support for superconductive systems
@@ -25,14 +24,12 @@ List of Features
 * Support for inequivalent impurity sites through a Real-Space DMFT module
 * APIs for FORTRAN, C++, Python and Julia
 * Interoperability with the TRIQS software suite through a fully-featured thin compatibility layer
-
+* Published in `SciPost Physics Codebases <https://scipost.org/SciPostPhysCodeb.58>`_
 
 Authors
 """"""""""
 
-The `EDIpack` libraries have been developed as a
-collective effort by different authors, each contributing to diverse
-aspects of the library. The main authors are:
+**EDIpack** is collective effort by different authors:
 
 * `Adriano Amaricci`_ (leading author)
   
@@ -41,6 +38,8 @@ aspects of the library. The main authors are:
 * `Samuele Giuli`_
 
 * `Gabriele Bellomia`_
+
+* `Igor Krivenko`_
   
 * Massimo Capone
 
@@ -48,11 +47,12 @@ aspects of the library. The main authors are:
 .. _Lorenzo Crippa: https://github.com/lcrippa    
 .. _Samuele Giuli: https://github.com/SamueleGiuli
 .. _Gabriele Bellomia: https://github.com/beddalumia
+.. _Igor Krivenko: https://github.com/krivenko
 
 
-***************************************
+
 Installation
-***************************************
+"""""""""""""
 
 :doc:`dependencies`
      Software requirements to install the |edipack| library.
@@ -61,9 +61,8 @@ Installation
      Build, install and configure the library in the OS.
      
 
-***************************************
 Usage
-***************************************
+""""""""
 
 :doc:`quickstart`
      A quick start guide with two simple examples.
@@ -72,40 +71,34 @@ Usage
      Further examples showcasing some potentialities of the software. 
 
 
-***************************************
-EDIpack
-***************************************
+
+Fortran library
+"""""""""""""""""
+
 :doc:`edipack`
      A detailed presentation  of the library with a thorough 
      description of the relevant modules, data types and procedures.
 
-***************************************     
-EDIpack2ineq
-***************************************
 :doc:`edipack2ineq`
      The inequivalent impurities extension of |edipack|
 
 
-***************************************   
-EDIpack C-bindings
-***************************************
+Compatibility
+"""""""""""""""""
+
 :doc:`edipack_cbindings`
      The Fortran-C interface for |edipack| and |edipack2ineq|
      
-*****************************************  
-Python projects
-*****************************************
 :doc:`edipack_python`
      Link to the documentation of the EDIpack python API
      EDIack2py, as well as the TRIQS compatibilty layer
      
 
-***************************************
-Browse Source Code
-***************************************
+Source navigation
+""""""""""""""""""""
 
-:doc:`browsecode`
-     Browse the software source
+`Visual representation <browsecode>`_ of the interdependent modules
+and files, with links to the source.
 
 
 
@@ -145,22 +138,17 @@ Browse Source Code
 
    
 .. toctree::
-   :caption: EDIpack C-bindings
+   :caption: Compatibility
    :maxdepth: 2
    :hidden:
 
    edipack_cbindings
    
-.. toctree::
-   :caption: Python projects
-   :maxdepth: 2
-   :hidden:
-
    edipack_python
    
 
 .. toctree::
-   :caption: Browse code
+   :caption: Source navigation
    :maxdepth: 2
    :hidden:
 
