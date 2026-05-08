@@ -97,7 +97,7 @@ Compatibility
 Source navigation
 """"""""""""""""""""
 
-`Visual representation <browsecode>`_ of the interdependent modules
+:ref:`Visual representation <browsecode>` of the interdependent modules
 and files, with links to the source.
 
 

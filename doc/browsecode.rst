@@ -1,3 +1,5 @@
+.. _browsecode:
+
 Browse code
 #####################
 
