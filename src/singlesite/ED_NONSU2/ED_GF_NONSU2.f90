@@ -656,8 +656,6 @@ contains
        !
        axis_ = 'm' ; if(present(axis))axis_ = axis(1:1) !only for self-consistency, not used here
        !
-       G = zero
-       !
        if(.not.allocated(impDmatrix%state)) return
        !
        G= zero
@@ -671,23 +669,40 @@ contains
              do iexc=1,Nexcs
                 peso  = impDmatrix%state(istate)%channel(ichan)%weight(iexc)
                 de    = impDmatrix%state(istate)%channel(ichan)%poles(iexc)
-                ! ! the correct behavior for beta*dE << 1 is recovered only by assuming that v_n is still finite
-                ! ! beta*dE << v_n for v_n--> 0 slower. First limit beta*dE--> 0 and only then v_n -->0.
-                ! ! This ensures that the correct null contribution is obtained.
-                ! ! So we impose that: if (beta*dE is larger than a small qty) we sum up the contribution, else
-                ! ! we do not include the contribution (because we are in the situation described above).
-                ! ! For the real-axis case this problem is circumvented by the usual i*0+ = xi*eps
-                select case(axis_)
-                case("m","M")                
-                   if(beta*dE > 1d-3)G(1)=G(1) - peso*2*(1d0-exp(-beta*dE))/dE 
-                   do i=2,size(zeta)
-                      G(i)=G(i) - peso*(1d0-exp(-beta*dE))*2d0*dE/(dreal(zeta(i))**2+dE**2)
-                   enddo
-                case("r","R")
-                   do i=1,size(zeta)
-                      G(i)=G(i) + peso*(1d0-exp(-beta*dE))*(1d0/(zeta(i) - dE) - 1d0/(zeta(i) + dE))
-                   enddo
-                end select
+                if(abs(beta*de) < 1e-8) then
+                   select case(axis_)
+                      case("m","M")
+                         do i=1,size(zeta)
+                            if(abs(zeta(i))<1e-10) then ! \nu=0
+                               G(i) = G(i) - peso*beta
+                            endif
+                         enddo
+                      case("r","R")
+                         ! A zero energy pole contributes only to D(Re(z) = 0) and
+                         ! its contribution is taken to be the same as for D(\nu=0),
+                         ! regardless of the imaginary shift in z
+                         do i=1,size(zeta)
+                            if(abs(dreal(zeta(i)))<1e-10) then
+                               G(i) = G(i) + peso*beta
+                            endif
+                         enddo
+                   end select
+                   ! Ignore the negative energy poles and enforce the spectral symmetry by adding
+                  ! contributions from de and -de for each positive de
+                elseif(de > 0) then
+                   select case(axis_)
+                      case("m","M")
+                         do i=1,size(zeta)
+                            G(i) = G(i) - &
+                               peso*(1d0-exp(-beta*de))*2d0*de/(dimag(zeta(i))**2 + de**2)
+                         enddo
+                      case("r","R")
+                         do i=1,size(zeta)
+                            G(i) = G(i) + &
+                               peso*(1d0-exp(-beta*de)) * (1d0/(zeta(i)-de) - 1d0/(zeta(i)+de))
+                         enddo
+                   end select
+                endif
              enddo
           enddo
        enddo

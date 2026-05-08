@@ -71,13 +71,7 @@ Usage
 :doc:`examples`
      Further examples showcasing some potentialities of the software. 
 
-***************************************
-Structure
-***************************************
-:doc:`structure`
-     Overview of the |edipack| library structure.
-     
-     
+
 ***************************************
 EDIpack
 ***************************************
@@ -133,12 +127,6 @@ Browse Source Code
    quickstart
    examples
    
-.. toctree::
-   :caption: Structure
-   :maxdepth: 1
-   :hidden:
-
-   structure
 
 .. toctree::
    :caption: EDIpack
