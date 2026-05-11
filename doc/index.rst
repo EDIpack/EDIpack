@@ -159,7 +159,7 @@ and files, with links to the source.
 
    EDIpack on GitHub <https://github.com/edipack/EDIpack>   
    EDIpack2py on GitHub <https://github.com/edipack/EDIpack2py>
-   EDIpack2Triqs on GitHub <https://github.com/krivenko/edipack2triqs>
+   EDIpack2Triqs on GitHub <https://github.com/edipack/edipack2triqs>
    SciFortran on GitHub <https://github.com/SciFortran/SciFortran>
 
 
