@@ -91,7 +91,7 @@ Compatibility
      
 :doc:`edipack_python`
      Link to the documentation of the EDIpack python API
-     EDIack2py, as well as the TRIQS compatibilty layer
+     EDIpack2py, as well as the TRIQS compatibilty layer
      
 
 Source navigation
