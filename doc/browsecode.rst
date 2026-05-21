@@ -3,7 +3,7 @@
 Browse code
 #####################
 
-Browse the `EDIpack` structure using suitable graph of the module
+Browse the **EDIpack** structure using suitable graph of the module
 dependencies.
 
 .. note::

@@ -157,8 +157,8 @@ pygments_style = 'sphinx'
 
 
 rst_prolog = """
-.. |edipack| replace:: `EDIpack`
-.. |edipack2ineq| replace:: `EDIpack2ineq`
+.. |edipack| replace:: **EDIpack**
+.. |edipack2ineq| replace:: **EDIpack2ineq**
 .. |Nnambu| replace:: :f:var:`nnambu`
 .. |Nspin| replace:: :f:var:`nspin`
 .. |Norb| replace:: :f:var:`norb`

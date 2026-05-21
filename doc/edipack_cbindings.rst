@@ -15,19 +15,17 @@ a dynamic library called :code:`libedipack_cbindings.so` will be created and
 put in the same folder as the static Fortran library.
 An API to another language will need to interface to this library. 
 
-A Python API called EDIpack2py_ is provided and mantained.
-An experimental Julia API called EDipack2jl_ is in development.
-
-A :code:`C++` header file called :code:`edipack_cbindings.h` is installed into the
+A C++ header file called :code:`edipack_cbindings.h` is installed into the
 include directory at build time. The list of variables and functions therein provided
 is documented in the following. 
 Caution needs to be applied for functions requiring array input parameters: since arrays 
 have to be passed as raw pointers, additional
 arrays containing the dimensions of the former need to be passed.
 
-An example :code:`C++` program using EDIpack is provided  in the examples_ folder 
-of the GitHub repository.
-A more exotic usecase is available here_, come fosse antani.
+An example C++ program using |edipack| is provided  in the examples_ folder 
+of the GitHub repository. A more exotic usecase is available here_, come fosse antani.
+
+Here are the lists of variables and functions made available through C-bindings.
 
 .. _EDIpack2py: https://github.com/edipack/EDIpack2py
 .. _EDIpack2jl: https://github.com/edipack/EDIpack2jl
@@ -36,7 +34,7 @@ A more exotic usecase is available here_, come fosse antani.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :glob:
 
    c_bindings/*

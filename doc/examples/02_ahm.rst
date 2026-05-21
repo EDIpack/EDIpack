@@ -26,7 +26,7 @@ modules, including  `DMFT_TOOLS`_ library to perform some tasks
 related to DMFT implementation. We read the input file using
 :f:func:`ed_read_input`. Given the simplicity of this program we do
 **not** make use of MPI setup here. In the absence of MPI
-initialization, the `EDIpack.0` code will automatically fall back to
+initialization, the **EDIpack** code will automatically fall back to
 serial execution. 
    
 
@@ -196,7 +196,7 @@ real-axis Green's functions using the retrieved normal and anomalous self-energi
 Results
 ------------------------------
 
-We present some results obtained using this `EDIpack.0` based
+We present some results obtained using this **EDIpack** based
 program. To begin with, we show in panel A a snapshot of the evolution
 of the spectral functions :math:`-\Im G(\omega)/\pi` upon increasing
 the attraction strength :math:`U`. The tiny gap visible for small

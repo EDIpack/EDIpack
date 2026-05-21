@@ -209,8 +209,8 @@ package can be installed:
    conda install -c conda-forge -c edipack edipack
 
 
-this installs a bundle of the `scifor` and `edipack` libraries. In order to compile a
-fortran program linking the libraries, we provide  `.pc` files which are readable via 
+this installs a bundle of the :code:`scifor` and :code:`edipack` libraries. In order to compile a
+fortran program linking the libraries, we provide  :code:`.pc` files which are readable via 
 :code:`pkg-config`. If not present, the :code:`compilers` and :code:`pkg-config` conda
 packages need to be installed
 
