@@ -1,4 +1,4 @@
-EDIpack Fortran-C interface: Variables
+C Variables
 =================================================================
 
 The following is a list of EDIpack  input variables which

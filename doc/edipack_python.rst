@@ -3,7 +3,7 @@
 Python projects
 =================================================================
 
-EDIpack offers a fully-featured Python3 API, called `EDIpack2py <https://github.com/edipack/EDIpack2py/>`_. 
+EDIpack offers a fully-featured Python3 module, called `EDIpack2py <https://github.com/edipack/EDIpack2py/>`_. 
 A complete documentation is available `here <https://edipack.github.io/EDIpack2py/>`_.
 
 `EDIpack2TRIQS <https://github.com/edipack/edipack2triqs/>`_ is a compatibility layer between EDIpack and 
