@@ -4,7 +4,7 @@ Further examples
 #########################
 
 In this section we present more elaborated examples to illustrate 
-other features of the `EDIpack` library.
+other features of the **EDIpack** library.
 
 Specifically, we shall present three examples one for each value of
 the :f:var:`ed_mode` variable selecting the type of symmetry,
@@ -18,7 +18,7 @@ multi-orbital problem. Next, we consider the solution of the
 attractive Hubbard model as a simple description of s-wave
 superconductivity. Finally, we consider the description of in-plane triplet
 exciton condensation in the interacting BHZ model to illustrate the
-use of `EDIpack` in cases where spin-SU(2) symmetry is not
+use of **EDIpack** in cases where spin-SU(2) symmetry is not
 present.
 
 

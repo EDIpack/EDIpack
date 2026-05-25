@@ -1,7 +1,7 @@
 Dependencies
 #########################
 
-The `EDIpack` library requires just two additional software to be
+The **EDIpack** library requires just two additional software to be
 installed:
 
 * SciFortran_: an open-source Fortran library to support mathematical

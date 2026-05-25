@@ -7,9 +7,11 @@ program ed_normal_nonsu2
   USE COMMON
   implicit none
   integer                                     :: i,js,Nso,Nsymm,Nmomenta
-  integer                                     :: Nb,iorb,jorb,ispin,jspin
+  integer                                     :: Nb,iorb,jorb,ispin,jspin,Ns_full
   complex(8),allocatable                      :: Smats(:,:,:,:,:)
   complex(8),allocatable                      :: Hloc(:,:,:,:)
+  complex(8),allocatable                      :: denmat4(:,:,:,:)
+  complex(8),allocatable                      :: denmat2(:,:)
   real(8)                                     :: mh,lambda
   character(len=16)                           :: finput
   logical                                     :: dsave
@@ -109,6 +111,14 @@ contains
     call ed_get_doubles(doubles)
     call ed_get_imp_info(imp)
     call ed_get_evals(evals)
+    ! In NONSU2/NORMAL mode full_denmat covers all sites: Ns_full = (Nbath+1)*Norb
+    Ns_full = (Nbath+1)*Norb
+    if(allocated(denmat4))deallocate(denmat4)
+    if(allocated(denmat2))deallocate(denmat2)
+    allocate(denmat4(Nspin,Nspin,Ns_full,Ns_full))
+    allocate(denmat2(Nspin*Ns_full,Nspin*Ns_full))
+    call ed_get_denmat(denmat4)
+    call ed_get_denmat(denmat2)
     do i=1,Nmomenta
        do iorb=1,Norb
           call compute_momentum(Wlist,Smats(1,1,iorb,iorb,:),i,S11mom(iorb,i))
@@ -122,6 +132,7 @@ contains
        stop
     endif
     call test_results()
+    call test_denmat_checks()
   end subroutine run_test
 
 
@@ -194,6 +205,75 @@ contains
     call save_array("Sigma11_momenta.check",S11mom)
     call save_array("Sigma12_momenta.check",S12mom)
   end subroutine save_results
+
+
+  subroutine test_denmat_checks()
+    !
+    ! Verify the one-body density matrix getters in NONSU2 mode.
+    ! full_denmat covers all (bath+impurity) sites: shape [Nspin,Nspin,Ns_full,Ns_full].
+    ! Index ordering of dm2: spin-up block first, spin-down block after;
+    !   within each spin: impurity orbitals (1..Norb) then bath sites (Norb+1..Ns_full).
+    ! Four in-memory checks (no reference files needed):
+    !   1. Diagonal elements are purely real
+    !   2. Density check: dens(io) = <nup>+<ndw> = dm4(1,1,io,io)+dm4(2,2,io,io)
+    !      (for impurity orbitals io=1..Norb only)
+    !   3. dm4 is Hermitian: dm4(is,js,io,jo) == conj(dm4(js,is,jo,io))
+    !   4. n2 getter matches block-interleaved reshape of n4:
+    !         dm2(io+(is-1)*full, jo+(js-1)*Ns_full) == dm4(is,js,io,jo)
+    !
+    complex(8),allocatable :: dm4_hc(:,:,:,:)
+    complex(8),allocatable :: dm2_from_dm4(:,:)
+    integer :: is,js,io,jo
+    !
+    allocate(dm4_hc(Nspin,Nspin,Ns_full,Ns_full))
+    allocate(dm2_from_dm4(Nspin*Ns_full,Nspin*Ns_full))
+    !
+    write(*,*)
+    write(*,"(A50)") "Summary DENMAT CHECKS (NONSU2):"
+    !
+    ! 1. Diagonal imaginary parts vanish
+    do io=1,Ns_full
+       call assert(dimag(denmat4(1,1,io,io)),0.d0, &
+            "denmat4: Im[dm(1,1,"//str(io)//","//str(io)//")]")
+       call assert(dimag(denmat4(2,2,io,io)),0.d0, &
+            "denmat4: Im[dm(2,2,"//str(io)//","//str(io)//")]")
+    enddo
+    !
+    ! 2. Density check for impurity orbitals (io=1..Norb are the impurity sites):
+    !    dens(io) = <nup(io)> + <ndw(io)> = dm4(1,1,io,io) + dm4(2,2,io,io).
+    !    Loose tolerance: dm4 and dens are accumulated via independent sums.
+    do io=1,Norb
+       call assert(dreal(denmat4(1,1,io,io))+dreal(denmat4(2,2,io,io)),dens(io), &
+            "denmat4 vs dens: Re[dm_up+dm_dn]("//str(io)//") == dens",tol=1.d-8)
+    enddo
+    !
+    ! 3. Hermiticity of dm4
+    do is=1,Nspin
+       do js=1,Nspin
+          do io=1,Ns_full
+             do jo=1,Ns_full
+                dm4_hc(is,js,io,jo) = conjg(denmat4(js,is,jo,io))
+             enddo
+          enddo
+       enddo
+    enddo
+    call assert(denmat4,dm4_hc,"denmat4: Hermitian")
+    !
+    ! 4. n2 variant is block-interleaved reshape of n4
+    do is=1,Nspin
+       do js=1,Nspin
+          do io=1,Ns_full
+             do jo=1,Ns_full
+                dm2_from_dm4(io+(is-1)*Ns_full,jo+(js-1)*Ns_full) = denmat4(is,js,io,jo)
+             enddo
+          enddo
+       enddo
+    enddo
+    call assert(denmat2,dm2_from_dm4,"denmat: n2 vs n4 consistency")
+    !
+    deallocate(dm4_hc,dm2_from_dm4)
+    !
+  end subroutine test_denmat_checks
 
 
   subroutine set_twobody_hk()

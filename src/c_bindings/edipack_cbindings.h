@@ -408,7 +408,7 @@ int  get_bath_dimension_symmetries(int Nsym);
 \rst
 This function updates a variable (usually the chemical potential) trying to 
 achieve a desired density set by :f:var:`nread`.
-Interfaces to :f:func:`ed_search-variable`.
+Interfaces to :f:func:`ed_search_variable`.
 \endrst
 *
 * @param var: the variable to be adjusted
@@ -419,6 +419,27 @@ void search_variable(double *var,
                     double *ntmp, 
                     int64_t *converged
                     );
+                    
+                    
+/*!
+\rst
+This function sets the phonon displacement field.
+Interfaces to :f:func:`ed_set_A_ph`.
+\endrst
+*
+* @param A_new: the new displacement field
+*/ 
+void ed_set_A_ph(double *A_new);
+
+/*!
+\rst
+This function sets the electron-phonon coupling.
+Interfaces to :f:func:`ed_set_G_ph`.
+\endrst
+*
+* @param G_new: the new coupling matrix
+*/ 
+void ed_set_G_ph(std::complex<double> *G_new);
 
 
 /*!
@@ -1160,6 +1181,30 @@ Real-space DMFT version
 */  
 void ed_get_eimp_n2(std::complex<double> *self, int Nlat);
 
+/*!                                         
+\rst
+This function obtains the phononic observables.
+Interfaces to :f:func:`ed_io/ed_get_phon`. 
+Single-site DMFT version
+\endrst
+*
+* @param self: energy array
+*/  
+void ed_get_phon(std::complex<double> *self);
+
+
+
+/*!                                         
+\rst
+This function obtains the phononic contributions to the energy.
+Interfaces to :f:func:`ed_io/ed_get_ephon`. 
+Single-site DMFT version
+\endrst
+*
+* @param self: energy array
+*/  
+void ed_get_ephon(std::complex<double> *self);
+
 
 /*!
 \rst
@@ -1387,6 +1432,47 @@ void get_gimp_lattice_n6(std::complex<double> *gimp,
 
 /*!
 \rst
+This function obtains the phonon Green's function.
+Interfaces to :f:func:`ed_io/ed_get_dimp` for a rank-1 array.
+Single-site DMFT variant.
+\endrst
+* @param dimp: the impurity Green's function array
+* @param axis: integer flag for axis: `1` = `r`, otherwise `m`
+* @param zeta: frequency array
+* @param dz: dimension of the frequency array
+* @param zflag: flag to set (`1`) or not (`0`) calculation with internal frequency array
+*/   
+void get_dimp_site_n1(std::complex<double> *dimp, 
+                       int axis,
+                       std::complex<double> *zeta, 
+                       int dz, 
+                       int zflag
+                       );
+                       
+                       
+/*!
+\rst
+This function obtains the phonon Green's function.
+Interfaces to :f:func:`e2i_io/ed_get_dimp` for a rank-2 array.
+Real-space DMFT variant.
+\endrst
+* @param dimp: the impurity Green's function array
+* @param Nineq: numer of inequivalent sites
+* @param axis: integer flag for axis: `1` = `r`, otherwise `m`
+* @param zeta: frequency array
+* @param dz: dimension of the frequency array
+* @param zflag: flag to set (`1`) or not (`0`) calculation with internal frequency array
+*/   
+void get_dimp_lattice_n2(std::complex<double> *dimp,
+                       int Nineq, 
+                       int axis,
+                       std::complex<double> *zeta, 
+                       int dz, 
+                       int zflag
+                       );
+
+/*!
+\rst
 This function obtains the Weiss field.
 Interfaces to :f:func:`ed_io/ed_get_g0and` for a rank-3 array.
 Single-site DMFT variant.
@@ -1589,6 +1675,40 @@ Interfaces to :f:func:`ed_io/ed_get_impurity_rdm`.
 void ed_get_impurity_rdm(std::complex<double> *rdm, 
                     int doprint
                     );             
+
+
+/*!
+\rst
+This function obtains the 1-body density matrix.
+Interfaces to :f:func:`ed_io/ed_get_denmat`.
+Rank-2 version.
+\endrst
+* @param denmat: 1-body density matrix
+* @param dimdenmat: dimensions of the 1-body density matrix
+* @param doprint: flag to print to file (`1`) or not (`0`) the density matrix
+*/                      
+void ed_get_denmat_n2(std::complex<double> *denmat, 
+                    int64_t *dimdenmat,
+                    int doprint
+                    );  
+                    
+
+/*!
+\rst
+This function obtains the 1-body density matrix.
+Interfaces to :f:func:`ed_io/ed_get_denmat`.
+Rank-4 version.
+\endrst
+* @param denmat: 1-body density matrix
+* @param dimdenmat: dimensions of the 1-body density matrix
+* @param doprint: flag to print to file (`1`) or not (`0`) the density matrix
+*/                      
+void ed_get_denmat_n4(std::complex<double> *denmat,
+                    int64_t *dimdenmat,
+                    int doprint
+                    );  
+
+
 
 /*!
 \rst

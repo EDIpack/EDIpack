@@ -56,6 +56,7 @@ contains
     isector=Hsector%index
     !
     Dim = getdim(isector)
+    DimEl = Dim/DimPh
     !
     if(present(Hmat))call assert_shape(Hmat,[Dim,Dim],"ed_buildh_main","Hmat")
     !
@@ -140,6 +141,20 @@ contains
     if(ed_verbose>3)write(Logfile,"(A)")"DEBUG ed_buildH_NONSU2: stored/Himp_bath"
 #endif
     include "stored/Himp_bath.f90"
+    !
+    if(DimPh>1) then
+      !PHONON TERMS
+#ifdef _DEBUG
+      if(ed_verbose>3)write(Logfile,"(A)")"DEBUG ed_buildH_NORMAL: stored/H_ph"
+#endif
+      include "stored/H_ph.f90"
+      !
+      !ELECTRON-PHONON TERMS
+#ifdef _DEBUG
+      if(ed_verbose>3)write(Logfile,"(A)")"DEBUG ed_buildH_NORMAL: stored/H_e_ph"
+#endif
+      include "stored/H_e_ph.f90"
+   endif
     !
     !
     !-----------------------------------------------!

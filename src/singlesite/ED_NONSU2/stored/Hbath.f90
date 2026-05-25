@@ -1,5 +1,7 @@
   do i=MpiIstart,MpiIend
-     m  = Hsector%H(1)%map(i)
+     i_el = mod(i-1,DimEl) + 1
+     iph = (i-1)/DimEl + 1
+     m  = Hsector%H(1)%map(i_el)
      ib = bdecomp(m,2*Ns)
      !
      do iorb=1,Norb
@@ -57,7 +59,8 @@
                  if (Jcondition)then
                     call c(ibeta,m,k1,sg1)
                     call cdg(ialfa,k1,k2,sg2)
-                    j = binary_search(Hsector%H(1)%map,k2)
+                    j_el=binary_search(Hsector%H(1)%map,k2)
+                    j = j_el + (iph-1)*DimEl
                     htmp = conjg(hbath_tmp(1,1,iorb,jorb,kp))*sg1*sg2
                     !
                     select case(MpiStatus)
@@ -77,7 +80,8 @@
                  if (Jcondition)then
                     call c(ibeta,m,k1,sg1)
                     call cdg(ialfa,k1,k2,sg2)
-                    j = binary_search(Hsector%H(1)%map,k2)
+                    j_el=binary_search(Hsector%H(1)%map,k2)
+                    j = j_el + (iph-1)*DimEl
                     htmp =conjg(hbath_tmp(Nspin,Nspin,iorb,jorb,kp))*sg1*sg2
                     !
                     select case(MpiStatus)
@@ -106,7 +110,8 @@
                     if(Jcondition)then
                        call c(ibeta,m,k1,sg1)
                        call cdg(ialfa,k1,k2,sg2)
-                       j = binary_search(Hsector%H(1)%map,k2)
+                       j_el=binary_search(Hsector%H(1)%map,k2)
+                       j = j_el + (iph-1)*DimEl
                        htmp = conjg(hbath_tmp(ispin,jspin,iorb,jorb,kp))*sg1*sg2
                        !
                        select case(MpiStatus)

@@ -12,7 +12,7 @@
      ! Diagonal terms: Sum_iorb g_iorb,iorb n_iorb
      htmp = zero
      do iorb=1,Norb
-        htmp = htmp + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb)-1.d0)
+        htmp = htmp + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
      enddo
      !
      select case(MpiStatus)

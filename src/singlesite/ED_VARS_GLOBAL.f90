@@ -133,7 +133,7 @@ MODULE ED_VARS_GLOBAL
 
   !SIZE OF THE PROBLEM
   !=========================================================
-  integer,save                                       :: Ns       !Number of levels per spin
+  integer,save                                       :: Ns       !Number of electronic levels in the impurity problem (per spin)
   integer                                            :: Nlevels
   integer,save                                       :: Nsectors !Number of sectors
   integer,save                                       :: Ns_orb
@@ -250,6 +250,11 @@ MODULE ED_VARS_GLOBAL
   real(8)                                            :: ed_Ehartree
   real(8)                                            :: ed_Eknot
   real(8)                                            :: ed_Dust,ed_Dund,ed_Dse,ed_Dph
+  real(8)                                            :: ed_Eeph
+  real(8)                                            :: ed_Eph
+  real(8)                                            :: ed_dens_ph
+  real(8)                                            :: ed_X_ph
+  real(8)                                            :: ed_X2_ph
 
 
   !Frequency and time arrays:
@@ -261,6 +266,7 @@ MODULE ED_VARS_GLOBAL
   !PRIVATE (now public but accessible thru routine)
   !=========================================================
   complex(8),allocatable,dimension(:,:,:,:)          :: single_particle_density_matrix ![Nspin,Nspin,Norb,Norb]
+  complex(8),allocatable,dimension(:,:,:,:)          :: full_denmat                    ![Nspin,Nspin,Ns,Ns]
   complex(8),allocatable,dimension(:,:)              :: impurity_density_matrix        ![2**2Norb,2**2Norb]
   integer,dimension(3)                               :: Lzdiag = [-1,+1,0]
   integer,dimension(2)                               :: Szdiag = [1,-1]

@@ -25,7 +25,7 @@ subroutine ed_get_dimp_site_n1(self,axis,z)
      end select
   endif
   !
-  !self = get_impD(z_,axis_)
+  self = get_impD(z_,axis_)
   call deallocate_grids
   !
 end subroutine ed_get_dimp_site_n1

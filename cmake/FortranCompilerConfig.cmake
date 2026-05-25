@@ -9,7 +9,7 @@ ENDIF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
 IF( (${CMAKE_Fortran_COMPILER_ID} MATCHES Intel) OR (${CMAKE_Fortran_COMPILER_ID} MATCHES GNU))
   MESSAGE(STATUS "Fortran Compiler id   = ${CMAKE_Fortran_COMPILER_ID}")
   MESSAGE(STATUS "Fortran Compiler ver. = ${CMAKE_Fortran_COMPILER_VERSION}")
-ELSEIF()
+ELSE()
   MESSAGE(FATAL_ERROR "Unsupported Fortran compiler (use Intel or GNU). Try export FC=<your FC compiler> ")
 ENDIF()  
 

@@ -18,6 +18,7 @@ MODULE ED_GF_NONSU2
 
   public :: build_impG_nonsu2
   public :: get_impG_nonsu2
+  public :: get_impD_nonsu2
   public :: get_Sigma_nonsu2
 
 
@@ -96,6 +97,12 @@ contains
           enddo
        enddo
     enddo
+
+    !> PHONONS
+    if(DimPh>1)then
+      call allocate_GFmatrix(impDmatrix,Nstate=state_list%size)
+      call lanc_build_gf_phonon_main()
+    endif
     !
     !
     if(bath_type=="normal")then 
@@ -295,6 +302,66 @@ contains
 
 
 
+  subroutine lanc_build_gf_phonon_main()
+#if __INTEL_COMPILER
+       use ED_INPUT_VARS, only: Nspin,Norb
+#endif
+       integer                     :: iDimEl
+       integer                     :: Ntot
+       !
+#ifdef _DEBUG
+       if(ed_verbose>1)write(Logfile,"(A)")&
+            "DEBUG lanc_build_gf_phonon: build phonon GF"
+#endif
+       do istate=1,state_list%size
+          !
+          call allocate_GFmatrix(impDmatrix,istate=istate,Nchan=1)
+          !
+          isector    =  es_return_sector(state_list,istate)
+          e_state    =  es_return_energy(state_list,istate)
+          v_state    =  es_return_cvec(state_list,istate)
+          !
+          call get_Ntot(isector,Ntot)
+          if(MpiMaster.AND.ed_verbose>=3)write(LOGfile,"(A20,I6,20I4)")&
+               'From sector',isector,Ntot
+          !
+          idim = getdim(isector)
+          iDimEl = idim/(Nph+1)
+          !
+          if(MpiMaster)then
+             if(ed_verbose>=3)write(LOGfile,"(A20,I12)")'Apply x',isector
+             !
+             allocate(vvinit(idim));vvinit=0d0
+             !
+             do i=1,iDim
+                iph = (i-1)/(iDimEl) + 1
+                i_el = mod(i-1,iDimEl) + 1
+                !
+                !apply destruction operator
+                if(iph>1) then
+                   j = i_el + ((iph-1)-1)*iDimEl
+                   vvinit(j) = vvinit(j) + sqrt(dble(iph-1))*v_state(i)
+                endif
+                !
+                !apply creation operator
+                if(iph<DimPh) then
+                   j = i_el + ((iph+1)-1)*iDimEl
+                   vvinit(j) = vvinit(j) + sqrt(dble(iph))*v_state(i)
+                endif
+             enddo
+          else
+             allocate(vvinit(1));vvinit=0.d0
+          endif
+          !
+          call tridiag_Hv_sector_nonsu2(isector,vvinit,alfa_,beta_,norm2)
+          call add_to_lanczos_phonon(one*norm2,e_state,alfa_,beta_,istate)
+          deallocate(alfa_,beta_)
+          if(allocated(vvinit))deallocate(vvinit)
+          if(allocated(v_state))deallocate(v_state)
+       enddo
+       return
+     end subroutine lanc_build_gf_phonon_main
+
 
 
 
@@ -360,6 +427,57 @@ contains
   end subroutine add_to_lanczos_gf_nonsu2
 
 
+  subroutine add_to_lanczos_phonon(vnorm2,Ei,alanc,blanc,istate)
+#if __INTEL_COMPILER
+       use ED_INPUT_VARS, only: Nspin,Norb
+#endif
+       complex(8)                                 :: vnorm2, pesoBZ, peso
+       real(8)                                    :: Ei,Ej,Egs,pesoF,pesoAB,de
+       integer                                    :: nlanc
+       real(8),dimension(:)                       :: alanc
+       real(8),dimension(size(alanc))             :: blanc 
+       real(8),dimension(size(alanc),size(alanc)) :: Z
+       real(8),dimension(size(alanc))             :: diag,subdiag
+       integer                                    :: i,j,istate
+       complex(8)                                 :: iw
+       !
+       Egs = state_list%emin       !get the gs energy
+       !
+       Nlanc = size(alanc)
+       !
+       pesoF  = vnorm2/zeta_function
+       pesoBZ = one
+       if(finiteT)then
+          if(beta*(Ei-Egs) < 200)then
+             pesoBZ = one*exp(-beta*(Ei-Egs))
+          else
+             pesoBZ = zero
+          endif
+       endif
+       !
+#ifdef _MPI
+       if(MpiStatus)then
+          call Bcast_MPI(MpiComm,alanc)
+          call Bcast_MPI(MpiComm,blanc)
+       endif
+#endif
+       diag(1:Nlanc)    = alanc(1:Nlanc)
+       subdiag(2:Nlanc) = blanc(2:Nlanc)
+       call eigh(diag(1:Nlanc),subdiag(2:Nlanc),Ev=Z(:Nlanc,:Nlanc))
+       !
+       call allocate_GFmatrix(impDmatrix,istate,1,Nexc=Nlanc) !ichan=1
+       !
+       do j=1,nlanc
+          Ej     = diag(j)
+          dE     = Ej-Ei
+          pesoAB = Z(1,j)*Z(1,j)
+          peso   = pesoF*pesoAB*pesoBZ
+          !
+          impDmatrix%state(istate)%channel(1)%weight(j) = peso
+          impDmatrix%state(istate)%channel(1)%poles(j)  = de
+       enddo
+     end subroutine add_to_lanczos_phonon
+   
 
   !################################################################
   !################################################################
@@ -516,6 +634,82 @@ contains
   end function get_impG_nonsu2
 
 
+  function get_impD_nonsu2(zeta,axis) result(G)
+#if __INTEL_COMPILER
+       use ED_INPUT_VARS, only: Nspin,Norb
+#endif
+       !
+       ! Reconstructs the phonon Green's functions using :f:var:`impdmatrix` to retrieve weights and poles.
+       !
+       complex(8),dimension(:),intent(in) :: zeta !array of frequencies
+       character(len=*),optional          :: axis !string indicating the desired axis, :code:`'m'` for Matsubara (default), :code:`'r'` for Real-axis
+       complex(8),dimension(size(zeta))   :: G
+       character(len=1)                   :: axis_
+       !
+       integer                            :: Nstates,istate
+       integer                            :: Nchannels,ichan,i
+       integer                            :: Nexcs,iexc
+       real(8)                            :: peso,de
+#ifdef _DEBUG
+       if(ed_verbose>1)write(Logfile,"(A)")"DEBUG get_impD_nonsu2"
+#endif
+       !
+       axis_ = 'm' ; if(present(axis))axis_ = axis(1:1) !only for self-consistency, not used here
+       !
+       if(.not.allocated(impDmatrix%state)) return
+       !
+       G= zero
+       Nstates = size(impDmatrix%state)
+       do istate=1,Nstates
+          if(.not.allocated(impDmatrix%state(istate)%channel))cycle
+          Nchannels = size(impDmatrix%state(istate)%channel)
+          do ichan=1,Nchannels
+             Nexcs  = size(impDmatrix%state(istate)%channel(ichan)%poles)
+             if(Nexcs==0)cycle
+             do iexc=1,Nexcs
+                peso  = impDmatrix%state(istate)%channel(ichan)%weight(iexc)
+                de    = impDmatrix%state(istate)%channel(ichan)%poles(iexc)
+                if(abs(beta*de) < 1e-8) then
+                   select case(axis_)
+                      case("m","M")
+                         do i=1,size(zeta)
+                            if(abs(zeta(i))<1e-10) then ! \nu=0
+                               G(i) = G(i) - peso*beta
+                            endif
+                         enddo
+                      case("r","R")
+                         ! A zero energy pole contributes only to D(Re(z) = 0) and
+                         ! its contribution is taken to be the same as for D(\nu=0),
+                         ! regardless of the imaginary shift in z
+                         do i=1,size(zeta)
+                            if(abs(dreal(zeta(i)))<1e-10) then
+                               G(i) = G(i) + peso*beta
+                            endif
+                         enddo
+                   end select
+                   ! Ignore the negative energy poles and enforce the spectral symmetry by adding
+                  ! contributions from de and -de for each positive de
+                elseif(de > 0) then
+                   select case(axis_)
+                      case("m","M")
+                         do i=1,size(zeta)
+                            G(i) = G(i) - &
+                               peso*(1d0-exp(-beta*de))*2d0*de/(dimag(zeta(i))**2 + de**2)
+                         enddo
+                      case("r","R")
+                         do i=1,size(zeta)
+                            G(i) = G(i) + &
+                               peso*(1d0-exp(-beta*de)) * (1d0/(zeta(i)-de) - 1d0/(zeta(i)+de))
+                         enddo
+                   end select
+                endif
+             enddo
+          enddo
+       enddo
+       !
+     end function get_impD_nonsu2
+   
+   
 
 
 

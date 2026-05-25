@@ -1,4 +1,4 @@
-EDIpack Fortran-C interface: Functions
+C Functions
 =================================================================
 
 The following is a list of EDIpack functions 

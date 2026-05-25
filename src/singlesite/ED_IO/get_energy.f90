@@ -4,7 +4,7 @@ subroutine ed_get_eimp_n1(self)
 #endif
   real(8),dimension(:) :: self !energy components array
   call assert_shape(self,[4],'ed_get_eimp','eimp')
-  self = [ed_Epot,ed_Eint,ed_Eknot,ed_Ehartree]
+  self = [ed_Epot,ed_Eint,ed_Ehartree,ed_Eknot]
 end subroutine ed_get_eimp_n1
 
 

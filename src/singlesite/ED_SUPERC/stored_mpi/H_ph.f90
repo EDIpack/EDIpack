@@ -14,7 +14,7 @@
      if(A_ph/=0.d0)then
         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1)<n|
            j = i_el + (iph)*DimEl
-           htmp = sqrt(0.5d0)*A_ph*sqrt(dble(iph))
+           htmp = A_ph*sqrt(dble(iph))
            select case(MpiStatus)
            case (.true.)
               call sp_insert_element(MpiComm,spH0,htmp,i,j)
@@ -24,7 +24,7 @@
         endif
         if(iph > 1) then !bdg = sum_n |n+1> sqrt(n+1)<n|
            j = i_el + (iph-2)*DimEl
-           htmp = sqrt(0.5d0)*A_ph*sqrt(dble(iph-1))
+           htmp = A_ph*sqrt(dble(iph-1))
            select case(MpiStatus)
            case (.true.)
               call sp_insert_element(MpiComm,spH0,htmp,i,j)

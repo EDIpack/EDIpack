@@ -149,7 +149,7 @@ end subroutine ed_get_pairChi_lattice_n3
 
 
 subroutine ed_get_exctChi_lattice_n3(self,nlat,axis,z)
-  complex(8),dimension(:,:,:,:,:),intent(inout)       :: self !! [Nlat,3,Norb,Norb,:]
+  complex(8),dimension(:,:,:,:,:),intent(inout) :: self !! [Nlat,3,Norb,Norb,:]
   integer,intent(in)                            :: nlat  ! Number of inequivalent impurity sites for real-space DMFT
   character(len=*),optional                     :: axis ! Can be :f:var:`"m"` for Matsubara (default), :f:var:`"r"` for real
   complex(8),dimension(:),optional              :: z    ! User provided array of complex frequency where to evaluate Self

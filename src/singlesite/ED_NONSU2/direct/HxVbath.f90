@@ -40,7 +40,8 @@
               if (Jcondition)then
                  call c(ibeta,m,k1,sg1)
                  call cdg(ialfa,k1,k2,sg2)
-                 i = binary_search(Hsector%H(1)%map,k2)
+                 i_el = binary_search(Hsector%H(1)%map,k2)
+                 i = i_el + (iph-1)*DimEl
                  htmp = hbath_tmp(1,1,iorb,jorb,kp)*sg1*sg2
                  !
                  hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
@@ -55,7 +56,8 @@
               if (Jcondition)then
                  call c(ibeta,m,k1,sg1)
                  call cdg(ialfa,k1,k2,sg2)
-                 i = binary_search(Hsector%H(1)%map,k2)
+                 i_el = binary_search(Hsector%H(1)%map,k2)
+                 i = i_el + (iph-1)*DimEl
                  htmp = hbath_tmp(Nspin,Nspin,iorb,jorb,kp)*sg1*sg2
                  !
                  hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
@@ -79,7 +81,8 @@
                  if(Jcondition)then
                     call c(ibeta,m,k1,sg1)
                     call cdg(ialfa,k1,k2,sg2)
-                    i = binary_search(Hsector%H(1)%map,k2)
+                    i_el = binary_search(Hsector%H(1)%map,k2)
+                    i = i_el + (iph-1)*DimEl
                     htmp = hbath_tmp(ispin,jspin,iorb,jorb,kp)*sg1*sg2
                     !
                     hv(j-MpiIshift) = hv(j-MpiIshift) + htmp*vin(i)
