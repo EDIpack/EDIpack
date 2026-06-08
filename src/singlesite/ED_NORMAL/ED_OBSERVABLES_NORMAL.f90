@@ -509,7 +509,11 @@ contains
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
-       v_state =  es_return_dvec(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
+       v_state    =  es_return_dvec(state_list,istate)
+#endif
 #ifdef _DEBUG
        if(ed_verbose>3)write(Logfile,"(A)")&
             "DEBUG local_energy_normal: get contribution from state:"//str(istate)

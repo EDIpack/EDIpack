@@ -1219,6 +1219,14 @@ contains
     integer,dimension(2)                :: Iud
     integer,dimension(2*Ns)             :: ib
     !
+    if(ed_total_ud)then
+       ialfa = 1
+       ipos  = iorb
+    else
+       ialfa = iorb
+       ipos  = 1
+    endif
+    !
     if(MpiMaster)then
        !
        call build_sector(isector,sectorI)
@@ -1371,6 +1379,14 @@ contains
     integer,dimension(2,Ns_Orb)        :: Nud !Nbits(Ns_Orb)
     integer,dimension(2)               :: Iud
     integer,dimension(2*Ns)            :: ib
+    !
+    if(ed_total_ud)then
+       ialfa = 1
+       ipos  = iorb
+    else
+       ialfa = iorb
+       ipos  = 1
+    endif
     !
     if(MpiMaster)then
        !

@@ -184,7 +184,11 @@ contains
        call allocate_GFmatrix(pairChimatrix(iorb,jorb),istate,Nchan=2) !Nchan+4 for complex case
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
-       v_state  =  es_return_dvec(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
+       v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !First lesser
        ! --> Apply [C_b C_b + C_a C_a]|state>
