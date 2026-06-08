@@ -38,19 +38,20 @@ MODULE ED_HAMILTONIAN_NORMAL_COMMON
   integer                                   :: ialfa,ibeta,indx
   real(8)                                   :: sg1,sg2,sg3,sg4
 #ifdef _CMPLX_NORMAL
-  complex(8)                                :: htmp,htmpup,htmpdw
-  complex(8),dimension(:,:,:),allocatable   :: diag_hybr ![Nspin,Norb,Nbath] !these are real only, but gets initialized to cmplx for consistency
-  complex(8),dimension(:,:,:),allocatable   :: bath_diag ![Nspin,Norb/1,Nbath]
+  complex(8)                              :: htmp,htmpup,htmpdw
+  complex(8),dimension(:,:,:),allocatable :: diag_hybr ![Nspin,Norb,Nbath] !these are real only, but gets initialized to cmplx for consistency
+  complex(8),dimension(:,:,:),allocatable :: bath_diag ![Nspin,Norb/1,Nbath]
 #else
-  real(8)                                   :: htmp,htmpup,htmpdw
-  real(8),dimension(:,:,:),allocatable      :: diag_hybr ![Nspin,Norb,Nbath]
-  real(8),dimension(:,:,:),allocatable      :: bath_diag ![Nspin,Norb/1,Nbath]
+  real(8)                                 :: htmp,htmpup,htmpdw
+  real(8),dimension(:,:,:),allocatable    :: diag_hybr ![Nspin,Norb,Nbath]
+  real(8),dimension(:,:,:),allocatable    :: bath_diag ![Nspin,Norb/1,Nbath]
 #endif
   logical                                   :: Jcondition
   integer                                   :: Nfoo
   integer                                   :: spinchange,icount
   integer                                   :: iline
   integer,dimension(2)                      :: orbvec, orbvec_dag, spinvec, spinvec_dag
+
 
   integer,save,public                       :: iter=0
 
@@ -146,14 +147,16 @@ contains
        endif
 #ifdef _CMPLX_NORMAL
        call MPI_AllToAllV(&
+            ! A(:,j),send_counts(:,j),send_offset(:,j),MPI_DOUBLE_PRECISION,&
             Vtmp,send_counts(:,j),send_offset(:,j),MPI_DOUBLE_COMPLEX,&
             B(:,:),recv_counts(:,j),recv_offset(:,j),MPI_DOUBLE_COMPLEX,&
             MpiComm,ierr)
 #else
        call MPI_AllToAllV(&
+            ! A(:,j),send_counts(:,j),send_offset(:,j),MPI_DOUBLE_PRECISION,&
             Vtmp,send_counts(:,j),send_offset(:,j),MPI_DOUBLE_PRECISION,&
             B(:,:),recv_counts(:,j),recv_offset(:,j),MPI_DOUBLE_PRECISION,&
-            MpiComm,ierr)
+            MpiComm,ierr)    
 #endif
        deallocate(Vtmp)
     enddo

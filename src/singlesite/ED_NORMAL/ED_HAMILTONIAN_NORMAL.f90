@@ -61,16 +61,16 @@ contains
     !        | MPI:    :f:func:`sphtimesv_p` :code:`=>` :f:func:`directmatvec_mpi_normal_orbs`
     !
     !
-    integer                         :: isector !Index of the actual sector to be analyzed
+    integer                            :: isector !Index of the actual sector to be analyzed
 #ifdef _CMPLX_NORMAL
     complex(8),dimension(:,:),optional :: Hmat    !Dense matrix to store the sector Hamiltonian is dim < :f:var:`lanc_dim_threshold`
 #else
     real(8),dimension(:,:),optional    :: Hmat    !Dense matrix to store the sector Hamiltonian is dim < :f:var:`lanc_dim_threshold`
 #endif
-    integer                         :: SectorDim
-    integer                         :: irank,ierr
-    integer                         :: i,iup,idw
-    integer                         :: j,jup,jdw
+    integer                            :: SectorDim
+    integer                            :: irank,ierr
+    integer                            :: i,iup,idw
+    integer                            :: j,jup,jdw
     !
 #ifdef _DEBUG
     if(ed_verbose>2)write(Logfile,"(A)")&

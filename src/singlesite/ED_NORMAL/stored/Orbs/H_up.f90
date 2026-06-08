@@ -13,7 +13,7 @@
               iup  = binary_search(Hsector%H(iorb)%map,k2)
               htmp = diag_hybr(1,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0ups(iorb),one*htmp,iup,jup)
+              call sp_insert_element(spH0ups(iorb),htmp,iup,jup)
               !
            endif
            !
@@ -24,7 +24,7 @@
               iup  = binary_search(Hsector%H(iorb)%map,k2)
               htmp = diag_hybr(1,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0ups(iorb),one*htmp,iup,jup)
+              call sp_insert_element(spH0ups(iorb),htmp,iup,jup)
               !
            endif
         enddo

@@ -18,9 +18,9 @@
      !
      select case(MpiStatus)
      case (.true.)
-        call sp_insert_element(MpiComm,spH0e_eph,one*htmp,i,i)
+        call sp_insert_element(MpiComm,spH0e_eph,htmp,i,i)
      case (.false.)
-        call sp_insert_element(spH0e_eph,one*htmp,i,i)
+        call sp_insert_element(spH0e_eph,htmp,i,i)
      end select
      !     
      ! Off-Diagonal terms: Sum_iorb,jorb g_iorb,jorb cdg_iorb*c_jorb
@@ -39,7 +39,7 @@
               j   = jup + (jdw-1)*DimUp
               htmp = g_ph(iorb,jorb)*sg1*sg2
               !
-              call sp_insert_element(spH0e_eph,one*htmp,j,i)
+              call sp_insert_element(spH0e_eph,htmp,j,i)
            endif
         enddo
      enddo
@@ -58,7 +58,7 @@
               j   = jup + (jdw-1)*DimUp
               htmp = g_ph(iorb,jorb)*sg1*sg2
               !
-              call sp_insert_element(spH0e_eph,one*htmp,j,i)
+              call sp_insert_element(spH0e_eph,htmp,j,i)
               !
            endif
               
@@ -78,7 +78,7 @@
      i = iph - 1
      if(i>0) then
         htmp = sqrt(dble(iph - 1))
-        call sp_insert_element(spH0ph_eph,one*one*htmp,iph,i)
+        call sp_insert_element(spH0ph_eph,htmp,iph,i)
      end if
   end do
 

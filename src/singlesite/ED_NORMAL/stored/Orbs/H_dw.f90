@@ -13,7 +13,7 @@
               idw  = binary_search(Hsector%H(iorb+Ns_Ud)%map,k2)
               htmp = diag_hybr(Nspin,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0dws(iorb),one*htmp,idw,jdw)
+              call sp_insert_element(spH0dws(iorb),htmp,idw,jdw)
               !
            endif
            !
@@ -24,7 +24,7 @@
               idw  = binary_search(Hsector%H(iorb+Ns_Ud)%map,k2)
               htmp = diag_hybr(Nspin,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0dws(iorb),one*htmp,idw,jdw)
+              call sp_insert_element(spH0dws(iorb),htmp,idw,jdw)
               !
            endif
         enddo

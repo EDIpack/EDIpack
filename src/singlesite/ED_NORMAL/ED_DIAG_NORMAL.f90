@@ -74,21 +74,21 @@ contains
   ! spectrum DOUBLE PRECISION
   !+------------------------------------------------------------------+
   subroutine ed_diag_d
-    integer                :: isector,Dim,istate
-    integer                :: DimUps(Ns_Ud),DimUp
-    integer                :: DimDws(Ns_Ud),DimDw
-    integer                :: Nups(Ns_Ud)
-    integer                :: Ndws(Ns_Ud)
-    integer                :: i,j,iter,unit,vecDim,PvecDim
-    integer                :: Nitermax,Neigen,Nblock
-    real(8)                :: oldzero,enemin,Ei
-    real(8),allocatable    :: eig_values(:)
+    integer             :: isector,Dim,istate
+    integer             :: DimUps(Ns_Ud),DimUp
+    integer             :: DimDws(Ns_Ud),DimDw
+    integer             :: Nups(Ns_Ud)
+    integer             :: Ndws(Ns_Ud)
+    integer             :: i,j,iter,unit,vecDim,PvecDim
+    integer             :: Nitermax,Neigen,Nblock
+    real(8)             :: oldzero,enemin,Ei
+    real(8),allocatable :: eig_values(:)
 #ifdef _CMPLX_NORMAL
     complex(8),allocatable :: eig_basis(:,:),eig_basis_tmp(:,:)
 #else
     real(8),allocatable    :: eig_basis(:,:),eig_basis_tmp(:,:)
 #endif
-    logical                :: lanc_solve,Tflag,lanc_verbose,bool   
+    logical             :: lanc_solve,Tflag,lanc_verbose,bool
     !
 #ifdef _DEBUG
     write(Logfile,"(A)")"DEBUG ed_diag_d NORMAL: diagonalization"
@@ -231,7 +231,7 @@ contains
           if(ed_verbose>2)write(Logfile,"(A)")"DEBUG ed_diag_d NORMAL: calling LApack"
 #endif
           if(MpiMaster)call eigh(eig_basis_tmp,eig_values)
-          if(dim==1)eig_basis_tmp(dim,dim)=one
+          if(dim==1)eig_basis_tmp(dim,dim)=1d0
           !
           call delete_Hv_sector_normal()
 #ifdef _MPI

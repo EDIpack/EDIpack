@@ -17,9 +17,9 @@
      !
      select case(MpiStatus)
      case (.true.)
-        call sp_insert_element(MpiComm,spH0e_eph,one*htmp,i,i)
+        call sp_insert_element(MpiComm,spH0e_eph,htmp,i,i)
      case (.false.)
-        call sp_insert_element(spH0e_eph,one*htmp,i,i)
+        call sp_insert_element(spH0e_eph,htmp,i,i)
      end select
      !
      ! Off-Diagonal terms: Sum_iorb,jorb g_iorb,jorb cdg_iorb*c_jorb
@@ -40,9 +40,9 @@
               !
               select case(MpiStatus)
               case (.true.)
-                 call sp_insert_element(MpiComm,spH0e_eph,one*htmp,j,i)
+                 call sp_insert_element(MpiComm,spH0e_eph,htmp,j,i)
               case (.false.)
-                 call sp_insert_element(spH0e_eph,one*htmp,j,i)
+                 call sp_insert_element(spH0e_eph,htmp,j,i)
               end select
            endif
         enddo
@@ -64,9 +64,9 @@
               !
               select case(MpiStatus)
               case (.true.)
-                 call sp_insert_element(MpiComm,spH0e_eph,one*htmp,j,i)
+                 call sp_insert_element(MpiComm,spH0e_eph,htmp,j,i)
               case (.false.)
-                 call sp_insert_element(spH0e_eph,one*htmp,j,i)
+                 call sp_insert_element(spH0e_eph,htmp,j,i)
               end select
               !
            endif
@@ -82,10 +82,10 @@
      ! N.B. here iph = n+1
      if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
         htmp = sqrt(dble(iph))
-        call sp_insert_element(spH0ph_eph,one*htmp,iph+1,iph)
+        call sp_insert_element(spH0ph_eph,htmp,iph+1,iph)
      end if
      if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
         htmp = sqrt(dble(iph-1))
-        call sp_insert_element(spH0ph_eph,one*htmp,iph-1,iph)
+        call sp_insert_element(spH0ph_eph,htmp,iph-1,iph)
      end if
   end do

@@ -77,8 +77,8 @@ contains
     select case (bath_type)
     case default
        Nfoo = size(dmft_bath%e,2)
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=0d0       
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=zero      
        do ibath=1,Nbath
           do ispin=1,Nspin             
              do iorb=1,Norb
@@ -335,8 +335,8 @@ contains
           enddo
        enddo
     case ("replica")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hreplica(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
@@ -422,7 +422,7 @@ contains
     !
     if(present(Hmat))then
        Hmat = zero
-       allocate(Hmat_tmp(DimUp*DimDw,DimUp*DimDw));Hmat_tmp=zero     
+       allocate(Hmat_tmp(DimUp*DimDw,DimUp*DimDw));Hmat_tmp=zero      
 #ifdef _MPI
        if(MpiStatus)then
           call sp_dump_matrix(MpiComm,spH0d,Hmat_tmp)
@@ -451,11 +451,11 @@ contains
              do jj=1,spH0dws(iud)%row(idw)%Size
                 Jndices = Indices ; Jndices(iud+Ns_Ud) = spH0dws(iud)%row(idw)%cols(jj)
                 call indices2state(Jndices,[DimUps,DimDws],j)
-#ifdef _CMPLX_NORMAL
-                Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0dws(iud)%row(idw)%cvals(jj)
-#else
+#ifdef _CMPLX_NORMAL                
                 Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0dws(iud)%row(idw)%dvals(jj)
-#endif
+#else                
+                Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0dws(iud)%row(idw)%dvals(jj)
+#endif                
              enddo
              !
           enddo
@@ -519,35 +519,25 @@ contains
     ! Serial version of the matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in Arpack/Lanczos algorithm for :f:var:`ed_total_ud` = :code:`True` 
     ! This procedures applies one by one each term of the global Hamiltonian to an input vector using the stored sparse matrices.  
     !
-    integer                    :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
-#ifdef _CMPLX_NORMAL
-    complex(8)                 :: val
-    complex(8),dimension(Nloc) :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    complex(8),dimension(Nloc) :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
-#else
-    real(8)                    :: val
-    real(8),dimension(Nloc)    :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)    :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
-#endif
-    integer                    :: i,iup,idw,j,jup,jdw,jj,i_el,j_el
-    logical                    :: nonloc_condition, sundry_condition, either_condition
+    integer                 :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
+    real(8),dimension(Nloc) :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc) :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    real(8)                 :: val
+    integer                 :: i,iup,idw,j,jup,jdw,jj,i_el,j_el
+    logical                 :: nonloc_condition, sundry_condition, either_condition
     !
     nonloc_condition = (Norb>1 .AND. (any((Jx_internal/=0d0)) .OR. any((Jp_internal/=0d0))))
     sundry_condition = allocated(coulomb_sundry)
     either_condition = nonloc_condition .OR. sundry_condition
     !
-    Hv=zero
+    Hv=0d0
     !
     !Local:
     do i = 1,Nloc
        iph = (i-1)/(DimUp*DimDw) + 1   !phonon index [1:DimPh]
        i_el = mod(i-1,DimUp*DimDw) + 1 !electron index [1:DimUp*DimDw]
        do j_el=1,spH0d%row(i_el)%Size
-#ifdef _CMPLX_NORMAL
-          val = spH0d%row(i_el)%cvals(j_el)
-#else
           val = spH0d%row(i_el)%dvals(j_el)
-#endif
           j = spH0d%row(i_el)%cols(j_el) + (iph-1)*DimUp*DimDw
           Hv(i) = Hv(i) + val*v(j)
        enddo
@@ -562,11 +552,7 @@ contains
              do jj=1,spH0dws(1)%row(idw)%Size
                 jup = iup
                 jdw = spH0dws(1)%row(idw)%cols(jj)
-#ifdef _CMPLX_NORMAL
-                val = spH0dws(1)%row(idw)%cvals(jj)
-#else
                 val = spH0dws(1)%row(idw)%dvals(jj)
-#endif
                 j     = jup +  (jdw-1)*DimUp + (iph-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*V(j)
              enddo
@@ -582,11 +568,7 @@ contains
              do jj=1,spH0ups(1)%row(iup)%Size
                 jup = spH0ups(1)%row(iup)%cols(jj)
                 jdw = idw
-#ifdef _CMPLX_NORMAL
-                val = spH0ups(1)%row(iup)%cvals(jj)
-#else
                 val = spH0ups(1)%row(iup)%dvals(jj)
-#endif
                 j =  jup + (jdw-1)*DimUp + (iph-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*V(j)
              enddo
@@ -600,11 +582,7 @@ contains
              !
              !PHONON
              do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL             
-                val = spH0_ph%row(iph)%cvals(jj)
-#else                
                 val = spH0_ph%row(iph)%dvals(jj)
-#endif                
                 j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*v(j)
              enddo
@@ -612,13 +590,8 @@ contains
              !ELECTRON-PHONON
              do j_el = 1,spH0e_eph%row(i_el)%Size
                 do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL  
-                   val = spH0e_eph%row(i_el)%cvals(j_el)*&
-                        spH0ph_eph%row(iph)%cvals(jj)
-#else
                    val = spH0e_eph%row(i_el)%dvals(j_el)*&
                         spH0ph_eph%row(iph)%dvals(jj)
-#endif
                    j = spH0e_eph%row(i_el)%cols(j_el) +&
                         (spH0ph_eph%row(iph)%cols(jj)-1)*DimUp*DimDw
                    Hv(i) = Hv(i) + val*v(j)
@@ -636,11 +609,7 @@ contains
           iph = (i-1)/(DimUp*DimDw) + 1
           i_el = mod(i-1,DimUp*DimDw) + 1
           do j_el=1,spH0nd%row(i_el)%Size
-#ifdef _CMPLX_NORMAL
-             val = spH0nd%row(i_el)%cvals(j_el)
-#else
              val = spH0nd%row(i_el)%dvals(j_el)
-#endif
              j = spH0nd%row(i_el)%cols(j_el) + (iph-1)*DimUp*DimDw
              Hv(i) = Hv(i) + val*v(j)
           enddo
@@ -655,32 +624,22 @@ contains
     ! This procedures applies one by one each term of the global Hamiltonian to an input vector using the stored sparse matrices.
     !
     integer                    :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
-#ifdef _CMPLX_NORMAL
-    complex(8),dimension(Nloc) :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    complex(8),dimension(Nloc) :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
-    complex(8)                 :: val
-#else
     real(8),dimension(Nloc)    :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
     real(8),dimension(Nloc)    :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
     real(8)                    :: val
-#endif
     integer                    :: i,iup,idw,j,jup,jdw,jj,i_el,j_el
     integer                    :: iud
     integer,dimension(2*Ns_Ud) :: Indices,Jndices
     !
     !
-    Hv=zero
+    Hv=0d0
     !
 
     do i = 1,Nloc
        i_el = mod(i-1,DimUp*DimDw) + 1
        !
        do j=1,spH0d%row(i_el)%Size
-#ifdef _CMPLX_NORMAL
-          Hv(i) = Hv(i) + spH0d%row(i_el)%cvals(j)*v(i)
-#else
           Hv(i) = Hv(i) + spH0d%row(i_el)%dvals(j)*v(i)
-#endif
        enddo
     enddo
     !
@@ -699,11 +658,7 @@ contains
              call indices2state(Jndices,[DimUps,DimDws],j)
              !
              j = j + (iph-1)*DimUp*DimDw
-#ifdef _CMPLX_NORMAL            
-             Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%cvals(jj)*V(j)
-#else
              Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%dvals(jj)*V(j)
-#endif         
           enddo
           !
           !DW:
@@ -713,11 +668,7 @@ contains
              call indices2state(Jndices,[DimUps,DimDws],j)
              !
              j = j + (iph-1)*DimUp*DimDw
-#ifdef _CMPLX_NORMAL           
-             Hv(i) = Hv(i) + spH0dws(iud)%row(idw)%cvals(jj)*V(j)
-#else
              Hv(i) = Hv(i) + spH0dws(iud)%row(idw)%dvals(jj)*V(j)
-#endif        
           enddo
           !
        enddo
@@ -730,11 +681,7 @@ contains
           !
           !PHONON
           do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL
-             val = spH0_ph%row(iph)%cvals(jj)
-#else
              val = spH0_ph%row(iph)%dvals(jj)
-#endif     
              j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*DimDw
              Hv(i) = Hv(i) + val*v(j)
           enddo
@@ -742,13 +689,8 @@ contains
           !ELECTRON-PHONON
           do j_el = 1,spH0e_eph%row(i_el)%Size
              do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL       
-                val = spH0e_eph%row(i_el)%cvals(j_el)*&
-                     spH0ph_eph%row(iph)%cvals(jj)
-#else                
                 val = spH0e_eph%row(i_el)%dvals(j_el)*&
-                     spH0ph_eph%row(iph)%dvals(jj)   
-#endif                    
+                     spH0ph_eph%row(iph)%dvals(jj)
                 j = spH0e_eph%row(i_el)%cols(j_el) +&
                      (spH0ph_eph%row(iph)%cols(jj)-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*v(j)
@@ -767,26 +709,19 @@ contains
     ! MPI parallel version of the matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in P-Arpack/P-Lanczos algorithm for :f:var:`ed_total_ud` = :code:`True`. 
     ! This procedures applies one by one each term of the global Hamiltonian to a part of the vector own by the thread using the stored sparse matrices.
     !
-    integer                             :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
-#ifdef _CMPLX_NORMAL
-    complex(8),dimension(Nloc)          :: v    !input vector part (passed by P-Arpack/P-Lanczos) :math:`\vec{v}`
-    complex(8),dimension(Nloc)          :: Hv   !output vector (required by P-Arpack/P-Lanczos) :math:`\vec{w}`
-    complex(8),dimension(:),allocatable :: vt,Hvt
-    complex(8),dimension(:),allocatable :: vin
-    complex(8)                          :: val
-#else
-    real(8),dimension(Nloc)             :: v    !input vector part (passed by P-Arpack/P-Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)             :: Hv   !output vector (required by P-Arpack/P-Lanczos) :math:`\vec{w}`
-    real(8),dimension(:),allocatable    :: vt,Hvt
-    real(8),dimension(:),allocatable    :: vin
-    real(8)                             :: val
-#endif    
-    integer                             :: N
-    integer                             :: i,iup,idw,j,jup,jdw,jj
-    integer                             :: i_el,j_el,i_start,i_end
+    integer                          :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
+    real(8),dimension(Nloc)          :: v    !input vector part (passed by P-Arpack/P-Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc)          :: Hv   !output vector (required by P-Arpack/P-Lanczos) :math:`\vec{w}`
+    !
+    integer                          :: N
+    real(8),dimension(:),allocatable :: vt,Hvt
+    real(8),dimension(:),allocatable :: vin
+    real(8)                          :: val
+    integer                          :: i,iup,idw,j,jup,jdw,jj
+    integer                          :: i_el,j_el,i_start,i_end
     !local MPI
-    integer                             :: irank
-    logical                             :: nonloc_condition, sundry_condition, either_condition
+    integer                          :: irank
+    logical                          :: nonloc_condition, sundry_condition, either_condition
     !
     nonloc_condition = (Norb>1 .AND. (any((Jx_internal/=0d0)) .OR. any((Jp_internal/=0d0))))
     sundry_condition = allocated(coulomb_sundry)
@@ -797,15 +732,11 @@ contains
     if(.not.MpiStatus)stop "spMatVec_mpi_normal_main ERROR: MpiStatus = F"
     !
     !Evaluate the local contribution: Hv_loc = Hloc*v
-    Hv=zero
+    Hv=0d0
     do i=1,Nloc                
        i_el = mod(i-1,DimUp*MpiQdw) + 1
        ! do j_el=1,spH0d%row(i_el)%Size
-#ifdef _CMPLX_NORMAL    
-       val = spH0d%row(i_el)%cvals(1)!(j_el)
-#else
        val = spH0d%row(i_el)%dvals(1)!(j_el)
-#endif      
        Hv(i) = Hv(i) + val*v(i)
        ! enddo
     end do
@@ -819,11 +750,7 @@ contains
              hxv_up: do jj=1,spH0ups(1)%row(iup)%Size
                 jup = spH0ups(1)%row(iup)%cols(jj)
                 jdw = idw
-#ifdef _CMPLX_NORMAL               
-                val = spH0ups(1)%row(iup)%cvals(jj)
-#else
                 val = spH0ups(1)%row(iup)%dvals(jj)
-#endif              
                 j   = jup + (idw-1)*DimUp + (iph-1)*DimUp*MpiQdw
                 Hv(i) = Hv(i) + val*v(j)
              end do hxv_up
@@ -839,8 +766,8 @@ contains
     do iph=1,DimPh
        allocate(vt(mpiQup*DimDw))
        allocate(Hvt(mpiQup*DimDw))
-       vt=zero
-       Hvt=zero
+       vt=0d0
+       Hvt=0d0
        i_start = 1 + (iph-1)*DimUp*MpiQdw
        i_end = iph*DimUp*MpiQdw
        call vector_transpose_MPI(DimUp,MpiQdw,v(i_start:i_end),DimDw,MpiQup,vt)
@@ -851,16 +778,12 @@ contains
                 jup = spH0dws(1)%row(iup)%cols(jj)
                 jdw = idw             
                 j   = jup + (jdw-1)*DimDw
-#ifdef _CMPLX_NORMAL
-                val = spH0dws(1)%row(iup)%cvals(jj)
-#else
                 val = spH0dws(1)%row(iup)%dvals(jj)
-#endif
                 Hvt(i) = Hvt(i) + val*vt(j)
              end do hxv_dw
           enddo
        end do
-       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ; vt=zero
+       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ; vt=0d0
        call vector_transpose_MPI(DimDw,mpiQup,Hvt,DimUp,mpiQdw,vt)
        Hv(i_start:i_end) = Hv(i_start:i_end) + Vt
        deallocate(vt,Hvt)
@@ -873,11 +796,7 @@ contains
              !
              !PHONON
              do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL
-                val = spH0_ph%row(iph)%cvals(jj)
-#else                
                 val = spH0_ph%row(iph)%dvals(jj)
-#endif
                 j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
                 Hv(i) = Hv(i) + val*v(j)
              enddo
@@ -885,13 +804,8 @@ contains
              !ELECTRON-PHONON
              do j_el = 1,spH0e_eph%row(i_el)%Size
                 do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL
-                   val = spH0e_eph%row(i_el)%cvals(j_el)*&
-                        spH0ph_eph%row(iph)%cvals(jj)
-#else
                    val = spH0e_eph%row(i_el)%dvals(j_el)*&
                         spH0ph_eph%row(iph)%dvals(jj)
-#endif
                    !interaction is diag from the electron point of view (coupling to the density)
                    j = spH0e_eph%row(i_el)%cols(j_el) + (spH0ph_eph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
                    Hv(i) = Hv(i) + val*v(j)
@@ -907,18 +821,14 @@ contains
        N = 0
        call AllReduce_MPI(MpiComm,Nloc,N)
        ! 
-       allocate(vt(N)) ; vt = zero
+       allocate(vt(N)) ; vt = 0d0
        call allgather_vector_MPI(MpiComm,v,vt)
        !
        do i=1,Nloc
           iph  = (i-1)/(DimUp*MpiQdw)  + 1
           i_el = mod(i-1,DimUp*MpiQdw) + 1
           matmul: do j_el=1,spH0nd%row(i_el)%Size
-#ifdef _CMPLX_NORMAL
-             val = spH0nd%row(i_el)%cvals(j_el)
-#else             
              val = spH0nd%row(i_el)%dvals(j_el)
-#endif
              j = spH0nd%row(i_el)%cols(j_el) + (iph-1)*DimUp*DimDw
              Hv(i) = Hv(i) + val*Vt(j)
           enddo matmul
@@ -934,42 +844,32 @@ contains
     ! MPI parallel version of the matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in P-Arpack/P-Lanczos algorithm for :f:var:`ed_total_ud` = :code:`False`. 
     ! This procedures applies one by one each term of the global Hamiltonian to a part of the vector own by the thread using the stored sparse matrices.
     !
-    integer                             :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
-#ifdef _CMPLX_NORMAL
-    complex(8),dimension(Nloc)          :: v    !input vector part (passed by P-Arpack/P-Lanczos) :math:`\vec{v}`
-    complex(8),dimension(Nloc)          :: Hv   !output vector (required by P-Arpack/P-Lanczos) :math:`\vec{w}`
-    complex(8),dimension(:),allocatable :: vt,Hvt
-    complex(8)                          :: val
-#else
-    real(8),dimension(Nloc)             :: v    !input vector part (passed by P-Arpack/P-Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)             :: Hv   !output vector (required by P-Arpack/P-Lanczos) :math:`\vec{w}`
-    real(8),dimension(:),allocatable    :: vt,Hvt
-    real(8)                             :: val
-#endif
-    integer                             :: N
-    integer                             :: i,iup,idw,j,jup,jdw,jj
-    integer                             :: iiup,iidw
-    integer                             :: i_el,j_el,i_start,i_end
-    integer                             :: iud
-    integer,dimension(2*Ns_Ud)          :: Indices,Jndices
+    integer                          :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
+    real(8),dimension(Nloc)          :: v    !input vector part (passed by P-Arpack/P-Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc)          :: Hv   !output vector (required by P-Arpack/P-Lanczos) :math:`\vec{w}`
+    !
+    integer                          :: N
+    real(8),dimension(:),allocatable :: vt,Hvt
+    real(8)                          :: val
+    integer                          :: i,iup,idw,j,jup,jdw,jj
+    integer                          :: iiup,iidw
+    integer                          :: i_el,j_el,i_start,i_end
+    integer                          :: iud
+    integer,dimension(2*Ns_Ud)       :: Indices,Jndices
     !local MPI
-    integer                             :: irank
+    integer                          :: irank
     !
     if(MpiComm==Mpi_Comm_Null)return
     if(MpiComm==MPI_UNDEFINED)stop "spMatVec_mpi_cc ERROR: MpiComm = MPI_UNDEFINED"
     if(.not.MpiStatus)stop "spMatVec_mpi_cc ERROR: MpiStatus = F"
     !
     !Evaluate the local contribution: Hv_loc = Hloc*v
-    Hv=zero
+    Hv=0d0
     do i=1,Nloc                 
        i_el = mod(i-1,DimUp*MpiQdw) + 1
        !
        do j=1,spH0d%row(i_el)%Size
-#ifdef _CMPLX_NORMAL
-          Hv(i) = Hv(i) + spH0d%row(i_el)%cvals(j)*v(i)
-#else          
           Hv(i) = Hv(i) + spH0d%row(i_el)%dvals(j)*v(i)
-#endif
        end do
     end do
     !
@@ -991,11 +891,7 @@ contains
                    call indices2state(Jndices,[DimUps,DimDws],j)
                    !
                    j = j + (iph-1)*DimUp*MpiQdw
-#ifdef _CMPLX_NORMAL
-                   Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%cvals(jj)*v(j)
-#else                   
                    Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%dvals(jj)*v(j)
-#endif
                 end do hxv_up
                 !
              enddo
@@ -1010,13 +906,13 @@ contains
     if(MpiRank<mod(DimUp,MpiSize))MpiQup=MpiQup+1
     !
     do iph=1,DimPh
-       allocate(vt(mpiQup*DimDw)) ;vt=zero
-       allocate(Hvt(mpiQup*DimDw));Hvt=zero
+       allocate(vt(mpiQup*DimDw)) ;vt=0d0
+       allocate(Hvt(mpiQup*DimDw));Hvt=0d0
        i_start = 1 + (iph-1)*DimUp*MpiQdw
        i_end = iph*DimUp*MpiQdw
        !
        call vector_transpose_MPI(DimUp,MpiQdw,v(i_start:i_end),DimDw,MpiQup,vt)
-       Hvt=zero 
+       Hvt=0d0    
        do iidw=1,MpiQup            !<= Transposed order:  column-wise DW <--> UP  
           do iiup=1,DimDw          !<= Transposed order:  column-wise DW <--> UP  
              i = iiup + (iidw-1)*DimDw
@@ -1028,17 +924,13 @@ contains
                    Jndices      = Indices
                    Jndices(iud) = spH0dws(iud)%row(iup)%cols(jj)
                    call indices2state(Jndices,[DimDws,DimUps],j)
-#ifdef _CMPLX_NORMAL
-                   Hvt(i) = Hvt(i) + spH0dws(iud)%row(iup)%cvals(jj)*vt(j)
-#else                   
                    Hvt(i) = Hvt(i) + spH0dws(iud)%row(iup)%dvals(jj)*vt(j)
-#endif
                 end do hxv_dw
                 !
              enddo
           enddo
        end do
-       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ; vt=zero
+       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ; vt=0d0
        call vector_transpose_MPI(DimDw,mpiQup,Hvt,DimUp,mpiQdw,vt)
        Hv(i_start:i_end) = Hv(i_start:i_end) + vt
        deallocate(vt,Hvt)
@@ -1051,11 +943,7 @@ contains
              !
              !PHONON
              do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL
-                val = spH0_ph%row(iph)%cvals(jj)
-#else                
                 val = spH0_ph%row(iph)%dvals(jj)
-#endif
                 j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
                 Hv(i) = Hv(i) + val*v(j)
              enddo
@@ -1063,13 +951,8 @@ contains
              !ELECTRON-PHONON
              do j_el = 1,spH0e_eph%row(i_el)%Size
                 do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL
-                   val = spH0e_eph%row(i_el)%cvals(j_el)*&
-                        spH0ph_eph%row(iph)%cvals(jj)
-#else                   
                    val = spH0e_eph%row(i_el)%dvals(j_el)*&
                         spH0ph_eph%row(iph)%dvals(jj)
-#endif
                    !interaction is diag from the electron point of view (coupling to the density)
                    j = i_el + (spH0ph_eph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
                    Hv(i) = Hv(i) + val*v(j)
@@ -1085,7 +968,6 @@ contains
 
 
 end MODULE ED_HAMILTONIAN_NORMAL_STORED_HXV
-
 
 
 
