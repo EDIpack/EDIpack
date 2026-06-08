@@ -77,8 +77,8 @@ contains
     select case (bath_type)
     case default
        Nfoo = size(dmft_bath%e,2)
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
-       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=zero      
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
+       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=0d0       
        do ibath=1,Nbath
           do ispin=1,Nspin             
              do iorb=1,Norb
@@ -197,7 +197,7 @@ contains
     !-----------------------------------------------!
     !
     if(present(Hmat))then
-       Hmat = 0d0
+       Hmat = zero
        allocate(Htmp_up(DimUp,DimUp));Htmp_up=zero
        allocate(Htmp_dw(DimDw,DimDw));Htmp_dw=zero
        allocate(Hmat_tmp(DimUp*DimDw,DimUp*DimDw));Hmat_tmp=zero
@@ -335,8 +335,8 @@ contains
           enddo
        enddo
     case ("replica")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hreplica(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
@@ -421,8 +421,8 @@ contains
     !-----------------------------------------------!
     !
     if(present(Hmat))then
-       Hmat = 0d0 
-       allocate(Hmat_tmp(DimUp*DimDw,DimUp*DimDw));Hmat_tmp=zero      
+       Hmat = zero
+       allocate(Hmat_tmp(DimUp*DimDw,DimUp*DimDw));Hmat_tmp=zero     
 #ifdef _MPI
        if(MpiStatus)then
           call sp_dump_matrix(MpiComm,spH0d,Hmat_tmp)
@@ -442,7 +442,7 @@ contains
                 call indices2state(Jndices,[DimUps,DimDws],j)
 #ifdef _CMPLX_NORMAL
                 Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0ups(iud)%row(iup)%cvals(jj)
-#else                
+#else
                 Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0ups(iud)%row(iup)%dvals(jj)
 #endif
              enddo
@@ -455,7 +455,7 @@ contains
                 Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0dws(iud)%row(idw)%cvals(jj)
 #else
                 Hmat_tmp(i,j) = Hmat_tmp(i,j) + spH0dws(iud)%row(idw)%dvals(jj)
-#endif                
+#endif
              enddo
              !
           enddo
@@ -582,11 +582,11 @@ contains
              do jj=1,spH0ups(1)%row(iup)%Size
                 jup = spH0ups(1)%row(iup)%cols(jj)
                 jdw = idw
-#ifdef _CMPLX_NORMAL                
+#ifdef _CMPLX_NORMAL
                 val = spH0ups(1)%row(iup)%cvals(jj)
-#else                
+#else
                 val = spH0ups(1)%row(iup)%dvals(jj)
-#endif                
+#endif
                 j =  jup + (jdw-1)*DimUp + (iph-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*V(j)
              enddo
@@ -602,9 +602,9 @@ contains
              do jj = 1,spH0_ph%row(iph)%Size
 #ifdef _CMPLX_NORMAL             
                 val = spH0_ph%row(iph)%cvals(jj)
-#else
+#else                
                 val = spH0_ph%row(iph)%dvals(jj)
-#endif
+#endif                
                 j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*v(j)
              enddo
@@ -612,7 +612,7 @@ contains
              !ELECTRON-PHONON
              do j_el = 1,spH0e_eph%row(i_el)%Size
                 do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL                
+#ifdef _CMPLX_NORMAL  
                    val = spH0e_eph%row(i_el)%cvals(j_el)*&
                         spH0ph_eph%row(iph)%cvals(jj)
 #else
@@ -636,11 +636,11 @@ contains
           iph = (i-1)/(DimUp*DimDw) + 1
           i_el = mod(i-1,DimUp*DimDw) + 1
           do j_el=1,spH0nd%row(i_el)%Size
-#ifdef _CMPLX_NORMAL          
+#ifdef _CMPLX_NORMAL
              val = spH0nd%row(i_el)%cvals(j_el)
 #else
              val = spH0nd%row(i_el)%dvals(j_el)
-#endif             
+#endif
              j = spH0nd%row(i_el)%cols(j_el) + (iph-1)*DimUp*DimDw
              Hv(i) = Hv(i) + val*v(j)
           enddo
@@ -676,11 +676,11 @@ contains
        i_el = mod(i-1,DimUp*DimDw) + 1
        !
        do j=1,spH0d%row(i_el)%Size
-#ifdef _CMPLX_NORMAL        
+#ifdef _CMPLX_NORMAL
           Hv(i) = Hv(i) + spH0d%row(i_el)%cvals(j)*v(i)
 #else
           Hv(i) = Hv(i) + spH0d%row(i_el)%dvals(j)*v(i)
-#endif          
+#endif
        enddo
     enddo
     !
@@ -699,12 +699,11 @@ contains
              call indices2state(Jndices,[DimUps,DimDws],j)
              !
              j = j + (iph-1)*DimUp*DimDw
-#ifdef _CMPLX_NORMAL               
+#ifdef _CMPLX_NORMAL            
              Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%cvals(jj)*V(j)
 #else
              Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%dvals(jj)*V(j)
-#endif
-             
+#endif         
           enddo
           !
           !DW:
@@ -714,11 +713,11 @@ contains
              call indices2state(Jndices,[DimUps,DimDws],j)
              !
              j = j + (iph-1)*DimUp*DimDw
-#ifdef _CMPLX_NORMAL  
+#ifdef _CMPLX_NORMAL           
              Hv(i) = Hv(i) + spH0dws(iud)%row(idw)%cvals(jj)*V(j)
 #else
              Hv(i) = Hv(i) + spH0dws(iud)%row(idw)%dvals(jj)*V(j)
-#endif             
+#endif        
           enddo
           !
        enddo
@@ -731,12 +730,11 @@ contains
           !
           !PHONON
           do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL          
+#ifdef _CMPLX_NORMAL
              val = spH0_ph%row(iph)%cvals(jj)
-             
 #else
              val = spH0_ph%row(iph)%dvals(jj)
-#endif
+#endif     
              j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*DimDw
              Hv(i) = Hv(i) + val*v(j)
           enddo
@@ -744,13 +742,13 @@ contains
           !ELECTRON-PHONON
           do j_el = 1,spH0e_eph%row(i_el)%Size
              do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL 
+#ifdef _CMPLX_NORMAL       
                 val = spH0e_eph%row(i_el)%cvals(j_el)*&
                      spH0ph_eph%row(iph)%cvals(jj)
-#else
+#else                
                 val = spH0e_eph%row(i_el)%dvals(j_el)*&
-                     spH0ph_eph%row(iph)%dvals(jj)
-#endif                     
+                     spH0ph_eph%row(iph)%dvals(jj)   
+#endif                    
                 j = spH0e_eph%row(i_el)%cols(j_el) +&
                      (spH0ph_eph%row(iph)%cols(jj)-1)*DimUp*DimDw
                 Hv(i) = Hv(i) + val*v(j)
@@ -802,11 +800,12 @@ contains
     Hv=zero
     do i=1,Nloc                
        i_el = mod(i-1,DimUp*MpiQdw) + 1
-#ifdef _CMPLX_NORMAL
+       ! do j_el=1,spH0d%row(i_el)%Size
+#ifdef _CMPLX_NORMAL    
        val = spH0d%row(i_el)%cvals(1)!(j_el)
 #else
        val = spH0d%row(i_el)%dvals(1)!(j_el)
-#endif
+#endif      
        Hv(i) = Hv(i) + val*v(i)
        ! enddo
     end do
@@ -820,11 +819,11 @@ contains
              hxv_up: do jj=1,spH0ups(1)%row(iup)%Size
                 jup = spH0ups(1)%row(iup)%cols(jj)
                 jdw = idw
-#ifdef _CMPLX_NORMAL                
+#ifdef _CMPLX_NORMAL               
                 val = spH0ups(1)%row(iup)%cvals(jj)
 #else
                 val = spH0ups(1)%row(iup)%dvals(jj)
-#endif
+#endif              
                 j   = jup + (idw-1)*DimUp + (iph-1)*DimUp*MpiQdw
                 Hv(i) = Hv(i) + val*v(j)
              end do hxv_up
@@ -840,8 +839,8 @@ contains
     do iph=1,DimPh
        allocate(vt(mpiQup*DimDw))
        allocate(Hvt(mpiQup*DimDw))
-       vt=0d0
-       Hvt=0d0
+       vt=zero
+       Hvt=zero
        i_start = 1 + (iph-1)*DimUp*MpiQdw
        i_end = iph*DimUp*MpiQdw
        call vector_transpose_MPI(DimUp,MpiQdw,v(i_start:i_end),DimDw,MpiQup,vt)
@@ -852,16 +851,16 @@ contains
                 jup = spH0dws(1)%row(iup)%cols(jj)
                 jdw = idw             
                 j   = jup + (jdw-1)*DimDw
-#ifdef _CMPLX_NORMAL               
-                val = spH0dws(1)%row(iup)%cvals(jj)
+#ifdef _CMPLX_NORMAL
+                val = spH0dws(1)%row(iup)cvals(jj)
 #else
                 val = spH0dws(1)%row(iup)%dvals(jj)
-#endif                
+#endif
                 Hvt(i) = Hvt(i) + val*vt(j)
              end do hxv_dw
           enddo
        end do
-       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ; vt=0d0
+       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ; vt=zero
        call vector_transpose_MPI(DimDw,mpiQup,Hvt,DimUp,mpiQdw,vt)
        Hv(i_start:i_end) = Hv(i_start:i_end) + Vt
        deallocate(vt,Hvt)
@@ -874,9 +873,9 @@ contains
              !
              !PHONON
              do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL          
+#ifdef _CMPLX_NORMAL
                 val = spH0_ph%row(iph)%cvals(jj)
-#else
+#else                
                 val = spH0_ph%row(iph)%dvals(jj)
 #endif
                 j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
@@ -886,13 +885,13 @@ contains
              !ELECTRON-PHONON
              do j_el = 1,spH0e_eph%row(i_el)%Size
                 do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL                 
+#ifdef _CMPLX_NORMAL
                    val = spH0e_eph%row(i_el)%cvals(j_el)*&
                         spH0ph_eph%row(iph)%cvals(jj)
 #else
                    val = spH0e_eph%row(i_el)%dvals(j_el)*&
                         spH0ph_eph%row(iph)%dvals(jj)
-#endif                     
+#endif
                    !interaction is diag from the electron point of view (coupling to the density)
                    j = spH0e_eph%row(i_el)%cols(j_el) + (spH0ph_eph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
                    Hv(i) = Hv(i) + val*v(j)
@@ -908,18 +907,18 @@ contains
        N = 0
        call AllReduce_MPI(MpiComm,Nloc,N)
        ! 
-       allocate(vt(N)) ; vt = 0d0
+       allocate(vt(N)) ; vt = zero
        call allgather_vector_MPI(MpiComm,v,vt)
        !
        do i=1,Nloc
           iph  = (i-1)/(DimUp*MpiQdw)  + 1
           i_el = mod(i-1,DimUp*MpiQdw) + 1
           matmul: do j_el=1,spH0nd%row(i_el)%Size
-#ifdef _CMPLX_NORMAL    
+#ifdef _CMPLX_NORMAL
              val = spH0nd%row(i_el)%cvals(j_el)
-#else
+#else             
              val = spH0nd%row(i_el)%dvals(j_el)
-#endif            
+#endif
              j = spH0nd%row(i_el)%cols(j_el) + (iph-1)*DimUp*DimDw
              Hv(i) = Hv(i) + val*Vt(j)
           enddo matmul
@@ -968,7 +967,7 @@ contains
        do j=1,spH0d%row(i_el)%Size
 #ifdef _CMPLX_NORMAL
           Hv(i) = Hv(i) + spH0d%row(i_el)%cvals(j)*v(i)
-#else
+#else          
           Hv(i) = Hv(i) + spH0d%row(i_el)%dvals(j)*v(i)
 #endif
        end do
@@ -996,7 +995,7 @@ contains
                    Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%cvals(jj)*v(j)
 #else                   
                    Hv(i) = Hv(i) + spH0ups(iud)%row(iup)%dvals(jj)*v(j)
-#endif                   
+#endif
                 end do hxv_up
                 !
              enddo
@@ -1017,7 +1016,7 @@ contains
        i_end = iph*DimUp*MpiQdw
        !
        call vector_transpose_MPI(DimUp,MpiQdw,v(i_start:i_end),DimDw,MpiQup,vt)
-       Hvt=0d0    
+       Hvt=zero 
        do iidw=1,MpiQup            !<= Transposed order:  column-wise DW <--> UP  
           do iiup=1,DimDw          !<= Transposed order:  column-wise DW <--> UP  
              i = iiup + (iidw-1)*DimDw
@@ -1029,11 +1028,11 @@ contains
                    Jndices      = Indices
                    Jndices(iud) = spH0dws(iud)%row(iup)%cols(jj)
                    call indices2state(Jndices,[DimDws,DimUps],j)
-#ifdef _CMPLX_NORMAL                  
+#ifdef _CMPLX_NORMAL
                    Hvt(i) = Hvt(i) + spH0dws(iud)%row(iup)%cvals(jj)*vt(j)
-#else                 
+#else                   
                    Hvt(i) = Hvt(i) + spH0dws(iud)%row(iup)%dvals(jj)*vt(j)
-#endif                  
+#endif
                 end do hxv_dw
                 !
              enddo
@@ -1052,11 +1051,11 @@ contains
              !
              !PHONON
              do jj = 1,spH0_ph%row(iph)%Size
-#ifdef _CMPLX_NORMAL            
+#ifdef _CMPLX_NORMAL
                 val = spH0_ph%row(iph)%cvals(jj)
-#else              
+#else                
                 val = spH0_ph%row(iph)%dvals(jj)
-#endif               
+#endif
                 j = i_el + (spH0_ph%row(iph)%cols(jj)-1)*DimUp*MpiQdw
                 Hv(i) = Hv(i) + val*v(j)
              enddo
@@ -1064,10 +1063,10 @@ contains
              !ELECTRON-PHONON
              do j_el = 1,spH0e_eph%row(i_el)%Size
                 do jj = 1,spH0ph_eph%row(iph)%Size
-#ifdef _CMPLX_NORMAL     
+#ifdef _CMPLX_NORMAL
                    val = spH0e_eph%row(i_el)%cvals(j_el)*&
                         spH0ph_eph%row(iph)%cvals(jj)
-#else
+#else                   
                    val = spH0e_eph%row(i_el)%dvals(j_el)*&
                         spH0ph_eph%row(iph)%dvals(jj)
 #endif
@@ -1086,6 +1085,7 @@ contains
 
 
 end MODULE ED_HAMILTONIAN_NORMAL_STORED_HXV
+
 
 
 
