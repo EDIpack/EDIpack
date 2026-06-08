@@ -656,16 +656,17 @@ contains
     !
     integer                    :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
 #ifdef _CMPLX_NORMAL
-    complex(8)                 :: val
     complex(8),dimension(Nloc) :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
     complex(8),dimension(Nloc) :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    complex(8)                 :: val
 #else
-    real(8)                    :: val
     real(8),dimension(Nloc)    :: v    !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
     real(8),dimension(Nloc)    :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    real(8)                    :: val
 #endif
     integer                    :: i,iup,idw,j,jup,jdw,jj,i_el,j_el
-    logical                    :: nonloc_condition, sundry_condition, either_condition
+    integer                    :: iud
+    integer,dimension(2*Ns_Ud) :: Indices,Jndices
     !
     !
     Hv=zero

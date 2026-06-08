@@ -610,12 +610,12 @@ contains
                             j_el   = jup + (idw-1)*sectorI%DimUp
                             j = j_el + (iph-1)*sectorI%DimEl
                             !
-#ifdef _CMPLX_NORMAL                         
-                            ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
-                            ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
-#else
+#ifdef _CMPLX_NORMAL
                             ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
                             ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+#else
+                            ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
+                            ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
 #endif
                             !
                          endif

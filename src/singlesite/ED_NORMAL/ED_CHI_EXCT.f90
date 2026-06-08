@@ -25,7 +25,7 @@ MODULE ED_CHI_EXCT
 
 
   integer                             :: istate,iorb,jorb,ispin,jspin
-  integer                             :: isector,jsector,ksector
+  integer                             :: isector,jsector,ksector,lsector
   real(8),allocatable                 :: alfa_(:),beta_(:)
   integer                             :: ipos,jpos
   integer                             :: i,j,k
@@ -94,7 +94,11 @@ contains
        call allocate_GFmatrix(exctChimatrix(1,iorb,jorb),istate,Nchan=2)
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        ksector = getCsector(1,2,isector)
        lsector = getCsector(1,1,isector)
@@ -152,7 +156,7 @@ contains
 #ifdef _CMPLX_NORMAL
     complex(8),dimension(:),allocatable :: vtmp
 #else
-    real(8),dimension(:),allocatable    :: vup,vdw,vtmp
+    real(8),dimension(:),allocatable    :: vtmp
 #endif
     !
     write(LOGfile,"(A)")"Get triplet XY Chi_exct_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
@@ -162,9 +166,9 @@ contains
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
 #ifdef _CMPLX_NORMAL
-       v_state    =  es_return_dvec(state_list,istate)
-#else
        v_state    =  es_return_cvec(state_list,istate)
+#else
+       v_state    =  es_return_dvec(state_list,istate)
 #endif
        !
        !X - Component == Y -Component
@@ -253,7 +257,11 @@ contains
        call allocate_GFmatrix(exctChimatrix(3,iorb,jorb),istate,Nchan=2)
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !Z - Component:
        !Z_{ab}= C^+_{a,up}C_{b,up} - C^+_{a,dw}C_{b,dw}

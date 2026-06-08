@@ -1093,6 +1093,7 @@ contains
                   j     = j_el + (iph-1)*sectorJ%DimEl
                   OV(j) = OV(j) + sgn*V(i)*As(is)
                enddo
+            enddo
         case default
              do is=1,size(As)
                 ipos  = Pos(is)
