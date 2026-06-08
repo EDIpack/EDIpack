@@ -78,28 +78,52 @@ and working.
 The `CMake` compilation can be customized using the following
 additional variables:   
 
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
-| Option                        | Scope                                                       | Value                                   |
-+===============================+=============================================================+=========================================+
-| ``-DLONG_PREFIX``             | Set install prefix. If ``True``, installs to                | ``yes``/``True`` or ``no``/``False``    |
-|                               | ``~/opt/EDIpack/TAG/PLAT/BRANCH``; else to                  | (default: True)                         |
-|                               | ``~/opt/EDIpack/custom``.                                   |                                         |
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
-| ``-DCMAKE_INSTALL_PREFIX``    | Specify custom installation path. Overrides                 | User-defined path                       |
-|                               | ``-DLONG_PREFIX``. No default subfolders added.             |                                         |
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
-| ``-DUSE_MPI``                 | Enable MPI support at compile time.                         | ``yes``/``True`` or ``no``/``False``    |
-|                               |                                                             | (default: True)                         |
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
-| ``-DWITH_INEQ``               | Include inequivalent impurity extension                     | ``yes``/``True`` or ``no``/``False``    |
-|                               | (in ``EDIPACK2INEQ``).                                      | (default: True)                         |
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
-| ``-DVERBOSE``                 | Verbose CMake output.                                       | ``yes``/``True`` or ``no``/``False``    |
-|                               | Superseded by ``make VERBOSE=yes/no``.                      | (default: True)                         |
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
-| ``-DBUILD_TYPE``              | Set build mode flags.                                       | ``RELEASE``, ``DEBUG``, ``TESTING``,    |
-|                               |                                                             | ``AGGRESSIVE`` (default: ``RELEASE``)   |
-+-------------------------------+-------------------------------------------------------------+-----------------------------------------+
+* ``-DLONG_PREFIX``
+  
+  * **Scope:** Set install prefix. If ``True``, installs to
+    ``~/opt/EDIpack/TAG/PLAT/BRANCH``; otherwise to
+    ``~/opt/EDIpack/custom``.
+  * **Value:** ``yes``/``True`` or ``no``/``False``
+    (default: ``True``).
+
+* ``-DCMAKE_INSTALL_PREFIX``
+
+  * **Scope:** Specify a custom installation path. Overrides
+    ``-DLONG_PREFIX``. No default subdirectories are added.
+  * **Value:** User-defined path.
+
+* ``-DUSE_MPI``
+
+  * **Scope:** Enable MPI support at compile time.
+  * **Value:** ``yes``/``True`` or ``no``/``False``
+    (default: ``True``).
+
+* ``-DWITH_INEQ``
+
+  * **Scope:** Include the inequivalent impurity extension
+    (``EDIPACK2INEQ``).
+  * **Value:** ``yes``/``True`` or ``no``/``False``
+    (default: ``True``).
+
+* ``-DCMPLX_NORMAL``
+
+  * **Scope:** Enable complex eigenvectors for the
+    :f:var:`ED_MODE` = ``NORMAL`` case.
+  * **Value:** ``yes``/``True`` or ``no``/``False``
+    (default: ``False``).
+
+* ``-DVERBOSE``
+
+  * **Scope:** Enable verbose CMake output. Superseded by
+    ``make VERBOSE=yes/no``.
+  * **Value:** ``yes``/``True`` or ``no``/``False``
+    (default: ``True``).
+
+* ``-DBUILD_TYPE``
+
+  * **Scope:** Set build mode flags.
+  * **Value:** ``RELEASE``, ``DEBUG``, ``TESTING``,
+    ``AGGRESSIVE`` (default: ``RELEASE``).
 
 
 .. warning::
