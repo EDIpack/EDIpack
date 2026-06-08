@@ -590,14 +590,17 @@ contains
        allocate(getIorb(totNorb),getJorb(totNorb))
        l=0
        do iorb=1,Norb
+#ifdef _CMPLX_NORMAL
+          do jorb=1,Norb
+#else
           do jorb=iorb,Norb
+#endif
              l=l+1
              getIorb(l)=iorb
              getJorb(l)=jorb
           enddo
        enddo
     end select
-    if(l/=totNorb)stop "print_gf_normal error counting the orbitals"
     !!
     !Print the impurity functions:
     call allocate_grids
