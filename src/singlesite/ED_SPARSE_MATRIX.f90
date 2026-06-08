@@ -423,7 +423,15 @@ contains
     !
     column = j
     !
-    row => sparse%row(i-sparse%Ishift)
+    if (ED_MODE == "normal") then
+      row => sparse%row(i-sparse%Ishift)
+    else
+      if(column>=sparse%Istart.AND.column<=sparse%Iend)then
+         row => sparse%loc(i-sparse%Ishift)
+      else
+         row => sparse%row(i-sparse%Ishift)
+      endif
+    endif
     !
     iadd = .false.                          
     if(any(row%cols == column))then         
