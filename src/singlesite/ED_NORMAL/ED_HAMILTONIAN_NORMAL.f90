@@ -62,7 +62,11 @@ contains
     !
     !
     integer                         :: isector !Index of the actual sector to be analyzed
-    real(8),dimension(:,:),optional :: Hmat    !Dense matrix to store the sector Hamiltonian is dim < :f:var:`lanc_dim_threshold`
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:,:),optional :: Hmat    !Dense matrix to store the sector Hamiltonian is dim < :f:var:`lanc_dim_threshold`
+#else
+    real(8),dimension(:,:),optional    :: Hmat    !Dense matrix to store the sector Hamiltonian is dim < :f:var:`lanc_dim_threshold`
+#endif
     integer                         :: SectorDim
     integer                         :: irank,ierr
     integer                         :: i,iup,idw
@@ -319,12 +323,17 @@ contains
     ! Returns the parameters :math:`\vec{\alpha}` and :math:`\vec{\beta}` , respectively :f:var:`alanc` and :f:var:`blanc` , of the partial tridiagonalization of the sector Hamiltonian on a Krylov basis with starting vector :f:var:`vvinit`.
     !
     integer                            :: isector !Current sector index
-    real(8),dimension(:)               :: vvinit  !Input vector for the construction of the tridiagonal or Krylov basis
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:)             :: vvinit  !Input vector for the construction of the tridiagonal or Krylov basis
+    complex(8),dimension(:),allocatable :: vvloc
+#else
+    real(8),dimension(:)                :: vvinit  !Input vector for the construction of the tridiagonal or Krylov basis
+    real(8),dimension(:),allocatable    :: vvloc
+#endif
     real(8),dimension(:),allocatable   :: alanc !:math:`\vec{\alpha}` or diagonal parameters of the tridiagonal basis
     real(8),dimension(:),allocatable   :: blanc !:math:`\vec{\beta}` or sub-/over-diagonal parameters of the tridiagonal basis
     real(8)                            :: norm2 !Norm of the input vector  :math:`\langle {\rm vvinit}|{\rm vvinit}\rangle`
     !
-    real(8),dimension(:),allocatable   :: vvloc
     integer                            :: vecDim
     !
 #ifdef _DEBUG

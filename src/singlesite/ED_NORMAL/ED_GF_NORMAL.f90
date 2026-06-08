@@ -23,32 +23,37 @@ MODULE ED_GF_NORMAL
   public :: get_Sigma_normal
 
 
-  integer                          :: istate
-  integer                          :: isector,jsector
-  integer                          :: idim,idimUP,idimDW
+
+  integer                             :: istate
+  integer                             :: isector,jsector
+  integer                             :: idim,idimUP,idimDW
   !
-  integer                          :: ialfa,jalfa
-  integer                          :: ipos,jpos
-  integer                          :: i,j,m
-  integer                          :: iph,i_el
-  real(8)                          :: sgn,norm2
-  integer                          :: in,jn
-  integer                          :: inam,jnam
-  integer                          :: ilat,jlat
-  integer                          :: iorb,jorb
-  integer                          :: ispin,jspin
-  integer                          :: is,js
-  integer                          :: io,jo
-  integer                          :: iup,idw
-  integer                          :: jup,jdw  
-  integer                          :: mup,mdw
+  integer                             :: ialfa,jalfa
+  integer                             :: ipos,jpos
+  integer                             :: i,j,m
+  integer                             :: iph,i_el
+  real(8)                             :: sgn,norm2
+  integer                             :: in,jn
+  integer                             :: inam,jnam
+  integer                             :: ilat,jlat
+  integer                             :: iorb,jorb
+  integer                             :: ispin,jspin
+  integer                             :: is,js
+  integer                             :: io,jo
+  integer                             :: iup,idw
+  integer                             :: jup,jdw  
+  integer                             :: mup,mdw
 
   !
-  real(8),allocatable              :: vvinit(:)
-  real(8),allocatable              :: alfa_(:),beta_(:)
-  real(8),dimension(:),allocatable :: v_state
-  real(8)                          :: e_state
-
+#ifdef _CMPLX_NORMAL
+  complex(8),allocatable              :: vvinit(:)
+  complex(8),dimension(:),allocatable :: v_state
+#else
+  real(8),allocatable                 :: vvinit(:)
+  real(8),dimension(:),allocatable    :: v_state
+#endif
+  real(8),allocatable                 :: alfa_(:),beta_(:)
+  real(8)                             :: e_state
 
 
 
@@ -133,7 +138,11 @@ contains
        !
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !ADD ONE PARTICLE:
        jsector = getCDGsector(ialfa,ispin,isector)
@@ -183,7 +192,11 @@ contains
        !
        isector  =  es_return_sector(state_list,istate)
        e_state  =  es_return_energy(state_list,istate)
-       v_state  =  es_return_dvec(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
+       v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !(c^+_iorb + c^+_jorb)|gs> = [1,1].[C_{+1},C_{+1}].[iorb,jorb].[ispin,ispin]
        jsector = getCDGsector(ialfa,ispin,isector)
@@ -233,7 +246,11 @@ contains
        !
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        call get_Nup(isector,Nups)
        call get_Ndw(isector,Ndws)
@@ -258,13 +275,13 @@ contains
              !apply destruction operator
              if(iph>1) then
                 j = i_el + ((iph-1)-1)*iDimUp*iDimDw
-                vvinit(j) = vvinit(j) + sqrt(dble(iph-1))*v_state(i)
+                vvinit(j) = vvinit(j) + one*sqrt(dble(iph-1))*v_state(i)
              endif
              !
              !apply creation operator
              if(iph<DimPh) then
                 j = i_el + ((iph+1)-1)*iDimUp*iDimDw
-                vvinit(j) = vvinit(j) + sqrt(dble(iph))*v_state(i)
+                vvinit(j) = vvinit(j) + one*sqrt(dble(iph))*v_state(i)
              endif
           enddo
        else
@@ -272,7 +289,7 @@ contains
        endif
        !
        call tridiag_Hv_sector_normal(isector,vvinit,alfa_,beta_,norm2)
-       call add_to_lanczos_phonon(norm2,e_state,alfa_,beta_,istate)
+       call add_to_lanczos_phonon(one*norm2,e_state,alfa_,beta_,istate)
        deallocate(alfa_,beta_)
        if(allocated(vvinit))deallocate(vvinit)
        if(allocated(v_state))deallocate(v_state)
@@ -371,7 +388,8 @@ contains
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    real(8)                                    :: vnorm2,Ei,Ej,Egs,pesoF,pesoAB,pesoBZ,de,peso
+    complex(8)                                 :: vnorm2,pesoF,pesoAB,pesoBZ,de,peso
+    real(8)                                    :: Ei,Ej,Egs
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
     real(8),dimension(size(alanc))             :: blanc 

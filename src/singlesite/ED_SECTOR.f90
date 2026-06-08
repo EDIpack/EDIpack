@@ -543,7 +543,7 @@ contains
     type(sector)                        :: sectorI,sectorJ
     complex(8),dimension(:),allocatable :: OV
     real(8)                             :: sgn
-    integer                             :: ialfa,ibeta,isite
+    integer                             :: ialfa,ibeta,ipos,isite
     integer                             :: i,j,r
     integer                             :: iph,i_el,j_el,ei
     integer,dimension(2*Ns_Ud)          :: Indices
@@ -553,6 +553,14 @@ contains
     integer,dimension(2*Ns)             :: ib
     !
     if(MpiMaster)then
+       !
+       if(ed_total_ud)then
+          ialfa = 1
+          ipos  = iorb
+       else
+          ialfa = iorb
+          ipos  = 1
+       endif
        !
        call build_sector(isector,sectorI)
        !
@@ -565,7 +573,11 @@ contains
        !
        if(ed_verbose>2)then
           select case(ed_mode)
-          case default;stop "apply_op_C ERROR: called with ed_mode!=superc/nonsu2"
+          case default;stop "apply_op_C ERROR: called with wrong ed_mode"
+       case ("normal")
+          if(ed_verbose>2)write(LOGfile,"(A,I6,2I4,A,I6,2I4)")&
+               'From:',sectorI%index,sectorI%Nups,sectorI%Ndws,&
+               ' -> apply C  :',sectorJ%index,sectorJ%Nups,sectorJ%Ndws
           case ("superc")
              write(LOGfile,"(A,I6,I3,A,I6,I3)")&
                   'From:',sectorI%index,sectorI%Sz,&
@@ -583,19 +595,41 @@ contains
           end select
        endif
        !
-       do i=1,sectorI%Dim
-          isite= iorb + (ispin-1)*Ns
-          iph  = (i-1)/(sectorI%DimEl)+1
-          i_el = mod(i-1,sectorI%DimEl)+1
-          ei   = sectorI%H(1)%map(i_el)
-          ib   = bdecomp(ei,2*Ns)
-          if(ib(isite)/=1)cycle
-          call c(isite,ei,r,sgn)
-          j_el = binary_search(sectorJ%H(1)%map,r)
-          j    = j_el + (iph-1)*sectorJ%DimEl
-          !
-          OV(j) = sgn*V(i)
-       enddo
+       select case(ed_mode)
+       case("normal")
+          do i=1,sectorI%Dim
+             ibeta = ialfa + (ispin-1)*Ns_Ud
+             iph   = (i-1)/(sectorI%DimEl) + 1
+             i_el  = mod(i-1,sectorI%DimEl) + 1
+             !
+             call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+             iud(1)   = sectorI%H(ialfa)%map(Indices(ialfa))
+             iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
+             nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+             nud(2,:) = Bdecomp(iud(2),Ns_Orb)
+             if(Nud(ispin,ipos)/=1)cycle
+             call c(ipos,iud(ispin),r,sgn)
+             Jndices        = Indices
+             Jndices(ibeta) = binary_search(sectorJ%H(ibeta)%map,r)
+             call indices2state(Jndices,[sectorJ%DimUps,sectorJ%DimDws],j)
+             j     = j + (iph-1)*sectorJ%DimEl
+             OV(j) = sgn*V(i)
+          enddo
+       case default
+         do i=1,sectorI%Dim
+            isite= iorb + (ispin-1)*Ns
+            iph  = (i-1)/(sectorI%DimEl)+1
+            i_el = mod(i-1,sectorI%DimEl)+1
+            ei   = sectorI%H(1)%map(i_el)
+            ib   = bdecomp(ei,2*Ns)
+            if(ib(isite)/=1)cycle
+            call c(isite,ei,r,sgn)
+            j_el = binary_search(sectorJ%H(1)%map,r)
+            j    = j_el + (iph-1)*sectorJ%DimEl
+            !
+            OV(j) = sgn*V(i)
+         enddo
+       end select
        call delete_sector(sectorI)
        call delete_sector(sectorJ)
     else
@@ -698,7 +732,7 @@ contains
     type(sector)                        :: sectorI,sectorJ
     complex(8),dimension(:),allocatable :: OV
     real(8)                             :: sgn
-    integer                             :: ialfa,ibeta,isite
+    integer                             :: ialfa,ibeta,ipos,isite
     integer                             :: i,j,r
     integer                             :: iph,i_el,j_el,ei
     integer,dimension(2*Ns_Ud)          :: Indices
@@ -708,6 +742,14 @@ contains
     integer,dimension(2*Ns)             :: ib
     !
     if(MpiMaster)then
+       !
+       if(ed_total_ud)then
+          ialfa = 1
+          ipos  = iorb
+       else
+          ialfa = iorb
+          ipos  = 1
+       endif
        !
        call build_sector(isector,sectorI)
        !
@@ -720,7 +762,11 @@ contains
        !
        if(ed_verbose>2)then
           select case(ed_mode)
-          case default;stop "apply_op_CDG ERROR: called with ed_mode!=superc/nonsu2"
+          case default;stop "apply_op_CDG ERROR: called with wrong ed_mode"
+          case ("normal")
+              if(ed_verbose>2)write(LOGfile,"(A,I6,2I4,A,I6,2I4)")&
+                   'From:',sectorI%index,sectorI%Nups,sectorI%Ndws,&
+                   ' -> apply C^+:',sectorJ%index,sectorJ%Nups,sectorJ%Ndws
           case ("superc")
              write(LOGfile,"(A,I6,I3,A,I6,I3)")&
                   'From:',sectorI%index,sectorI%Sz,&
@@ -737,19 +783,40 @@ contains
              endif
           end select
        endif
-       !
-       do i=1,sectorI%Dim
-          isite= iorb + (ispin-1)*Ns
-          iph  = (i-1)/(sectorI%DimEl)+1
-          i_el = mod(i-1,sectorI%DimEl) + 1
-          ei   = sectorI%H(1)%map(i_el)
-          ib   = bdecomp(ei,2*Ns)
-          if(ib(isite)/=0)cycle
-          call cdg(isite,ei,r,sgn)
-          j_el = binary_search(sectorJ%H(1)%map,r)
-          j    = j_el + (iph-1)*sectorJ%DimEl
-          OV(j) = sgn*V(i)
-       enddo
+       select case(ed_mode)
+       case("normal")
+          do i=1,sectorI%Dim
+             ibeta  = ialfa + (ispin-1)*Ns_Ud
+             iph = (i-1)/(sectorI%DimEl) + 1
+             i_el = mod(i-1,sectorI%DimEl) + 1
+             !
+             call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+             iud(1)   = sectorI%H(ialfa)%map(Indices(ialfa))
+             iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
+             nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+             nud(2,:) = Bdecomp(iud(2),Ns_Orb)
+             if(Nud(ispin,ipos)/=0)cycle
+             call cdg(ipos,iud(ispin),r,sgn)
+             Jndices        = Indices
+             Jndices(ibeta) = binary_search(sectorJ%H(ibeta)%map,r)
+             call indices2state(Jndices,[sectorJ%DimUps,sectorJ%DimDws],j_el)
+             j     = j_el + (iph-1)*sectorJ%DimEl
+             OV(j) = sgn*V(i)
+          enddo
+       case default
+         do i=1,sectorI%Dim
+            isite= iorb + (ispin-1)*Ns
+            iph  = (i-1)/(sectorI%DimEl)+1
+            i_el = mod(i-1,sectorI%DimEl) + 1
+            ei   = sectorI%H(1)%map(i_el)
+            ib   = bdecomp(ei,2*Ns)
+            if(ib(isite)/=0)cycle
+            call cdg(isite,ei,r,sgn)
+            j_el = binary_search(sectorJ%H(1)%map,r)
+            j    = j_el + (iph-1)*sectorJ%DimEl
+            OV(j) = sgn*V(i)
+         enddo
+       end select
        call delete_sector(sectorI)
        call delete_sector(sectorJ)
     else
@@ -975,7 +1042,11 @@ contains
           N = max(20,len(Ostr))
           !
           select case(ed_mode)
-          case default;stop "apply_op_CDG ERROR: called with ed_mode!=superc/nonsu2"
+          case default;stop "apply_op_CDG ERROR: called with wrong ed_mode"
+          case ("normal")
+             if(ed_verbose>2)write(LOGfile,"(A,I6,2I4,A,A"//str(N)//",I6,2I4)")&
+                  'From:',sectorI%index,sectorI%Nups,sectorI%Ndws,&
+                  ' -> apply:',Ostr,sectorJ%index,sectorJ%Nups,sectorJ%Ndws
           case ("superc")
              write(LOGfile,"(A,I6,I3,A,A"//str(N)//",I6,I3))")&
                   'From:',sectorI%index,sectorI%Sz,&
@@ -993,30 +1064,61 @@ contains
           end select
        endif
        !
-       do is=1,size(As)
-          ipos  = Pos(is)
-          ispin = Spin(is)
-          ios   = Os(is)
-          do i=1,sectorI%Dim
-             isite= ipos + (ispin-1)*Ns
-             iph  = (i-1)/(sectorI%DimEl)+1
-             i_el = mod(i-1,sectorI%DimEl) + 1
-             fi   = sectorI%H(1)%map(i_el)
-             ib   = bdecomp(fi,2*Ns)
-             select case(ios)
-             case default;stop "apply_COps ERROR: ios sign not \in [-1,1]"
-             case(-1)
-                if(ib(isite)/=1)cycle
-                call c(isite,fi,r,sgn)
-             case(1)
-                if(ib(isite)/=0)cycle
-                call cdg(isite,fi,r,sgn)
-             end select
-             j_el = binary_search(sectorJ%H(1)%map,r)
-             j    = j_el + (iph-1)*sectorJ%DimEl
-             OV(j) = OV(j) + sgn*V(i)*As(is)
-          enddo
-       enddo
+       select case(ed_mode)
+       case ("normal")
+            do is=1,size(As)
+               ipos  = Pos(is)
+               ispin = Spin(is)
+               ios   = Os(is)
+               do i=1,sectorI%Dim
+                  iph  = (i-1)/(sectorI%DimEl) + 1
+                  i_el = mod(i-1,sectorI%DimEl) + 1
+                  call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+                  iud(1)   = sectorI%H(1)%map(Indices(1))
+                  iud(2)   = sectorI%H(2)%map(Indices(2))
+                  Nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+                  Nud(2,:) = Bdecomp(iud(2),Ns_Orb)             
+                  select case(ios)
+                  case default;stop "apply_COps ERROR: ios sign not \in [-1,1]"
+                  case(-1)
+                     if(Nud(ispin,ipos)/=1)cycle
+                     call c(ipos,iud(ispin),r,sgn)
+                  case(1)
+                     if(Nud(ispin,ipos)/=0)cycle
+                     call cdg(ipos,iud(ispin),r,sgn)
+                  end select
+                  Jndices        = Indices
+                  Jndices(ispin) = binary_search(sectorJ%H(ispin)%map,r)
+                  call indices2state(Jndices,[sectorJ%DimUps,sectorJ%DimDws],j_el)
+                  j     = j_el + (iph-1)*sectorJ%DimEl
+                  OV(j) = OV(j) + sgn*V(i)*As(is)
+               enddo
+        case default
+             do is=1,size(As)
+                ipos  = Pos(is)
+                ispin = Spin(is)
+                ios   = Os(is)
+                do i=1,sectorI%Dim
+                   isite= ipos + (ispin-1)*Ns
+                   iph  = (i-1)/(sectorI%DimEl)+1
+                   i_el = mod(i-1,sectorI%DimEl) + 1
+                   fi   = sectorI%H(1)%map(i_el)
+                   ib   = bdecomp(fi,2*Ns)
+                   select case(ios)
+                   case default;stop "apply_COps ERROR: ios sign not \in [-1,1]"
+                   case(-1)
+                      if(ib(isite)/=1)cycle
+                      call c(isite,fi,r,sgn)
+                   case(1)
+                      if(ib(isite)/=0)cycle
+                      call cdg(isite,fi,r,sgn)
+                   end select
+                   j_el = binary_search(sectorJ%H(1)%map,r)
+                   j    = j_el + (iph-1)*sectorJ%DimEl
+                   OV(j) = OV(j) + sgn*V(i)*As(is)
+                enddo
+             enddo
+       end select
        call delete_sector(sectorI)
        call delete_sector(sectorJ)
     else
@@ -1127,7 +1229,10 @@ contains
        !
        if(ed_verbose>2)then
           select case(ed_mode)
-          case default;stop "apply_op_Sz ERROR: called with ed_mode/=superc/nonsu2"
+          case default;stop "apply_op_Sz ERROR: called with wrong ed_mode"
+          case ("normal")
+             write(LOGfile,"(A,I6,2I4)")&
+                  'apply Sz :',sectorI%index,sectorI%Nups,sectorI%Ndws
           case ("superc")
              write(LOGfile,"(A,I6,I3)")&
                   'apply Sz :',sectorI%index,sectorI%Sz
@@ -1142,15 +1247,31 @@ contains
           end select
        endif
        !
-       do i=1,sectorI%Dim
-          iph   = (i-1)/(sectorI%DimEl)+1
-          i_el  = mod(i-1,sectorI%DimEl)+1
-          ei    = sectorI%H(1)%map(i_el)
-          ib    = bdecomp(ei,2*Ns)
-          sgn   = dble(ib(ipos))-dble(ib(ipos+Ns))
-          sgn   = sgn/2d0
-          OV(i) = sgn*V(i)
-       enddo
+       select case(ed_mode)
+       case("normal")
+         do i=1,sectorI%Dim
+            iph = (i-1)/(sectorI%DimEl) + 1
+            i_el = mod(i-1,sectorI%DimEl) + 1
+            call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+            iud(1)   = sectorI%H(ialfa)%map(Indices(ialfa))
+            iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
+            nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+            nud(2,:) = Bdecomp(iud(2),Ns_Orb)
+            sgn      = dble(nud(1,ipos))-dble(nud(2,ipos))
+            sgn      = sgn/2d0
+            OV(i)    = sgn*V(i)
+         enddo      
+       case default;
+         do i=1,sectorI%Dim
+            iph   = (i-1)/(sectorI%DimEl)+1
+            i_el  = mod(i-1,sectorI%DimEl)+1
+            ei    = sectorI%H(1)%map(i_el)
+            ib    = bdecomp(ei,2*Ns)
+            sgn   = dble(ib(ipos))-dble(ib(ipos+Ns))
+            sgn   = sgn/2d0
+            OV(i) = sgn*V(i)
+         enddo
+       end select
        !
        call delete_sector(sectorI)
        !
@@ -1261,7 +1382,10 @@ contains
        !
        if(ed_verbose>2)then
           select case(ed_mode)
-          case default;stop "apply_op_N ERROR: called with ed_mode/=superc/nonsu2"
+          case default;stop "apply_op_N ERROR: called with wrong ed_mode"
+          case ("normal")
+             write(LOGfile,"(A,I6,2I4)")&
+                  'apply N  :',sectorI%index,sectorI%Nups,sectorI%Ndws
           case ("superc")
              write(LOGfile,"(A,I6,I3)")&
                   'apply N  :',sectorI%index,sectorI%Sz
@@ -1276,14 +1400,29 @@ contains
           end select
        endif
        !
-       do i=1,sectorI%Dim
-          iph   = (i-1)/(sectorI%DimEl)+1
-          i_el  = mod(i-1,sectorI%DimEl)+1
-          ei    = sectorI%H(1)%map(i_el)
-          ib    = bdecomp(ei,2*Ns)
-          sgn   = dble(ib(ipos))+dble(ib(ipos+Ns))
-          OV(i) = sgn*V(i)
-       enddo
+       select case(ed_mode)
+         case ("normal")
+           do i=1,sectorI%Dim
+              iph = (i-1)/(sectorI%DimEl) + 1
+              i_el = mod(i-1,sectorI%DimEl) + 1
+              call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+              iud(1)   = sectorI%H(ialfa)%map(Indices(ialfa))
+              iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
+              nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+              nud(2,:) = Bdecomp(iud(2),Ns_Orb)
+              sgn      = dble(nud(1,ipos))+dble(nud(2,ipos))
+              OV(i)    = sgn*V(i)
+           enddo         
+         case default;
+           do i=1,sectorI%Dim
+              iph   = (i-1)/(sectorI%DimEl)+1
+              i_el  = mod(i-1,sectorI%DimEl)+1
+              ei    = sectorI%H(1)%map(i_el)
+              ib    = bdecomp(ei,2*Ns)
+              sgn   = dble(ib(ipos))+dble(ib(ipos+Ns))
+              OV(i) = sgn*V(i)
+           enddo
+       end select
        !
        call delete_sector(sectorI)
        !

@@ -121,8 +121,13 @@ MODULE ED_VARS_GLOBAL
   abstract interface
      subroutine cc_sparse_HxV(Nloc,v,Hv)
        integer                    :: Nloc
+#ifdef _CMPLX_NORMAL
        complex(8),dimension(Nloc) :: v
        complex(8),dimension(Nloc) :: Hv
+#else
+       real(8),dimension(Nloc)    :: v
+       real(8),dimension(Nloc)    :: Hv
+#endif
      end subroutine cc_sparse_HxV
   end interface
 

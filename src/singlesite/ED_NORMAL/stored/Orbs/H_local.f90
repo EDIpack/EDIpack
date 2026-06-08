@@ -14,12 +14,12 @@
      do iorb=1,Norb
         htmp = htmp + impHloc(1,1,iorb,iorb)*Nup(iorb)
         htmp = htmp + impHloc(Nspin,Nspin,iorb,iorb)*Ndw(iorb)
-        htmp = htmp - xmu*( Nup(iorb)+Ndw(iorb) )
+        htmp = htmp - one*xmu*( Nup(iorb)+Ndw(iorb) )
      enddo
      if(any(spin_field(:,3)/=0d0))then
         !F_z.S^z:= F_z.(n_up-n_dw)
         do iorb=1,Norb
-           htmp = htmp + spin_field(iorb,3)*(nup(iorb)-ndw(iorb))
+           htmp = htmp + one*spin_field(iorb,3)*(nup(iorb)-ndw(iorb))
         enddo
      endif
      !
@@ -29,7 +29,7 @@
      !density-density interaction: same orbital, opposite spins:
      ! = \sum_\a U_\a*(n_{\a,up}*n_{\a,dw})
      do iorb=1,Norb
-        htmp = htmp + Uloc_internal(iorb)*nup(iorb)*ndw(iorb)
+        htmp = htmp + one*Uloc_internal(iorb)*nup(iorb)*ndw(iorb)
      enddo
      if(Norb>1)then
         !density-density interaction: different orbitals, opposite spins:
@@ -37,7 +37,7 @@
         ! =  (Uloc_internal-2*Jh_internal(iorb,jorb))*sum_{i/=j} [ n_{i,up}*n_{j,dw} + n_{j,up}*n_{i,dw} ]
         do iorb=1,Norb
            do jorb=iorb+1,Norb
-              htmp = htmp + Ust_internal(iorb,jorb)*(nup(iorb)*ndw(jorb) + nup(jorb)*ndw(iorb))
+              htmp = htmp + one*Ust_internal(iorb,jorb)*(nup(iorb)*ndw(jorb) + nup(jorb)*ndw(iorb))
            enddo
         enddo
         !density-density interaction: different orbitals, parallel spins
@@ -45,7 +45,7 @@
         ! = \sum_{i<j} (Uloc_internal-3*Jh_internal(iorb,jorb))*[ n_{i,up}*n_{j,up} + n_{i,dw}*n_{j,dw} ]
         do iorb=1,Norb
            do jorb=iorb+1,Norb
-              htmp = htmp + (Ust_internal(iorb,jorb)-Jh_internal(iorb,jorb))*(nup(iorb)*nup(jorb) + ndw(iorb)*ndw(jorb))
+              htmp = htmp + one*(Ust_internal(iorb,jorb)-Jh_internal(iorb,jorb))*(nup(iorb)*nup(jorb) + ndw(iorb)*ndw(jorb))
            enddo
         enddo
      endif
@@ -53,13 +53,13 @@
      !sum up the contributions of hartree terms:
      if(hfmode)then
         do iorb=1,Norb
-           htmp = htmp - 0.5d0*Uloc_internal(iorb)*(nup(iorb)+ndw(iorb)) + 0.25d0*Uloc_internal(iorb)
+           htmp = htmp - one*0.5d0*Uloc_internal(iorb)*(nup(iorb)+ndw(iorb)) + 0.25d0*Uloc_internal(iorb)
         enddo
         if(Norb>1)then
            do iorb=1,Norb
               do jorb=iorb+1,Norb
-                 htmp=htmp-0.5d0*Ust_internal(iorb,jorb)*(nup(iorb)+ndw(iorb)+nup(jorb)+ndw(jorb))+0.25d0*Ust_internal(iorb,jorb)
-                 htmp=htmp-0.5d0*(Ust_internal(iorb,jorb)-Jh_internal(iorb,jorb))*(nup(iorb)+ndw(iorb)+nup(jorb)+ndw(jorb))+0.25d0*(Ust_internal(iorb,jorb)-Jh_internal(iorb,jorb))
+                 htmp=htmp-one*0.5d0*Ust_internal(iorb,jorb)*(nup(iorb)+ndw(iorb)+nup(jorb)+ndw(jorb))+0.25d0*Ust_internal(iorb,jorb)
+                 htmp=htmp-one*0.5d0*(Ust_internal(iorb,jorb)-Jh_internal(iorb,jorb))*(nup(iorb)+ndw(iorb)+nup(jorb)+ndw(jorb))+0.25d0*(Ust_internal(iorb,jorb)-Jh_internal(iorb,jorb))
               enddo
            enddo
         endif
@@ -71,8 +71,8 @@
      do iorb=1,size(bath_diag,2)
         do kp=1,Nbath
            ialfa = getBathStride(iorb,kp)
-           htmp =htmp + bath_diag(1    ,iorb,kp)*Nup(ialfa) !UP
-           htmp =htmp + bath_diag(Nspin,iorb,kp)*Ndw(ialfa) !DW
+           htmp =htmp + one*bath_diag(1    ,iorb,kp)*Nup(ialfa) !UP
+           htmp =htmp + one*bath_diag(Nspin,iorb,kp)*Ndw(ialfa) !DW
         enddo
      enddo
      !

@@ -39,7 +39,7 @@
               call cdg(iorb,k1,k2,sg2)
               jup  = binary_search(Hsector%H(1)%map,k2)
               jdw  = idw
-              htmp = g_ph(iorb,jorb)*sg1*sg2
+              htmp = one*g_ph(iorb,jorb)*sg1*sg2
               !
               if(iph<Nph)then !bdg
                  j     = jup + (jdw-1)*dimUp + (iph)*DimUp*MpiQdw
@@ -64,7 +64,7 @@
               call cdg(iorb,k1,k2,sg2)
               jdw = binary_search(Hsector%H(2)%map,k2)
               jup  = iup
-              htmp = g_ph(iorb,jorb)*sg1*sg2
+              htmp = one*g_ph(iorb,jorb)*sg1*sg2
               !
               if(iph<Nph)then !bdg
                  j     = jup + (jdw-1)*dimUp + (iph)*DimUp*MpiQdw

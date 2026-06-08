@@ -95,7 +95,7 @@
               STOP "H_sundry: impossible operator"
            endif
            
-           htmp = coulomb_sundry(iline)%U * sg1 * sg2 * sg3 * sg4
+           htmp = one*coulomb_sundry(iline)%U * sg1 * sg2 * sg3 * sg4
            j = jup + (jdw-1)*DimUp
            !
            select case(MpiStatus)

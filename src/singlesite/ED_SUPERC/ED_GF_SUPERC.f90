@@ -416,7 +416,7 @@ contains
        endif
        !
        call tridiag_Hv_sector_superc(isector,vvinit,alfa_,beta_,norm2)
-       call add_to_lanczos_phonon(norm2,e_state,alfa_,beta_,istate)
+       call add_to_lanczos_phonon(one*norm2,e_state,alfa_,beta_,istate)
        deallocate(alfa_,beta_)
        if(allocated(vvinit))deallocate(vvinit)
        if(allocated(v_state))deallocate(v_state)
@@ -520,7 +520,8 @@ contains
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    real(8)                                    :: vnorm2,Ei,Ej,Egs,pesoF,pesoAB,pesoBZ,de,peso
+    complex(8)                                 :: vnorm2,pesoF,pesoAB,pesoBZ,de,peso
+    real(8)                                    :: Ei,Ej,Egs
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
     real(8),dimension(size(alanc))             :: blanc

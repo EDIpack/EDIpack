@@ -21,17 +21,22 @@ MODULE ED_CHI_PAIR
   public :: build_pairChi_normal
   public :: get_pairChi_normal
 
-  integer                          :: istate,iorb,jorb,ispin,jspin
-  integer                          :: isector,jsector,ksector
-  real(8),allocatable              :: vvinit(:)
-  real(8),allocatable              :: alfa_(:),beta_(:)
-  integer                          :: ialfa
-  integer                          :: jalfa
-  integer                          :: i,j,k
-  real(8)                          :: sgn
-  real(8)                          :: norm2
-  real(8),dimension(:),allocatable :: v_state
-  real(8)                          :: e_state
+  integer                             :: istate,iorb,jorb,ispin,jspin
+  integer                             :: isector,jsector,ksector
+  real(8),allocatable                 :: alfa_(:),beta_(:)
+  integer                             :: ialfa
+  integer                             :: jalfa
+  integer                             :: ipos,jpos
+  integer                             :: i,j,k
+  real(8)                             :: sgn,norm2
+#ifdef _CMPLX_NORMAL
+  complex(8),allocatable              :: vvinit(:)
+  complex(8),dimension(:),allocatable :: v_state
+#else
+  real(8),allocatable                 :: vvinit(:)
+  real(8),dimension(:),allocatable    :: v_state
+#endif
+  real(8)                             :: e_state
 
 
 
@@ -89,8 +94,12 @@ contains
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    integer                          :: iorb
-    real(8),dimension(:),allocatable :: vtmp
+    integer                             :: iorb
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:),allocatable :: vtmp
+#else
+    real(8),dimension(:),allocatable    :: vtmp
+#endif
     !
     write(LOGfile,"(A)")"Get Chi_pair_l"//reg(txtfy(iorb))
     !
@@ -104,7 +113,11 @@ contains
        call allocate_GFmatrix(pairChimatrix(iorb,iorb),istate,Nchan=2)
        isector  =  es_return_sector(state_list,istate)
        e_state  =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state  =  es_return_cvec(state_list,istate)
+#else       
        v_state  =  es_return_dvec(state_list,istate)
+#endif
        !
        ! Lesser
        !
@@ -154,7 +167,11 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     integer                             :: iorb,jorb
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:),allocatable    :: va,vb,vtmp
+#else
     real(8),dimension(:),allocatable    :: va,vb,vtmp
+#endif
     !
     write(LOGfile,"(A)")"Get Chi_pair_mix_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
     !

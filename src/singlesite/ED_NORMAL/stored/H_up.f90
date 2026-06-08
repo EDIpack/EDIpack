@@ -14,7 +14,7 @@
               call c(jorb,mup,k1,sg1)
               call cdg(iorb,k1,k2,sg2)
               iup = binary_search(Hsector%H(1)%map,k2)
-              htmp = (impHloc(1,1,iorb,jorb)+mfHloc(1,1,iorb,jorb))*sg1*sg2
+              htmp = one*(impHloc(1,1,iorb,jorb)+mfHloc(1,1,iorb,jorb))*sg1*sg2
               !
               call sp_insert_element(spH0ups(1),htmp,iup,jup)
               !
@@ -39,7 +39,7 @@
                     call c(ibeta,mup,k1,sg1)
                     call cdg(ialfa,k1,k2,sg2)
                     iup = binary_search(Hsector%H(1)%map,k2)
-                    htmp = hbath_tmp(1,1,iorb,jorb,kp)*sg1*sg2
+                    htmp = one*hbath_tmp(1,1,iorb,jorb,kp)*sg1*sg2
                     !
                     call sp_insert_element(spH0ups(1),htmp,iup,jup)
                     !
@@ -61,7 +61,7 @@
               call c(iorb,mup,k1,sg1)
               call cdg(ialfa,k1,k2,sg2)
               iup = binary_search(Hsector%H(1)%map,k2)
-              htmp = diag_hybr(1,iorb,kp)*sg1*sg2
+              htmp = one*diag_hybr(1,iorb,kp)*sg1*sg2
               !
               call sp_insert_element(spH0ups(1),htmp,iup,jup)
               !
@@ -72,7 +72,7 @@
               call c(ialfa,mup,k1,sg1)
               call cdg(iorb,k1,k2,sg2)
               iup=binary_search(Hsector%H(1)%map,k2)
-              htmp = diag_hybr(1,iorb,kp)*sg1*sg2
+              htmp = one*diag_hybr(1,iorb,kp)*sg1*sg2
               !
               call sp_insert_element(spH0ups(1),htmp,iup,jup)
               !
@@ -92,10 +92,10 @@
                  call cdg(iorb,k1,k2,sg2)
                  iup = binary_search(Hsector%H(1)%map,k2)
                  !
-                 htmp = exc_field(1)*sg1*sg2
+                 htmp = one*exc_field(1)*sg1*sg2
                  call sp_insert_element(spH0ups(1),htmp,iup,jup)
                  !
-                 htmp = exc_field(4)*sg1*sg2
+                 htmp = one*exc_field(4)*sg1*sg2
                  call sp_insert_element(spH0ups(1),htmp,iup,jup)
               endif
            enddo

@@ -40,6 +40,13 @@ else()
   message(STATUS "WITH_INEQ is OFF")
 endif()
 
+OPTION(CMPLX_NORMAL "Use Cmplx algebra also for ed_mode=normal" OFF)
+if(CMPLX_NORMAL)
+  message(STATUS "CMPLX_NORMAL is ON")
+else()
+  message(STATUS "CMPLX_NORMAL is OFF")
+endif()
+
 OPTION(VERBOSE "Build a verbose Makefile" OFF)
 IF(VERBOSE)
   SET(CMAKE_VERBOSE_MAKEFILE ON)
