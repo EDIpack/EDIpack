@@ -852,7 +852,7 @@ contains
                 jdw = idw             
                 j   = jup + (jdw-1)*DimDw
 #ifdef _CMPLX_NORMAL
-                val = spH0dws(1)%row(iup)cvals(jj)
+                val = spH0dws(1)%row(iup)%cvals(jj)
 #else
                 val = spH0dws(1)%row(iup)%dvals(jj)
 #endif
