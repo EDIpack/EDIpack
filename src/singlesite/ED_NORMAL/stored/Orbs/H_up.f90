@@ -11,9 +11,9 @@
               call c(1,mup,k1,sg1)
               call cdg(ialfa,k1,k2,sg2)
               iup  = binary_search(Hsector%H(iorb)%map,k2)
-              htmp = one*diag_hybr(1,iorb,kp)*sg1*sg2
+              htmp = diag_hybr(1,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0ups(iorb),htmp,iup,jup)
+              call sp_insert_element(spH0ups(iorb),one*htmp,iup,jup)
               !
            endif
            !
@@ -22,9 +22,9 @@
               call c(ialfa,mup,k1,sg1)
               call cdg(1,k1,k2,sg2)
               iup  = binary_search(Hsector%H(iorb)%map,k2)
-              htmp = one*diag_hybr(1,iorb,kp)*sg1*sg2
+              htmp = diag_hybr(1,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0ups(iorb),htmp,iup,jup)
+              call sp_insert_element(spH0ups(iorb),one*htmp,iup,jup)
               !
            endif
         enddo

@@ -13,14 +13,14 @@
      ! Diagonal terms: Sum_iorb g_iorb,iorb n_iorb
      htmp = zero
      do iorb=1,Norb
-        htmp = htmp + one*g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+        htmp = htmp + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
      enddo
      !
      select case(MpiStatus)
      case (.true.)
-        call sp_insert_element(MpiComm,spH0e_eph,htmp,i,i)
+        call sp_insert_element(MpiComm,spH0e_eph,one*htmp,i,i)
      case (.false.)
-        call sp_insert_element(spH0e_eph,htmp,i,i)
+        call sp_insert_element(spH0e_eph,one*htmp,i,i)
      end select
      !     
      ! Off-Diagonal terms: Sum_iorb,jorb g_iorb,jorb cdg_iorb*c_jorb
@@ -37,9 +37,9 @@
               jup  = binary_search(Hsector%H(1)%map,k2)
               jdw  = idw
               j   = jup + (jdw-1)*DimUp
-              htmp = one*g_ph(iorb,jorb)*sg1*sg2
+              htmp = g_ph(iorb,jorb)*sg1*sg2
               !
-              call sp_insert_element(spH0e_eph,htmp,j,i)
+              call sp_insert_element(spH0e_eph,one*htmp,j,i)
            endif
         enddo
      enddo
@@ -56,9 +56,9 @@
               jup  = iup
               jdw  = binary_search(Hsector%H(2)%map,k2)
               j   = jup + (jdw-1)*DimUp
-              htmp = one*g_ph(iorb,jorb)*sg1*sg2
+              htmp = g_ph(iorb,jorb)*sg1*sg2
               !
-              call sp_insert_element(spH0e_eph,htmp,j,i)
+              call sp_insert_element(spH0e_eph,one*htmp,j,i)
               !
            endif
               
@@ -72,13 +72,13 @@
   do iph=1,DimPh
      i = iph + 1
      if(i <= DimPh) then
-        htmp = one*sqrt(dble(iph))
+        htmp = sqrt(dble(iph))
         call sp_insert_element(spH0ph_eph,htmp,iph,i)
      end if
      i = iph - 1
      if(i>0) then
-        htmp = one*sqrt(dble(iph - 1))
-        call sp_insert_element(spH0ph_eph,htmp,iph,i)
+        htmp = sqrt(dble(iph - 1))
+        call sp_insert_element(spH0ph_eph,one*one*htmp,iph,i)
      end if
   end do
 

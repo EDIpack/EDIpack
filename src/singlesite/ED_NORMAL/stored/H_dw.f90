@@ -15,9 +15,9 @@
               call cdg(iorb,k1,k2,sg2)
               idw = binary_search(Hsector%H(2)%map,k2)
               htmp = impHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2
-              htmp = htmp + one*mfHloc(2,2,iorb,jorb)*sg1*sg2
+              htmp = htmp + mfHloc(2,2,iorb,jorb)*sg1*sg2
               !
-              call sp_insert_element(spH0dws(1),htmp,idw,jdw)
+              call sp_insert_element(spH0dws(1),one*htmp,idw,jdw)
               !
            endif
         enddo
@@ -40,9 +40,9 @@
                     call c(ibeta,mdw,k1,sg1)
                     call cdg(ialfa,k1,k2,sg2)
                     idw = binary_search(Hsector%H(2)%map,k2)
-                    htmp = one*hbath_tmp(Nspin,Nspin,iorb,jorb,kp)*sg1*sg2
+                    htmp = hbath_tmp(Nspin,Nspin,iorb,jorb,kp)*sg1*sg2
                     !
-                    call sp_insert_element(spH0dws(1),htmp,idw,jdw)
+                    call sp_insert_element(spH0dws(1),one*htmp,idw,jdw)
                     !
                  endif
               enddo
@@ -64,7 +64,7 @@
               idw=binary_search(Hsector%H(2)%map,k2)
               htmp=diag_hybr(Nspin,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0dws(1),htmp,idw,jdw)
+              call sp_insert_element(spH0dws(1),one*htmp,idw,jdw)
               !
            endif
            if( (diag_hybr(Nspin,iorb,kp)/=0d0) &
@@ -72,9 +72,9 @@
               call c(ialfa,mdw,k1,sg1)
               call cdg(iorb,k1,k2,sg2)
               idw=binary_search(Hsector%H(2)%map,k2)
-              htmp=one*diag_hybr(Nspin,iorb,kp)*sg1*sg2
+              htmp=diag_hybr(Nspin,iorb,kp)*sg1*sg2
               !
-              call sp_insert_element(spH0dws(1),htmp,idw,jdw)
+              call sp_insert_element(spH0dws(1),one*htmp,idw,jdw)
               !
            endif
         enddo
@@ -93,11 +93,11 @@
                  call cdg(iorb,k1,k2,sg2)
                  idw = binary_search(Hsector%H(2)%map,k2)
                  !
-                 htmp = one*exc_field(1)*sg1*sg2
-                 call sp_insert_element(spH0dws(1),htmp,idw,jdw)
+                 htmp = exc_field(1)*sg1*sg2
+                 call sp_insert_element(spH0dws(1),one*htmp,idw,jdw)
                  !
-                 htmp = -one*exc_field(4)*sg1*sg2
-                 call sp_insert_element(spH0dws(1),htmp,idw,jdw)
+                 htmp = -exc_field(4)*sg1*sg2
+                 call sp_insert_element(spH0dws(1),one*htmp,idw,jdw)
               endif
            enddo
         enddo

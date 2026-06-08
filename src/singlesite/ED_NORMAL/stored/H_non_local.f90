@@ -33,14 +33,14 @@
                  call c(jorb,mup,k3,sg3)  !UP
                  call cdg(iorb,k3,k4,sg4) !UP
                  jup=binary_search(Hsector%H(1)%map,k4)
-                 htmp = one*Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4
+                 htmp = Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4
                  j = jup + (jdw-1)*DimUp
                  !
                  select case(MpiStatus)
                  case (.true.)
-                    call sp_insert_element(MpiComm,spH0nd,htmp,i,j)
+                    call sp_insert_element(MpiComm,spH0nd,one*htmp,i,j)
                  case (.false.)
-                    call sp_insert_element(spH0nd,htmp,i,j)
+                    call sp_insert_element(spH0nd,one*htmp,i,j)
                  end select
                  !
               endif
@@ -66,14 +66,14 @@
                  call c(jorb,mup,k3,sg3)       !c_jorb_up
                  call cdg(iorb,k3,k4,sg4)      !c^+_iorb_up
                  jup = binary_search(Hsector%H(1)%map,k4)
-                 htmp = one*Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4
+                 htmp = Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4
                  j = jup + (jdw-1)*DimUp
                  !
                  select case(MpiStatus)
                  case (.true.)
-                    call sp_insert_element(MpiComm,spH0nd,htmp,i,j)
+                    call sp_insert_element(MpiComm,spH0nd,one*htmp,i,j)
                  case (.false.)
-                    call sp_insert_element(spH0nd,htmp,i,j)
+                    call sp_insert_element(spH0nd,one*htmp,i,j)
                  end select
                  !
               endif

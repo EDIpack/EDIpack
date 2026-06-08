@@ -12,14 +12,14 @@
      ! Diagonal terms: Sum_iorb g_iorb,iorb n_iorb
      htmp = zero
      do iorb=1,Norb
-        htmp = htmp + one*g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
+        htmp = htmp + g_ph(iorb,iorb)*(nup(iorb)+ndw(iorb))
      enddo
      !
      select case(MpiStatus)
      case (.true.)
-        call sp_insert_element(MpiComm,spH0e_eph,htmp,i,i)
+        call sp_insert_element(MpiComm,spH0e_eph,one*htmp,i,i)
      case (.false.)
-        call sp_insert_element(spH0e_eph,htmp,i,i)
+        call sp_insert_element(spH0e_eph,one*htmp,i,i)
      end select
      !
      ! Off-Diagonal terms: Sum_iorb,jorb g_iorb,jorb cdg_iorb*c_jorb
@@ -36,13 +36,13 @@
               jup  = binary_search(Hsector%H(1)%map,k2)
               jdw  = idw
               j    = jup + (jdw-1)*DimUp
-              htmp = one*g_ph(iorb,jorb)*sg1*sg2
+              htmp = g_ph(iorb,jorb)*sg1*sg2
               !
               select case(MpiStatus)
               case (.true.)
-                 call sp_insert_element(MpiComm,spH0e_eph,htmp,j,i)
+                 call sp_insert_element(MpiComm,spH0e_eph,one*htmp,j,i)
               case (.false.)
-                 call sp_insert_element(spH0e_eph,htmp,j,i)
+                 call sp_insert_element(spH0e_eph,one*htmp,j,i)
               end select
            endif
         enddo
@@ -60,13 +60,13 @@
               jup  = iup
               jdw  = binary_search(Hsector%H(2)%map,k2)
               j    = jup + (jdw-1)*DimUp
-              htmp = one*g_ph(iorb,jorb)*sg1*sg2
+              htmp = g_ph(iorb,jorb)*sg1*sg2
               !
               select case(MpiStatus)
               case (.true.)
-                 call sp_insert_element(MpiComm,spH0e_eph,htmp,j,i)
+                 call sp_insert_element(MpiComm,spH0e_eph,one*htmp,j,i)
               case (.false.)
-                 call sp_insert_element(spH0e_eph,htmp,j,i)
+                 call sp_insert_element(spH0e_eph,one*htmp,j,i)
               end select
               !
            endif
@@ -81,11 +81,11 @@
   do iph=1,DimPh
      ! N.B. here iph = n+1
      if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
-        htmp = one*sqrt(dble(iph))
-        call sp_insert_element(spH0ph_eph,htmp,iph+1,iph)
+        htmp = sqrt(dble(iph))
+        call sp_insert_element(spH0ph_eph,one*htmp,iph+1,iph)
      end if
      if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
-        htmp = one*sqrt(dble(iph-1))
-        call sp_insert_element(spH0ph_eph,htmp,iph-1,iph)
+        htmp = sqrt(dble(iph-1))
+        call sp_insert_element(spH0ph_eph,one*htmp,iph-1,iph)
      end if
   end do
