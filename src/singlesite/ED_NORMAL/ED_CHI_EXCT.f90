@@ -516,7 +516,7 @@ contains
     integer                             :: iorb,jorb,iorb_,jorb_,ksector,lsector,isign,indx,ichan,istate
     real(8)                             :: comb_sign
 #ifdef _CMPLX_NORMAL
-    complex(8),dimension(:),allocatable :: vtmp
+    complex(8),dimension(:),allocatable :: vup,vdw,vtmp
 #else
     real(8),dimension(:),allocatable    :: vup,vdw,vtmp
 #endif

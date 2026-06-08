@@ -201,7 +201,11 @@ contains
        !(c^+_iorb + c^+_jorb)|gs> = [1,1].[C_{+1},C_{+1}].[iorb,jorb].[ispin,ispin]
        jsector = getCDGsector(ialfa,ispin,isector)
        if(jsector/=0)then
+#ifdef _CMPLX_NORMAL
+          vvinit = apply_Cops(v_state,[one,one],[1,1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#else        
           vvinit = apply_Cops(v_state,[1d0,1d0],[1,1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#endif
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
           call add_to_lanczos_gf_normal(one*norm2,e_state,alfa_,beta_,1,iorb,jorb,ispin,ichan=1,istate=istate)
           deallocate(alfa_,beta_,vvinit)
@@ -212,7 +216,11 @@ contains
        !(c_iorb + c_jorb)|gs> = [1,1].[C_{-1},C_{-1}].[iorb,jorb].[ispin,ispin]
        jsector = getCsector(ialfa,ispin,isector)
        if(jsector/=0)then
+#ifdef _CMPLX_NORMAL
+          vvinit =  apply_Cops(v_state,[one,one],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#else  
           vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#endif
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
           call add_to_lanczos_gf_normal(one*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ispin,2,istate)
           deallocate(alfa_,beta_,vvinit)
