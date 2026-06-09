@@ -202,11 +202,7 @@ contains
     call observables_impurity()
     call local_energy_impurity()
     !
-    ! if(Nbath>0)then
-      call rdm_impurity()
-    ! else
-    !   print*,"**WARNING** RDM calculation not available without a bath, for now."
-    ! endif
+    call rdm_impurity()
     !
     call deallocate_dmft_bath()
     call es_delete_espace(state_list)

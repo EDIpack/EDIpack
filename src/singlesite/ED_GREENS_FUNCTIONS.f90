@@ -453,11 +453,14 @@ contains
 #endif
     call allocate_grids()
     select case(ed_mode)
+#ifdef _CMPLX_NORMAL
+#else
     case ("normal");
        impG0mats  = g0and_bath_function(dcmplx(0d0,wm(:)),axis='mats')
        impG0real  = g0and_bath_function(dcmplx(wr(:),eps),axis='real')
        call Gprint_normal("impG0",impG0mats,'m')
        call Gprint_normal("impG0",impG0real,'r')
+#endif
     case ("superc");
        impG0mats  = g0and_bath_function(dcmplx(0d0,wm(:)),axis='mats')
        impF0mats  = f0and_bath_function(dcmplx(0d0,wm(:)),axis='mats')
@@ -467,7 +470,11 @@ contains
        call Gprint_superc("impF0",impF0mats,'m')
        call Gprint_superc("impG0",impG0real,'r')
        call Gprint_superc("impF0",impF0real,'r')
+#ifdef _CMPLX_NORMAL
+    case ("normal","nonsu2");
+#else
     case ("nonsu2");
+#endif
        impG0mats  = g0and_bath_function(dcmplx(0d0,wm(:)),axis='mats')
        impG0real  = g0and_bath_function(dcmplx(wr(:),eps),axis='real')
        call Gprint_nonsu2("impG0",impG0mats,'m')
@@ -590,17 +597,14 @@ contains
        allocate(getIorb(totNorb),getJorb(totNorb))
        l=0
        do iorb=1,Norb
-#ifdef _CMPLX_NORMAL
-          do jorb=1,Norb
-#else
           do jorb=iorb,Norb
-#endif
              l=l+1
              getIorb(l)=iorb
              getJorb(l)=jorb
           enddo
        enddo
     end select
+    if(l/=totNorb)stop "print_gf_normal error counting the orbitals"
     !!
     !Print the impurity functions:
     call allocate_grids
