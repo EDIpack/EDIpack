@@ -195,7 +195,11 @@ contains
                                !-----------------------------------------------------------------
                                !(i,j)_th contribution to the (io,jo)_th element of \rho_IMP
                                impurity_density_matrix(io,jo) = impurity_density_matrix(io,jo) + &
+#ifdef _CMPLX_NORMAL
+                                    v_state(i)*conjg(v_state(j))*peso
+#else
                                     v_state(i)*v_state(j)*peso
+#endif
                                !-----------------------------------------------------------------
                             enddo
                          enddo
