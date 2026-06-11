@@ -379,7 +379,7 @@ contains
                   ! diagonal
                   if(iorb==jorb )then
                      full_denmat(ispin,ispin,iorb,jorb) = &
-                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*v_state(i)
+                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*conjg(v_state(i))
                   elseif((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
                      iud(1) = sectorI%H(1)%map(Indices(1))
                      iud(2) = sectorI%H(2)%map(Indices(2))
@@ -393,7 +393,7 @@ contains
                      j = j + (iph-1)*sectorI%DimEl
                      !
                      full_denmat(ispin,ispin,iorb,jorb) = &
-                        full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+                        full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
                   endif
                   enddo
                enddo
