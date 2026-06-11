@@ -9,6 +9,15 @@ MODULE ED_INPUT_VARS
   use iso_c_binding
   implicit none
 
+  !-------------------------- COMPLEX NORMAL BRANCH --------------------------!
+#ifdef _CMPLX_NORMAL
+  integer(c_int),bind(c, name="normal_complex") :: normal_complex=1 
+#else
+  integer(c_int),bind(c, name="normal_complex") :: normal_complex=0
+#endif
+  !---------------------------------------------------------------------------!
+
+
   !======================================!
   ! These variables are bound to c types ! 
   !======================================!

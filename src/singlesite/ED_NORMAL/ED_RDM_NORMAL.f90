@@ -37,7 +37,11 @@ MODULE ED_RDM_NORMAL
   integer                          :: isector,jsector
   !
   real(8)                          :: e_state
-  real(8),dimension(:),allocatable :: v_state
+#ifdef _CMPLX_NORMAL
+  complex(8),dimension(:),allocatable :: v_state
+#else
+  real(8),dimension(:),allocatable    :: v_state
+#endif
   logical                          :: Jcondition
   !
   integer                          :: iImpUp,iImpDw
@@ -90,7 +94,11 @@ contains
        !
        isector = es_return_sector(state_list,istate)
        e_state =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state =  es_return_cvec(state_list,istate)
+#else
        v_state =  es_return_dvec(state_list,istate)
+#endif
        !
        peso = 1.d0 ; if(finiteT)peso=exp(-beta*(e_state-Egs))
        peso = peso/zeta_function
@@ -122,8 +130,13 @@ contains
                          jo = (JimpUp + 2**Norb*JimpDw) + 1
                          !
                          !(i,j)_th contribution to the (io,jo)_th element of \rho_IMP
+#ifdef _CMPLX_NORMAL                         
                          impurity_density_matrix(io,jo) = impurity_density_matrix(io,jo) + &
-                              v_state(i)*v_state(j)*peso
+                              v_state(i)*conjg(v_state(j))*peso  
+#else                              
+                         impurity_density_matrix(io,jo) = impurity_density_matrix(io,jo) + &
+                              v_state(i)*v_state(j)*peso    
+#endif                             
                       enddo
                    enddo
                 enddo
@@ -182,7 +195,11 @@ contains
                                !-----------------------------------------------------------------
                                !(i,j)_th contribution to the (io,jo)_th element of \rho_IMP
                                impurity_density_matrix(io,jo) = impurity_density_matrix(io,jo) + &
+#ifdef _CMPLX_NORMAL
+                                    v_state(i)*conjg(v_state(j))*peso
+#else
                                     v_state(i)*v_state(j)*peso
+#endif
                                !-----------------------------------------------------------------
                             enddo
                          enddo

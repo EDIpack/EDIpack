@@ -75,6 +75,11 @@ contains
     !
     if(ed_all_g)then
        Hmask=.true.
+       !don't fit spin offdiagonal if ed_mode is normal!
+       if(ED_MODE=="normal" .and. Nspin==2)then
+         Hmask(1,2,:,:) = .false.
+         Hmask(2,1,:,:) = .false.
+       endif
        ! Aren't we sure about hermiticity?
        ! -> Hmask=Hreplica_mask(wdiag=.false.,uplo=.true.)
     else

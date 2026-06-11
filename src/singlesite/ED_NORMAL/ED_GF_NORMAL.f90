@@ -23,32 +23,37 @@ MODULE ED_GF_NORMAL
   public :: get_Sigma_normal
 
 
-  integer                          :: istate
-  integer                          :: isector,jsector
-  integer                          :: idim,idimUP,idimDW
+
+  integer                             :: istate
+  integer                             :: isector,jsector
+  integer                             :: idim,idimUP,idimDW
   !
-  integer                          :: ialfa,jalfa
-  integer                          :: ipos,jpos
-  integer                          :: i,j,m
-  integer                          :: iph,i_el
-  real(8)                          :: sgn,norm2
-  integer                          :: in,jn
-  integer                          :: inam,jnam
-  integer                          :: ilat,jlat
-  integer                          :: iorb,jorb
-  integer                          :: ispin,jspin
-  integer                          :: is,js
-  integer                          :: io,jo
-  integer                          :: iup,idw
-  integer                          :: jup,jdw  
-  integer                          :: mup,mdw
+  integer                             :: ialfa,jalfa
+  integer                             :: ipos,jpos
+  integer                             :: i,j,m
+  integer                             :: iph,i_el
+  real(8)                             :: sgn,norm2
+  integer                             :: in,jn
+  integer                             :: inam,jnam
+  integer                             :: ilat,jlat
+  integer                             :: iorb,jorb
+  integer                             :: ispin,jspin
+  integer                             :: is,js
+  integer                             :: io,jo
+  integer                             :: iup,idw
+  integer                             :: jup,jdw  
+  integer                             :: mup,mdw
 
   !
-  real(8),allocatable              :: vvinit(:)
-  real(8),allocatable              :: alfa_(:),beta_(:)
-  real(8),dimension(:),allocatable :: v_state
-  real(8)                          :: e_state
-
+#ifdef _CMPLX_NORMAL
+  complex(8),allocatable              :: vvinit(:)
+  complex(8),dimension(:),allocatable :: v_state
+#else
+  real(8),allocatable                 :: vvinit(:)
+  real(8),dimension(:),allocatable    :: v_state
+#endif
+  real(8),allocatable                 :: alfa_(:),beta_(:)
+  real(8)                             :: e_state
 
 
 
@@ -93,7 +98,12 @@ contains
        !
        do ispin=1,Nspin
           do iorb=1,Norb
+#ifdef _CMPLX_NORMAL
+             do jorb=1,Norb
+#else
              do jorb=iorb+1,Norb
+#endif
+                if(iorb==jorb)cycle
                 if(.not.Gbool(ispin,ispin,iorb,jorb))cycle
                 call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),Nstate=state_list%size)
                 call lanc_build_gf_normal_mix(iorb,jorb,ispin)
@@ -133,7 +143,11 @@ contains
        !
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !ADD ONE PARTICLE:
        jsector = getCDGsector(ialfa,ispin,isector)
@@ -179,33 +193,79 @@ contains
     !
     do istate=1,state_list%size
        !
+#ifdef _CMPLX_NORMAL
+       call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,Nchan=4)
+#else
        call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,Nchan=2)
+#endif
        !
        isector  =  es_return_sector(state_list,istate)
        e_state  =  es_return_energy(state_list,istate)
-       v_state  =  es_return_dvec(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
+       v_state    =  es_return_dvec(state_list,istate)
+#endif
+       !
+       !
        !
        !(c^+_iorb + c^+_jorb)|gs> = [1,1].[C_{+1},C_{+1}].[iorb,jorb].[ispin,ispin]
        jsector = getCDGsector(ialfa,ispin,isector)
        if(jsector/=0)then
+#ifdef _CMPLX_NORMAL
+          vvinit = apply_Cops(v_state,[one,one],[1,1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#else        
           vvinit = apply_Cops(v_state,[1d0,1d0],[1,1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#endif
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
           call add_to_lanczos_gf_normal(one*norm2,e_state,alfa_,beta_,1,iorb,jorb,ispin,ichan=1,istate=istate)
           deallocate(alfa_,beta_,vvinit)
        else
-          call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,1,Nexc=0)
+          call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,ichan=1,Nexc=0)
+       endif
+       !
+       !
+       !
+       !(c_iorb + c_jorb)|gs> = [1,1].[C_{-1},C_{-1}].[iorb,jorb].[ispin,ispin]
+       jsector = getCsector(ialfa,ispin,isector)
+       if(jsector/=0)then
+#ifdef _CMPLX_NORMAL
+          vvinit =  apply_Cops(v_state,[one,one],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#else  
+          vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
+#endif
+          call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
+          call add_to_lanczos_gf_normal(one*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ispin,ichan=2,istate=istate)
+          deallocate(alfa_,beta_,vvinit)
+       else
+          call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,ichan=2,Nexc=0)
+       endif
+       !
+       !
+       !
+#ifdef _CMPLX_NORMAL
+       !(c^+_iorb + c^+_jorb)|gs> = [1,1].[C_{+1},C_{+1}].[iorb,jorb].[ispin,ispin]
+       jsector = getCDGsector(ialfa,ispin,isector)
+       if(jsector/=0)then
+          vvinit = apply_Cops(v_state,[one,xi],[1,1],[iorb,jorb],[ispin,ispin],isector,jsector)
+          call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
+          call add_to_lanczos_gf_normal(-xi*norm2,e_state,alfa_,beta_,1,iorb,jorb,ispin,ichan=3,istate=istate)
+          deallocate(alfa_,beta_,vvinit)
+       else
+          call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,ichan=3,Nexc=0)
        endif
        !
        !(c_iorb + c_jorb)|gs> = [1,1].[C_{-1},C_{-1}].[iorb,jorb].[ispin,ispin]
        jsector = getCsector(ialfa,ispin,isector)
        if(jsector/=0)then
-          vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
+          vvinit =  apply_Cops(v_state,[one,-xi],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_gf_normal(one*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ispin,2,istate)
+          call add_to_lanczos_gf_normal(-xi*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ispin,ichan=4,istate=istate)
           deallocate(alfa_,beta_,vvinit)
        else
-          call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,2,Nexc=0)
+          call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,ichan=4,Nexc=0)
        endif
+#endif
        !
        if(allocated(v_state))deallocate(v_state)
        !
@@ -233,7 +293,11 @@ contains
        !
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        call get_Nup(isector,Nups)
        call get_Ndw(isector,Ndws)
@@ -258,13 +322,13 @@ contains
              !apply destruction operator
              if(iph>1) then
                 j = i_el + ((iph-1)-1)*iDimUp*iDimDw
-                vvinit(j) = vvinit(j) + sqrt(dble(iph-1))*v_state(i)
+                vvinit(j) = vvinit(j) + one*sqrt(dble(iph-1))*v_state(i)
              endif
              !
              !apply creation operator
              if(iph<DimPh) then
                 j = i_el + ((iph+1)-1)*iDimUp*iDimDw
-                vvinit(j) = vvinit(j) + sqrt(dble(iph))*v_state(i)
+                vvinit(j) = vvinit(j) + one*sqrt(dble(iph))*v_state(i)
              endif
           enddo
        else
@@ -272,7 +336,7 @@ contains
        endif
        !
        call tridiag_Hv_sector_normal(isector,vvinit,alfa_,beta_,norm2)
-       call add_to_lanczos_phonon(norm2,e_state,alfa_,beta_,istate)
+       call add_to_lanczos_phonon(one*norm2,e_state,alfa_,beta_,istate)
        deallocate(alfa_,beta_)
        if(allocated(vvinit))deallocate(vvinit)
        if(allocated(v_state))deallocate(v_state)
@@ -371,7 +435,8 @@ contains
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    real(8)                                    :: vnorm2,Ei,Ej,Egs,pesoF,pesoAB,pesoBZ,de,peso
+    complex(8)                                 :: vnorm2,pesoF,pesoAB,pesoBZ,de,peso
+    real(8)                                    :: Ei,Ej,Egs
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
     real(8),dimension(size(alanc))             :: blanc 
@@ -461,13 +526,30 @@ contains
        !
        do ispin=1,Nspin
           do iorb=1,Norb
+#ifdef _CMPLX_NORMAL
+             do jorb=1,Norb
+#else
              do jorb=iorb+1,Norb
+#endif
+                if(iorb==jorb)cycle
                 if(.not.Gbool(ispin,ispin,iorb,jorb))cycle
                 call get_normal_Gab(iorb,jorb,ispin)
              enddo
           enddo
        enddo
-       !
+#ifdef _CMPLX_NORMAL
+       do ispin=1,Nspin
+          do iorb=1,Norb
+             do jorb=1,Norb
+                if(iorb==jorb)cycle
+                if(.not.Gbool(ispin,ispin,iorb,jorb))cycle
+                Gf(ispin,ispin,iorb,jorb,:) = 0.5d0*(Gf(ispin,ispin,iorb,jorb,:) &
+                        - (one-xi)*Gf(ispin,ispin,iorb,iorb,:) &
+                        - (one-xi)*Gf(ispin,ispin,jorb,jorb,:))
+             enddo
+          enddo
+       enddo
+#else
        do ispin=1,Nspin
           do iorb=1,Norb
              do jorb=iorb+1,Norb
@@ -478,6 +560,7 @@ contains
              enddo
           enddo
        enddo
+#endif
     end if
     !
   contains
@@ -490,7 +573,12 @@ contains
       integer                            :: Nstates,istate
       integer                            :: Nchannels,ichan
       integer                            :: Nexcs,iexc
-      real(8)                            :: peso,de
+      real(8)                            :: de
+#ifdef _CMPLX_NORMAL
+      complex(8)                         :: peso
+#else
+      real(8)                            :: peso
+#endif
       !
       Gf(ispin,ispin,iorb,jorb,:)=zero
       !
@@ -535,7 +623,13 @@ contains
     integer                            :: Nstates,istate
     integer                            :: Nchannels,ichan,i
     integer                            :: Nexcs,iexc
-    real(8)                            :: peso,de
+    real(8)                            :: de
+#ifdef _CMPLX_NORMAL
+    complex(8)                         :: peso
+#else
+    real(8)                            :: peso
+#endif
+
 #ifdef _DEBUG
     if(ed_verbose>1)write(Logfile,"(A)")"DEBUG get_impD_normal"
 #endif

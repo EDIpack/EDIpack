@@ -105,10 +105,10 @@
                        iup = jup
                        i   = iup + (idw-1)*DimUp + (iph-1)*DimUp*DimDw
                        !
-                       htmp = exc_field(1)*sg1*sg2
+                       htmp = one*exc_field(1)*sg1*sg2
                        Hv(i) = Hv(i) + htmp*vin(j)
                        !
-                       htmp = -exc_field(4)*sg1*sg2
+                       htmp = -one*exc_field(4)*sg1*sg2
                        Hv(i) = Hv(i) + htmp*vin(j)
                     endif
                  enddo

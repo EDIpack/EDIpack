@@ -97,7 +97,7 @@
               STOP "H_sundry: impossible operator"
            endif
            
-           htmp = coulomb_sundry(iline)%U * sg1 * sg2 * sg3 * sg4
+           htmp = one*coulomb_sundry(iline)%U * sg1 * sg2 * sg3 * sg4
            !
            i = iup + (idw-1)*DimUp + (iph-1)*DimUp*MpiQdw
            !

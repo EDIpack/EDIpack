@@ -78,6 +78,10 @@ contains
        Hmask=.true.
        ! Aren't we sure about hermiticity?
        ! -> Hmask=Hreplica_mask(wdiag=.false.,uplo=.true.)
+       if(ED_MODE=="normal" .and. Nspin==2)then
+         Hmask(1,2,:,:) = .false.
+         Hmask(2,1,:,:) = .false.
+       endif
     else
        Hmask=Hreplica_mask(wdiag=.true.,uplo=.false.)
     endif
