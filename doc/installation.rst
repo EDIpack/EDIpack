@@ -111,6 +111,10 @@ additional variables:
     :f:var:`ED_MODE` = ``NORMAL`` case.
   * **Value:** ``yes``/``True`` or ``no``/``False``
     (default: ``False``).
+    
+.. warning::
+   
+   :code:`DCMPLX_NORMAL=YES`  does not support the calculation of susceptibilities at this stage.  
 
 * ``-DVERBOSE``
 
@@ -128,7 +132,8 @@ additional variables:
 
 .. warning::
    
-   :code:`BUILD_TYPE=AGGRESSIVE`  includes many deep level debug options which might not compile on some systems or breakdown compilation at linking step.  
+   :code:`BUILD_TYPE=AGGRESSIVE`  includes many deep level debug options which might not compile on some systems or breakdown compilation at linking step.
+
 
 
 The default target builds either the main library and the C-bindings. A
