@@ -25,14 +25,22 @@ contains
     ! Serial version of the direct, on-the-fly matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in Arpack/Lanczos algorithm for :f:var:`ed_total_ud` = :code:`True` 
     ! This procedures evaluates the non-zero terms of any part of the global Hamiltonian and applies them to the input vector using serial algorithm.  
     !
-    integer                                        :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
-    real(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
-    integer,dimension(2*Ns_Ud)                     :: Indices,Jndices ![2-2*Norb]
-    integer,dimension(Ns_Ud,Ns_Orb)                :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
-    integer,dimension(Ns)                          :: Nup,Ndw
-    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
-    logical                                        :: nonloc_condition, sundry_condition, either_condition
+    integer                                           :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    complex(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    complex(8),dimension(:),allocatable               :: vt,Hvt
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
+#else
+    real(8),dimension(Nloc)                           :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc)                           :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    real(8),dimension(:),allocatable                  :: vt,Hvt
+    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath)    :: Hbath_tmp
+#endif    
+    integer,dimension(2*Ns_Ud)                        :: Indices,Jndices ![2-2*Norb]
+    integer,dimension(Ns_Ud,Ns_Orb)                   :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
+    integer,dimension(Ns)                             :: Nup,Ndw
+    logical                                           :: nonloc_condition, sundry_condition, either_condition
     !
     nonloc_condition = (Norb>1 .AND. (any((Jx_internal/=0d0)) .OR. any((Jp_internal/=0d0))))
     sundry_condition = allocated(coulomb_sundry)
@@ -49,8 +57,8 @@ contains
     select case (bath_type)
     case default
        Nfoo = size(dmft_bath%e,2)
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=0d0       
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=zero      
        do ibath=1,Nbath
           do ispin=1,Nspin             
              do iorb=1,Norb
@@ -62,8 +70,8 @@ contains
           enddo
        enddo
     case ("replica")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hreplica(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
@@ -74,20 +82,20 @@ contains
           enddo
        enddo
     case ("general")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hgeneral(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
              do iorb=1,Norb
-                diag_hybr(ispin,iorb,ibath)=dmft_bath%item(ibath)%vg(iorb+Norb*(ispin-1))
+                diag_hybr(ispin,iorb,ibath)=one*dmft_bath%item(ibath)%vg(iorb+Norb*(ispin-1))
                 bath_diag(ispin,iorb,ibath)=Hbath_tmp(ispin,ispin,iorb,iorb,ibath)
              enddo
           enddo
        enddo
     end select
     !
-    Hv=0d0
+    Hv=zero
     !
     !-----------------------------------------------!
     !LOCAL HAMILTONIAN PART: H_loc*vin = vout
@@ -128,14 +136,22 @@ contains
     ! Serial version of the direct, on-the-fly matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in Arpack/Lanczos algorithm for :f:var:`ed_total_ud` = :code:`False` 
     ! This procedures evaluates the non-zero terms of any part of the global Hamiltonian and applies them to the input vector using serial algorithm.  
     !
-    integer                                        :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
-    real(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
-    integer                                        :: isector
-    integer,dimension(2*Ns_Ud)                     :: Indices,Jndices ![2-2*Norb]
-    integer,dimension(Ns_Ud,Ns_Orb)                :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
-    integer,dimension(Ns)                          :: Nup,Ndw
-    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
+    integer                                           :: Nloc !Global dimension of the problem. :code:`size(v)=Nloc=size(Hv)`
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    complex(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    complex(8),dimension(:),allocatable               :: vt,Hvt
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
+#else
+    real(8),dimension(Nloc)                           :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc)                           :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    real(8),dimension(:),allocatable                  :: vt,Hvt
+    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath)    :: Hbath_tmp
+#endif
+    integer                                           :: isector
+    integer,dimension(2*Ns_Ud)                        :: Indices,Jndices ![2-2*Norb]
+    integer,dimension(Ns_Ud,Ns_Orb)                   :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
+    integer,dimension(Ns)                             :: Nup,Ndw
     !
     if(.not.Hsector%status)stop "directMatVec_cc ERROR: Hsector NOT allocated"
     isector=Hsector%index
@@ -148,8 +164,8 @@ contains
     select case (bath_type)
     case default
        Nfoo = size(dmft_bath%e,2)
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=0d0       
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=zero      
        do ibath=1,Nbath
           do ispin=1,Nspin             
              do iorb=1,Norb
@@ -161,8 +177,8 @@ contains
           enddo
        enddo
     case ("replica")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hreplica(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
@@ -173,20 +189,20 @@ contains
           enddo
        enddo
     case ("general")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hgeneral(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
              do iorb=1,Norb
-                diag_hybr(ispin,iorb,ibath)=dmft_bath%item(ibath)%vg(iorb+Norb*(Nspin-1))!(ispin)
+                diag_hybr(ispin,iorb,ibath)=one*dmft_bath%item(ibath)%vg(iorb+Norb*(Nspin-1))!(ispin)
                 bath_diag(ispin,iorb,ibath)=Hbath_tmp(ispin,ispin,iorb,iorb,ibath)
              enddo
           enddo
        enddo
     end select
     !
-    Hv=0d0
+    Hv=zero
     !
     !-----------------------------------------------!
     !LOCAL HAMILTONIAN PART: H_loc*vin = vout
@@ -222,19 +238,26 @@ contains
     ! MPI parallel version of the direct, on-the-fly matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in P-Arpack/P-Lanczos algorithm for :f:var:`ed_total_ud` = :code:`True` 
     ! This procedures evaluates the non-zero terms of any part of the global Hamiltonian and applies them to a part of the vector own by the thread using parallel algorithm.  
     !
-    integer                                        :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
-    real(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
-    integer                                        :: N
-    real(8),dimension(:),allocatable               :: vt,Hvt
+    integer                                           :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    complex(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    complex(8),dimension(:),allocatable               :: vt,Hvt
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
+#else
+    real(8),dimension(Nloc)                           :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc)                           :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    real(8),dimension(:),allocatable                  :: vt,Hvt
+    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath)    :: Hbath_tmp
+#endif
+    integer                                           :: N
     !
-    integer,dimension(2*Ns_Ud)                     :: Indices,Jndices ![2-2*Norb]
-    integer,dimension(Ns_Ud,Ns_Orb)                :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
-    integer,dimension(Ns)                          :: Nup,Ndw
-    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
+    integer,dimension(2*Ns_Ud)                        :: Indices,Jndices ![2-2*Norb]
+    integer,dimension(Ns_Ud,Ns_Orb)                   :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
+    integer,dimension(Ns)                             :: Nup,Ndw
     !
-    integer                                        :: i_start,i_end
-    logical                                        :: nonloc_condition, sundry_condition, either_condition
+    integer                                           :: i_start,i_end
+    logical                                           :: nonloc_condition, sundry_condition, either_condition  
     !
     nonloc_condition = (Norb>1 .AND. (any((Jx_internal/=0d0)) .OR. any((Jp_internal/=0d0))))
     sundry_condition = allocated(coulomb_sundry)
@@ -249,8 +272,8 @@ contains
     select case (bath_type)
     case default
        Nfoo = size(dmft_bath%e,2)
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=0d0       
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=zero      
        do ibath=1,Nbath
           do ispin=1,Nspin             
              do iorb=1,Norb
@@ -262,8 +285,8 @@ contains
           enddo
        enddo
     case ("replica")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hreplica(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
@@ -274,13 +297,13 @@ contains
           enddo
        enddo
     case ("general")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hgeneral(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
              do iorb=1,Norb
-                diag_hybr(ispin,iorb,ibath)=dmft_bath%item(ibath)%vg(iorb+Norb*(ispin-1))
+                diag_hybr(ispin,iorb,ibath)=one*dmft_bath%item(ibath)%vg(iorb+Norb*(ispin-1))
                 bath_diag(ispin,iorb,ibath)=Hbath_tmp(ispin,ispin,iorb,iorb,ibath)
              enddo
           enddo
@@ -291,7 +314,7 @@ contains
          stop "directMatVec_MPI_cc ERRROR: MpiComm = MPI_UNDEFINED"
     ! if(.not.MpiStatus)stop "directMatVec_MPI_cc ERROR: MpiStatus = F"
     !
-    Hv=0d0
+    Hv=zero
     !
     !-----------------------------------------------!
     !LOCAL HAMILTONIAN PART: H_loc*vin = vout
@@ -307,14 +330,14 @@ contains
     do iph=1,DimPh
        allocate(vt(mpiQup*DimDw))
        allocate(Hvt(mpiQup*DimDw))
-       vt=0d0
-       Hvt=0d0
+       vt=zero
+       Hvt=zero
        i_start = 1 + (iph-1)*DimUp*MpiQdw
        i_end = iph*DimUp*MpiQdw
        !
        call vector_transpose_MPI(DimUp,MpiQdw,Vin(i_start:i_end),DimDw,MpiQup,vt) !Vin^T --> Vt
        include "direct_mpi/HxV_dw.f90"
-       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ;vt=0d0         !reallocate Vt
+       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ;vt=zero         !reallocate Vt
        call vector_transpose_MPI(DimDw,mpiQup,Hvt,DimUp,mpiQdw,vt) !Hvt^T --> Vt
        Hv(i_start:i_end) = Hv(i_start:i_end) + Vt
        !
@@ -333,7 +356,7 @@ contains
        N = 0
        call AllReduce_MPI(MpiComm,Nloc,N)
        !
-       allocate(vt(N)) ; vt = 0d0
+       allocate(vt(N)) ; vt = zero
        call allgather_vector_MPI(MpiComm,vin,vt)
        !
        if(nonloc_condition)then
@@ -359,17 +382,23 @@ contains
     ! MPI parallel version of the direct, on-the-fly matrix-vector product :math:`\vec{w}=H\times\vec{v}` used in P-Arpack/P-Lanczos algorithm for :f:var:`ed_total_ud` = :code:`False` 
     ! This procedures evaluates the non-zero terms of any part of the global Hamiltonian and applies them to a part of the vector own by the thread using parallel algorithm.  
     !
-    integer                                        :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
-    real(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
-    real(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    integer                                           :: Nloc !Local dimension of the vector chunk. :code:`size(v)=Nloc` with :math:`\sum_p` :f:var:`Nloc` = :f:var:`Dim`
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(Nloc)                        :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    complex(8),dimension(Nloc)                        :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    complex(8),dimension(:),allocatable               :: vt,Hvt
+    complex(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
+#else
+    real(8),dimension(Nloc)                           :: vin  !input vector (passed by Arpack/Lanczos) :math:`\vec{v}`
+    real(8),dimension(Nloc)                           :: Hv   !output vector (required by Arpack/Lanczos) :math:`\vec{w}`
+    real(8),dimension(:),allocatable                  :: vt,Hvt
+    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath)    :: Hbath_tmp
+#endif
     !
-    real(8),dimension(:),allocatable               :: vt,Hvt
-    !
-    integer,dimension(2*Ns_Ud)                     :: Indices,Jndices ![2-2*Norb]
-    integer,dimension(Ns_Ud,Ns_Orb)                :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
-    integer,dimension(Ns)                          :: Nup,Ndw
-    real(8),dimension(Nspin,Nspin,Norb,Norb,Nbath) :: Hbath_tmp
-    integer                                        :: i_start,i_end
+    integer,dimension(2*Ns_Ud)                        :: Indices,Jndices ![2-2*Norb]
+    integer,dimension(Ns_Ud,Ns_Orb)                   :: Nups,Ndws       ![1,Ns]-[Norb,1+Nbath]
+    integer,dimension(Ns)                             :: Nup,Ndw
+    integer                                           :: i_start,i_end    
     !
     if(.not.Hsector%status)stop "directMatVec_cc ERROR: Hsector NOT allocated"
     isector=Hsector%index
@@ -380,38 +409,38 @@ contains
     select case (bath_type)
     case default
        Nfoo = size(dmft_bath%e,2)
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=0d0       
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Nfoo,Nbath));bath_diag=zero       
        do ibath=1,Nbath
           do ispin=1,Nspin             
              do iorb=1,Norb
-                diag_hybr(ispin,iorb,ibath)=dmft_bath%v(ispin,iorb,ibath)
+                diag_hybr(ispin,iorb,ibath)=one*dmft_bath%v(ispin,iorb,ibath)
              enddo
              do iorb=1,Nfoo
-                bath_diag(ispin,iorb,ibath)=dmft_bath%e(ispin,iorb,ibath)
+                bath_diag(ispin,iorb,ibath)=one*dmft_bath%e(ispin,iorb,ibath)
              enddo
           enddo
        enddo
     case ("replica")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hreplica(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
              do iorb=1,Norb
-                diag_hybr(ispin,iorb,ibath)=dmft_bath%item(ibath)%v
+                diag_hybr(ispin,iorb,ibath)=one*dmft_bath%item(ibath)%v
                 bath_diag(ispin,iorb,ibath)=Hbath_tmp(ispin,ispin,iorb,iorb,ibath)
              enddo
           enddo
        enddo
     case ("general")
-       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=0d0
-       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=0d0
+       allocate(diag_hybr(Nspin,Norb,Nbath));diag_hybr=zero
+       allocate(bath_diag(Nspin,Norb,Nbath));bath_diag=zero
        do ibath=1,Nbath
           Hbath_tmp(:,:,:,:,ibath) = build_Hgeneral(dmft_bath%item(ibath)%lambda)
           do ispin=1,Nspin
              do iorb=1,Norb
-                diag_hybr(ispin,iorb,ibath)=dmft_bath%item(ibath)%vg(iorb+Norb*(ispin-1))
+                diag_hybr(ispin,iorb,ibath)=one*dmft_bath%item(ibath)%vg(iorb+Norb*(ispin-1))
                 bath_diag(ispin,iorb,ibath)=Hbath_tmp(ispin,ispin,iorb,iorb,ibath)
              enddo
           enddo
@@ -423,7 +452,7 @@ contains
          stop "directMatVec_MPI_cc ERRROR: MpiComm = MPI_UNDEFINED"
     !
     !
-    Hv=0d0
+    Hv=zero
     !
     !-----------------------------------------------!
     !LOCAL HAMILTONIAN PART: H_loc*vin = vout
@@ -439,14 +468,14 @@ contains
     if(MpiRank<mod(DimUp,MpiSize))MpiQup=MpiQup+1
     !
     do iph=1,DimPh
-       allocate(vt(mpiQup*DimDw)) ;vt=0d0
-       allocate(Hvt(mpiQup*DimDw));Hvt=0d0
+       allocate(vt(mpiQup*DimDw)) ;vt=zero
+       allocate(Hvt(mpiQup*DimDw));Hvt=zero
        i_start = 1 + (iph-1)*DimUp*MpiQdw
        i_end = iph*DimUp*MpiQdw
        !
        call vector_transpose_MPI(DimUp,MpiQdw,Vin(i_start:i_end),DimDw,MpiQup,vt) !Vin^T --> Vt
        include "direct_mpi/Orbs/HxV_dw.f90"
-       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ;vt=0d0         !reallocate Vt
+       deallocate(vt) ; allocate(vt(DimUp*mpiQdw)) ;vt=zero         !reallocate Vt
        call vector_transpose_MPI(DimDw,mpiQup,Hvt,DimUp,mpiQdw,vt) !Hvt^T --> Vt
        Hv(i_start:i_end) = Hv(i_start:i_end) + Vt
        !

@@ -21,7 +21,7 @@
                  idw = jdw
                  i   = iup + (idw-1)*DimDw
                  htmp = impHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2
-                 htmp = htmp + mfHloc(2,2,iorb,jorb)*sg1*sg2
+                 htmp = htmp + one*mfHloc(2,2,iorb,jorb)*sg1*sg2
                  !
                  Hvt(i) = Hvt(i) + htmp*vt(j)
                  !
@@ -48,7 +48,7 @@
                        iup = binary_search(Hsector%H(2)%map,k2)
                        idw = jdw
                        i   = iup + (idw-1)*DimDw
-                       htmp = hbath_tmp(Nspin,Nspin,iorb,jorb,kp)*sg1*sg2
+                       htmp = one*hbath_tmp(Nspin,Nspin,iorb,jorb,kp)*sg1*sg2
                        !
                        Hvt(i) = Hvt(i) + htmp*vt(j)
                        !
@@ -71,7 +71,7 @@
                  iup = binary_search(Hsector%H(2)%map,k2)
                  idw = jdw
                  i   = iup + (idw-1)*DimDw
-                 htmp=diag_hybr(Nspin,iorb,kp)*sg1*sg2
+                 htmp=one*diag_hybr(Nspin,iorb,kp)*sg1*sg2
                  !
                  hvt(i) = hvt(i) + htmp*vt(j)
                  !
@@ -83,7 +83,7 @@
                  iup = binary_search(Hsector%H(2)%map,k2)
                  idw = jdw
                  i   = iup + (idw-1)*DimDw
-                 htmp=diag_hybr(Nspin,iorb,kp)*sg1*sg2
+                 htmp=one*diag_hybr(Nspin,iorb,kp)*sg1*sg2
                  !
                  hvt(i) = hvt(i) + htmp*vt(j)
                  !
@@ -106,10 +106,10 @@
                     idw = jdw
                     i   = iup + (idw-1)*DimDw
                     !
-                    htmp = exc_field(1)*sg1*sg2
+                    htmp = one*exc_field(1)*sg1*sg2
                     Hvt(i) = Hvt(i) + htmp*vt(j)
                     !
-                    htmp = -exc_field(4)*sg1*sg2
+                    htmp = -one*exc_field(4)*sg1*sg2
                     Hvt(i) = Hvt(i) + htmp*vt(j)
                  endif
               enddo

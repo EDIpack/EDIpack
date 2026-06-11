@@ -417,19 +417,25 @@ contains
     if(ed_verbose>5)write(Logfile,"(A,2I8)")"DEBUG MPI_sp_insert_element_csr_c: insert element in sparse @",i,j
 #endif
     !
+    if(MpiComm==Mpi_Comm_Null)return
+    !
     call sp_test_matrix_mpi(MpiComm,sparse," mpi_sp_insert_element_csr")
     !
     column = j
     !
-    if(column>=sparse%Istart.AND.column<=sparse%Iend)then
-       row => sparse%loc(i-sparse%Ishift)
+    if (ED_MODE == "normal") then
+      row => sparse%row(i-sparse%Ishift)
     else
-       row => sparse%row(i-sparse%Ishift)
+      if(column>=sparse%Istart.AND.column<=sparse%Iend)then
+         row => sparse%loc(i-sparse%Ishift)
+      else
+         row => sparse%row(i-sparse%Ishift)
+      endif
     endif
     !
     iadd = .false.                          
     if(any(row%cols == column))then         
-       pos = binary_search_spmat(row%cols,column)
+       pos = binary_search_spmat(row%cols,column) 
        iadd=.true.                          
     endif
     !
@@ -447,6 +453,7 @@ contains
   STOP "mpi_sp_insert_element_csr_c called in a non-mpi build"
 #endif
   end subroutine mpi_sp_insert_element_csr_c
+
 
 
 

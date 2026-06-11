@@ -23,15 +23,21 @@ MODULE ED_CHI_EXCT
   public :: build_exctChi_normal
   public :: get_exctChi_normal
 
-  integer                          :: istate,iorb,jorb,ispin,jspin
-  integer                          :: isector,jsector,ksector,lsector
-  real(8),allocatable              :: vvinit(:)
-  real(8),allocatable              :: alfa_(:),beta_(:)
-  integer                          :: ipos,jpos
-  integer                          :: i,j,k
-  real(8)                          :: sgn,norm2
-  real(8),dimension(:),allocatable :: v_state
-  real(8)                          :: e_state
+
+  integer                             :: istate,iorb,jorb,ispin,jspin
+  integer                             :: isector,jsector,ksector,lsector
+  real(8),allocatable                 :: alfa_(:),beta_(:)
+  integer                             :: ipos,jpos
+  integer                             :: i,j,k
+  real(8)                             :: sgn,norm2
+#ifdef _CMPLX_NORMAL
+  complex(8),allocatable              :: vvinit(:)
+  complex(8),dimension(:),allocatable :: v_state
+#else
+  real(8),allocatable                 :: vvinit(:)
+  real(8),dimension(:),allocatable    :: v_state
+#endif
+  real(8)                             :: e_state
 
 
 
@@ -88,7 +94,11 @@ contains
        call allocate_GFmatrix(exctChimatrix(1,iorb,jorb),istate,Nchan=2)
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        ksector = getCsector(1,2,isector)
        lsector = getCsector(1,1,isector)
@@ -142,8 +152,12 @@ contains
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    integer                          :: iorb,jorb
-    real(8),dimension(:),allocatable :: vtmp
+    integer                             :: iorb,jorb
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:),allocatable :: vtmp
+#else
+    real(8),dimension(:),allocatable    :: vtmp
+#endif
     !
     write(LOGfile,"(A)")"Get triplet XY Chi_exct_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
     !
@@ -151,7 +165,11 @@ contains
        call allocate_GFmatrix(exctChimatrix(2,iorb,jorb),istate,Nchan=4)
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !X - Component == Y -Component
        !X_{ab}= C^+_{a,up}C_{b,dw} + C^+_{a,dw}C_{b,up}
@@ -239,7 +257,11 @@ contains
        call allocate_GFmatrix(exctChimatrix(3,iorb,jorb),istate,Nchan=2)
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
        v_state    =  es_return_dvec(state_list,istate)
+#endif
        !
        !Z - Component:
        !Z_{ab}= C^+_{a,up}C_{b,up} - C^+_{a,dw}C_{b,dw}
@@ -491,9 +513,13 @@ contains
   subroutine auxiliary_vvinit_manipulation(ksector,lsector,iorb,jorb,indx,ichan,istate)
     !this subroutine applies, when possible, the operators for the singlet and triplet_Z components
     !of the excitonic susceptibility
-    integer                          :: iorb,jorb,iorb_,jorb_,ksector,lsector,isign,indx,ichan,istate
-    real(8)                          :: comb_sign
-    real(8),dimension(:),allocatable :: vup,vdw,vtmp
+    integer                             :: iorb,jorb,iorb_,jorb_,ksector,lsector,isign,indx,ichan,istate
+    real(8)                             :: comb_sign
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:),allocatable :: vup,vdw,vtmp
+#else
+    real(8),dimension(:),allocatable    :: vup,vdw,vtmp
+#endif
     !
     !See if we have to do anythin: if both c operators cannot be applied, exit.
     if(ksector==0 .AND. lsector==0)then

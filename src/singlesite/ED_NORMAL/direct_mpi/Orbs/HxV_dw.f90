@@ -19,7 +19,7 @@
                  Indices       = Jndices
                  Indices(iorb) = binary_search(Hsector%H(iorb+Ns_Ud)%map,k2)
                  call indices2state(Indices,[DimDws,DimUps],i)
-                 htmp = diag_hybr(Nspin,iorb,kp)*sg1*sg2
+                 htmp = one*diag_hybr(Nspin,iorb,kp)*sg1*sg2
                  !
                  Hvt(i) = Hvt(i) + htmp*Vt(j)
                  !
@@ -32,7 +32,7 @@
                  Indices       = Jndices
                  Indices(iorb) = binary_search(Hsector%H(iorb+Ns_Ud)%map,k2)
                  call indices2state(Indices,[DimDws,DimUps],i)
-                 htmp = diag_hybr(Nspin,iorb,kp)*sg1*sg2
+                 htmp = one*diag_hybr(Nspin,iorb,kp)*sg1*sg2
                  !
                  Hvt(i) = Hvt(i) + htmp*Vt(j)
                  !

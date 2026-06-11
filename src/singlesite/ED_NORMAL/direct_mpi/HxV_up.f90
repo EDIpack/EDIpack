@@ -19,7 +19,7 @@
                     iup  = binary_search(Hsector%H(1)%map,k2)
                     idw  = jdw
                     i    = iup + (idw-1)*dimUp + (iph-1)*DimUp*MpiQdw
-                    htmp = (impHloc(1,1,iorb,jorb)+mfHloc(1,1,iorb,jorb))*sg1*sg2
+                    htmp = one*(impHloc(1,1,iorb,jorb)+mfHloc(1,1,iorb,jorb))*sg1*sg2
                     !
                     Hv(j) = Hv(j) + htmp*vin(i)
                     ! Hv(i) = Hv(i) + htmp*vin(j)
@@ -47,7 +47,7 @@
                           iup  = binary_search(Hsector%H(1)%map,k2)
                           idw  = jdw
                           i    = iup + (idw-1)*dimUp + (iph-1)*DimUp*MpiQdw
-                          htmp = hbath_tmp(1,1,iorb,jorb,kp)*sg1*sg2
+                          htmp = one*hbath_tmp(1,1,iorb,jorb,kp)*sg1*sg2
                           !
                           Hv(j) = Hv(j) + htmp*vin(i)
                           ! Hv(i) = Hv(i) + htmp*vin(j)
@@ -71,7 +71,7 @@
                     iup  = binary_search(Hsector%H(1)%map,k2)
                     idw  = jdw
                     i    = iup + (idw-1)*dimUp + (iph-1)*DimUp*MpiQdw
-                    htmp = diag_hybr(1,iorb,kp)*sg1*sg2
+                    htmp = one*diag_hybr(1,iorb,kp)*sg1*sg2
                     !
                     Hv(j) = Hv(j) + htmp*vin(i)
                     ! Hv(i) = Hv(i) + htmp*vin(j)
@@ -85,7 +85,7 @@
                     iup  = binary_search(Hsector%H(1)%map,k2)
                     idw  = jdw
                     i    = iup + (idw-1)*dimUp + (iph-1)*DimUp*MpiQdw
-                    htmp = diag_hybr(1,iorb,kp)*sg1*sg2
+                    htmp = one*diag_hybr(1,iorb,kp)*sg1*sg2
                     !
                     Hv(j) = Hv(j) + htmp*vin(i)
                     ! Hv(i) = Hv(i) + htmp*vin(j)
@@ -108,11 +108,11 @@
                        idw = jdw 
                        i    = iup + (idw-1)*dimUp + (iph-1)*DimUp*MpiQdw
                        !
-                       htmp = exc_field(1)*sg1*sg2
+                       htmp = one*exc_field(1)*sg1*sg2
                        Hv(j) = Hv(j) + htmp*vin(i)
                        ! Hv(i) = Hv(i) + htmp*vin(j)
                        !
-                       htmp = exc_field(4)*sg1*sg2
+                       htmp = one*exc_field(4)*sg1*sg2
                        Hv(j) = Hv(j) + htmp*vin(i)
                        ! Hv(i) = Hv(i) + htmp*vin(j)
                     endif

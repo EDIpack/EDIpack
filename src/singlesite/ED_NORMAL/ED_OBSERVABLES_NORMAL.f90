@@ -58,11 +58,16 @@ MODULE ED_OBSERVABLES_NORMAL
   integer                            :: i,j,ii
   integer                            :: isector,jsector
   !
-  real(8),dimension(:),allocatable   :: vvinit,v1,v2
-  real(8),dimension(:),allocatable   :: v_state
-  logical                            :: Jcondition
+#ifdef _CMPLX_NORMAL
+  complex(8),dimension(:),allocatable :: vvinit, v1, v2
+  complex(8),dimension(:),allocatable :: v_state
+#else
+  real(8),dimension(:),allocatable    :: vvinit, v1, v2
+  real(8),dimension(:),allocatable    :: v_state
+#endif
+  logical                             :: Jcondition
   !
-  type(sector)                       :: sectorI,sectorJ
+  type(sector)                        :: sectorI,sectorJ
 
 
 contains 
@@ -123,7 +128,12 @@ contains
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state =  es_return_cvec(state_list,istate)
+#else    
        v_state =  es_return_dvec(state_list,istate)
+#endif       
+       
        !
 #ifdef _DEBUG
        if(ed_verbose>3)write(Logfile,"(A)")&
@@ -225,7 +235,12 @@ contains
       do istate=1,state_list%size
          isector = es_return_sector(state_list,istate)
          Ei      = es_return_energy(state_list,istate)
+#ifdef _CMPLX_NORMAL        
+         v_state  =  es_return_cvec(state_list,istate)
+#else      
          v_state  =  es_return_dvec(state_list,istate)
+#endif
+
 #ifdef _DEBUG
          if(ed_verbose>3)write(Logfile,"(A)")&
               "DEBUG observables_normal: get contribution from state:"//str(istate)
@@ -241,7 +256,11 @@ contains
                !\Theta_upup = <v|v>, |v> = (C_aup + C_bup)|>
                jsector = getCsector(1,1,isector)
                if(jsector/=0)then
-                  vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[1,1],isector,jsector)
+#ifdef _CMPLX_NORMAL
+                   vvinit =  apply_Cops(v_state,[one,one],[-1,-1],[iorb,jorb],[1,1],isector,jsector)
+#else
+                   vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[1,1],isector,jsector)
+#endif
                   if(Mpimaster)then
                      theta_upup(iorb,jorb) = theta_upup(iorb,jorb) + dot_product(vvinit,vvinit)*peso
                   endif
@@ -251,7 +270,11 @@ contains
                !\Theta_dwdw = <v|v>, |v> = (C_adw + C_bdw)|>
                jsector = getCsector(1,2,isector)
                if(jsector/=0)then
-                  vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[2,2],isector,jsector)
+#ifdef _CMPLX_NORMAL
+                   vvinit =  apply_Cops(v_state,[one,one],[-1,-1],[iorb,jorb],[2,2],isector,jsector)
+#else
+                   vvinit =  apply_Cops(v_state,[1d0,1d0],[-1,-1],[iorb,jorb],[2,2],isector,jsector)
+#endif
                   if(Mpimaster)then
                      theta_dwdw(iorb,jorb) = theta_dwdw(iorb,jorb) + dot_product(vvinit,vvinit)*peso
                   endif
@@ -291,7 +314,11 @@ contains
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
-       v_state =  es_return_dvec(state_list,istate)              
+#ifdef _CMPLX_NORMAL
+       v_state =  es_return_cvec(state_list,istate)
+#else
+       v_state =  es_return_dvec(state_list,istate)
+#endif           
 #ifdef _DEBUG
        if(ed_verbose>3)write(Logfile,"(A)")&
             "DEBUG observables_normal: get contribution from state:"//str(istate)
@@ -352,7 +379,11 @@ contains
                   ! diagonal
                   if(iorb==jorb )then
                      full_denmat(ispin,ispin,iorb,jorb) = &
+#ifdef _CMPLX_NORMAL
+                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*conjg(v_state(i))
+#else
                      full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*v_state(i)
+#endif
                   elseif((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
                      iud(1) = sectorI%H(1)%map(Indices(1))
                      iud(2) = sectorI%H(2)%map(Indices(2))
@@ -366,7 +397,11 @@ contains
                      j = j + (iph-1)*sectorI%DimEl
                      !
                      full_denmat(ispin,ispin,iorb,jorb) = &
-                        full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*(v_state(j))
+#ifdef _CMPLX_NORMAL                   
+                     full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+#else
+                     full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*v_state(j)
+#endif                       
                   endif
                   enddo
                enddo
@@ -482,7 +517,11 @@ contains
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
-       v_state =  es_return_dvec(state_list,istate)
+#ifdef _CMPLX_NORMAL
+       v_state    =  es_return_cvec(state_list,istate)
+#else
+       v_state    =  es_return_dvec(state_list,istate)
+#endif
 #ifdef _DEBUG
        if(ed_verbose>3)write(Logfile,"(A)")&
             "DEBUG local_energy_normal: get contribution from state:"//str(istate)
@@ -533,8 +572,13 @@ contains
                          jup = binary_search(sectorI%H(1)%map,k2)
                          j_el   = jup + (idw-1)*sectorI%DimUp
                          j = j_el + (iph-1)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL                    
+                         ed_Eknot = ed_Eknot + &
+                              (impHloc(1,1,iorb,jorb))*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+#else               
                          ed_Eknot = ed_Eknot + &
                               (impHloc(1,1,iorb,jorb))*sg1*sg2*v_state(i)*(v_state(j))*peso
+#endif                            
                       endif
                       !
                       !DW
@@ -547,8 +591,13 @@ contains
                          jdw = binary_search(sectorI%H(2)%map,k2)
                          j_el   = iup + (jdw-1)*sectorI%DimUp
                          j = j_el + (iph-1)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL                         
+                         ed_Eknot = ed_Eknot + &
+                              (impHloc(Nspin,Nspin,iorb,jorb))*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+#else
                          ed_Eknot = ed_Eknot + &
                               (impHloc(Nspin,Nspin,iorb,jorb))*sg1*sg2*v_state(i)*(v_state(j))*peso
+#endif
                       endif
                    enddo
                 enddo
@@ -573,8 +622,13 @@ contains
                             j_el   = jup + (idw-1)*sectorI%DimUp
                             j = j_el + (iph-1)*sectorI%DimEl
                             !
+#ifdef _CMPLX_NORMAL
+                            ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+                            ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+#else
                             ed_Epot = ed_Epot + Jx_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                             ed_Dse = ed_Dse + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
+#endif
                             !
                          endif
                       enddo
@@ -600,8 +654,13 @@ contains
                             j_el   = jup + (jdw-1)*sectorI%DimUp
                             j = j_el + (iph-1)*sectorI%DimEl
                             !
+#ifdef _CMPLX_NORMAL  
+                            ed_Epot = ed_Epot + Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+                            ed_Dph = ed_Dph + sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+#else
                             ed_Epot = ed_Epot + Jp_internal(iorb,jorb)*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
                             ed_Dph = ed_Dph + sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
+#endif                   
                             !
                          endif
                       enddo
@@ -623,7 +682,11 @@ contains
                          jup = binary_search(sectorI%H(1)%map,k2)
                          j_el   = jup + (idw-1)*sectorI%DimUp
                          j = j_el + (iph-1)*sectorI%DimEl
-                         ed_Epot = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*(v_state(j))*peso
+#ifdef _CMPLX_NORMAL                      
+                         ed_Epot = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+#else                
+                         ed_Epot = ed_Epot + mfHloc(1,1,iorb,jorb)*sg1*sg2*v_state(i)*v_state(j)*peso
+#endif                         
                       endif
                       !
                       !DW
@@ -636,7 +699,11 @@ contains
                          jdw = binary_search(sectorI%H(2)%map,k2)
                          j_el   = iup + (jdw-1)*sectorI%DimUp
                          j = j_el + (iph-1)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL                      
+                         ed_Epot = ed_Epot + mfHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*conjg(v_state(j))*peso
+#else
                          ed_Epot = ed_Epot + mfHloc(Nspin,Nspin,iorb,jorb)*sg1*sg2*v_state(i)*(v_state(j))*peso
+#endif                    
                       endif
                    enddo
                 enddo                
@@ -711,7 +778,11 @@ contains
                        j_el = jup + (jdw-1)*sectorI%DimUp
                        j = j_el + (iph-1)*sectorI%DimEl
                        !
+#ifdef _CMPLX_NORMAL                       
+                       ed_Epot = ed_Epot + coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4*v_state(i)*conjg(v_state(j))*peso
+#else
                        ed_Epot = ed_Epot + coulomb_sundry(iline)%U*sg1*sg2*sg3*sg4*v_state(i)*v_state(j)*peso
+#endif              
                        !
                   enddo
                 endif
@@ -785,11 +856,19 @@ contains
                          ! N.B.here iph = n+1
                          if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
                             j = j_el + (iph)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL                            
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+#else
                             ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*(v_state(j))*peso
+#endif                     
                          endif
                          if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
                             j = j_el + (iph-2)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL  
+                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+#else                         
                             ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*(v_state(j))*peso
+#endif                            
                          endif
                       endif
                    end do
@@ -807,11 +886,19 @@ contains
                         ! N.B.here iph = n+1
                         if(iph < DimPh) then !bdg = sum_n |n+1> sqrt(n+1) <n|
                            j = j_el + (iph)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL                          
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*conjg(v_state(j))*peso
+#else                          
                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph))*v_state(i)*(v_state(j))*peso
+#endif                        
                         endif
                         if(iph > 1) then !b = sum_n |n-1> sqrt(n) <n|
                            j = j_el + (iph-2)*sectorI%DimEl
+#ifdef _CMPLX_NORMAL                            
+                           ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*conjg(v_state(j))*peso
+#else                      
                            ed_Eeph = ed_Eeph + g_ph(iorb,jorb)*sg1*sg2*sqrt(dble(iph-1))*v_state(i)*(v_state(j))*peso
+#endif                        
                         endif
                      endif
                   end do
@@ -1151,7 +1238,11 @@ contains
     !
     ! P(X) = <x\| rho_ph \|x> where rho_ph = Tr_fermions rho_aim
     ! and \|x> = \sum_n psi*_n(x)\|n> with psi_n(x) eigenstates of the quantum harmonic oscillator
-    real(8),dimension(:) :: vec
+#ifdef _CMPLX_NORMAL
+    complex(8),dimension(:) :: vec
+#else
+    real(8),dimension(:)    :: vec
+#endif
     real(8)              :: psi(0:DimPh-1)
     real(8)              :: x,dx
     integer              :: i,j,i_ph,j_ph,val
@@ -1169,9 +1260,16 @@ contains
           do j_ph=1,DimPh
              jstart = i_el + (j_ph-1)*sectorI%DimEl
              ! Global PDF
+#ifdef _CMPLX_NORMAL
+             !#FIXME: IS THIS CORRECT?
+             pdf_ph(i) = pdf_ph(i) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*conjg(vec(jstart))
+             ! PDF restricted to a sector of orbital occupation
+             pdf_part(i,val) = pdf_part(i,val) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*conjg(vec(jstart))
+#else
              pdf_ph(i) = pdf_ph(i) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*vec(jstart)
              ! PDF restricted to a sector of orbital occupation
              pdf_part(i,val) = pdf_part(i,val) + peso*psi(i_ph-1)*psi(j_ph-1)*vec(istart)*vec(jstart)
+#endif            
              !
           enddo
        enddo
