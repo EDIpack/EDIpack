@@ -46,9 +46,11 @@ contains
 #ifdef _DEBUG
     if(any([chispin_flag,chidens_flag,chipair_flag,chiexct_flag]))&
          write(Logfile,"(A)")"DEBUG buildChi_impurity: build susceptibilities Chi"
-#ifdef _CMPLX_NORMAL
-    write(Logfile,"(A)")"WARNING: the calculation of susceptibilities with CMPLX_NORMAL activate is experimental and not tested!"
 #endif
+    !
+#ifdef _CMPLX_NORMAL
+    write(Logfile,"(A)")"WARNING: the calculation of susceptibilities with CMPLX_NORMAL enabled is not available at present."
+    return
 #endif
     !
     call deallocate_GFmatrix(spinChimatrix)
