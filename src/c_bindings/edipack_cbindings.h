@@ -11,9 +11,17 @@ extern "C" {
 
 
 /**
-*This flag is `1` if real-space DMFT support enabled, `0` otherwhise
+*This flag is `1` if  EDIpack was compiled with real-space DMFT support enabled, `0` otherwise
 */ 
 extern int has_ineq;
+
+/*!
+\rst
+This flag is :code:`1` if EDIpack was compiled in the complex :f:var:`ed_mode` = :code:`NORMAL` variant, :code:`0` otherwise
+\endrst
+*/ 
+extern int normal_complex;
+
 
 /*!
 \rst
