@@ -53,7 +53,7 @@ module ED_MAIN
      !  #. Get the impurity observables: call :f:func:`observables_impurity`
      !  #. Get the impurity local energy: call :f:func:`local_energy_impurity`
      !  #. Get the impurity reduced density matric: call :f:func:`rdm_impurity`
-     !  #. Delete MPI environment and deallocate used structures :f:var:`state_list` and :f:var:`dmft_bath`
+     !  #. Delete MPI environment and deallocate used structures, keeping :f:var:`state_list` available until :f:func:`ed_finalize_solver`
      !
      module procedure :: ed_solve_single
      module procedure :: ed_solve_single_nobath
@@ -205,7 +205,6 @@ contains
     call rdm_impurity()
     !
     call deallocate_dmft_bath()
-    call es_delete_espace(state_list)
     !
     !DELETE THE LOCAL MPI COMMUNICATOR:
 #ifdef _MPI    
@@ -270,7 +269,5 @@ contains
 
 
 end module ED_MAIN
-
-
 
 

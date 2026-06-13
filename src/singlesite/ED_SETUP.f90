@@ -482,6 +482,14 @@ contains
     if(allocated(ed_dens_up))deallocate(ed_dens_up)
     if(allocated(ed_dens_dw))deallocate(ed_dens_dw)
     if(allocated(ed_mag))deallocate(ed_mag)
+    if(allocated(ed_Kcdg))deallocate(ed_Kcdg)
+    if(allocated(ed_Scdg))deallocate(ed_Scdg)
+    if(allocated(ed_Normcdg))deallocate(ed_Normcdg)
+    if(allocated(ed_Pcdg))deallocate(ed_Pcdg)
+    if(allocated(ed_Kn))deallocate(ed_Kn)
+    if(allocated(ed_Sn))deallocate(ed_Sn)
+    if(allocated(ed_Normn))deallocate(ed_Normn)
+    if(allocated(ed_Pn))deallocate(ed_Pn)
     if(allocated(spin_field))deallocate(spin_field)
     call delete_input
   end subroutine delete_ed_structure
@@ -1088,7 +1096,6 @@ contains
 
 
 end MODULE ED_SETUP
-
 
 
 

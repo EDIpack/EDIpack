@@ -260,11 +260,20 @@ MODULE ED_VARS_GLOBAL
   real(8)                                            :: ed_dens_ph
   real(8)                                            :: ed_X_ph
   real(8)                                            :: ed_X2_ph
+  real(8),dimension(:,:,:),allocatable               :: ed_Kcdg
+  real(8),dimension(:,:,:),allocatable               :: ed_Scdg
+  real(8),dimension(:,:,:),allocatable               :: ed_Normcdg
+  real(8),dimension(:,:,:,:),allocatable             :: ed_Pcdg
+  real(8),dimension(:,:,:),allocatable               :: ed_Kn
+  real(8),dimension(:,:,:),allocatable               :: ed_Sn
+  real(8),dimension(:,:,:),allocatable               :: ed_Normn
+  real(8),dimension(:,:,:,:),allocatable             :: ed_Pn
 
 
   !Frequency and time arrays:
   !=========================================================
-  real(8),dimension(:),allocatable                   :: wm,tau,wr,vm,vr
+  real(8),dimension(:),allocatable                   :: wm,tau,wr,vm,vr,times
+  real(8)                                           :: dtimes
 
 
   !Impurity operators

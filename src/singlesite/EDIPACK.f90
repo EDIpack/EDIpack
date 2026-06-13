@@ -27,6 +27,7 @@ MODULE EDIPACK
        Lpos               , &
        Lreal              , &
        Ltau               , &
+       Ltimes             , &
        Nbath              , &
        Nloop              , &
        Norb               , &
@@ -37,6 +38,7 @@ MODULE EDIPACK
        sb_field           , &
        Uloc               , &
        Ust                , &
+       Tmax               , &
        w0_ph              , &
        wfin               , &
        wini               , &
@@ -110,13 +112,21 @@ MODULE EDIPACK
        ed_get_gimp            , &
        ed_get_imp_info        , &
        ed_get_impurity_rdm    , &
+       ed_get_Kcdg            , &
+       ed_get_Kn              , &
        ed_get_mag             , &
        ed_get_neigen_sector   , &
+       ed_get_Normcdg         , &
+       ed_get_Normn           , &
        ed_get_nsectors        , &
+       ed_get_Pcdg            , &
        ed_get_pairChi         , &
+       ed_get_Pn              , &
        ed_get_phi             , &
        ed_get_phon            , &
+       ed_get_Scdg            , &
        ed_get_sigma           , &
+       ed_get_Sn              , &
        ed_get_sp_dm           , &
        ed_get_spinChi         , &
        ed_set_neigen_sector
@@ -144,6 +154,9 @@ MODULE EDIPACK
        ed_build_pairChi  => get_pairChi , &
        ed_build_spinChi  => get_spinChi
 
+  USE ED_KRYLOV, only: &
+       ed_build_krylov_state_complexity => krylov_state_complexity
+
   
   USE ED_MAIN, only:    &
        ed_finalize_solver , &
@@ -157,4 +170,3 @@ MODULE EDIPACK
 
 
 END MODULE EDIPACK
-
