@@ -1153,11 +1153,13 @@ contains
     if(.not.allocated(wr))allocate(wr(Lreal))
     if(.not.allocated(vr))allocate(vr(Lreal))
     if(.not.allocated(tau))allocate(tau(Ltau))
+    if(.not.allocated(times))allocate(times(Ltimes))
     wm  = pi/beta*(2*arange(1,Lmats)-1)
     vm  = pi/beta*(2*arange(1,Lmats)-2)
     wr  = linspace(wini,wfin,Lreal)
     vr  = linspace(0d0,wfin,Lreal)
     tau = linspace(0d0,beta,Ltau)
+    times = linspace(0d0,Tmax,Ltimes,mesh=dtimes)
   end subroutine allocate_grids
 
 
@@ -1167,6 +1169,7 @@ contains
     if(allocated(tau))deallocate(tau)
     if(allocated(wr))deallocate(wr)
     if(allocated(vr))deallocate(vr)
+    if(allocated(times))deallocate(times)
   end subroutine deallocate_grids
 
 

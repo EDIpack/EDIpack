@@ -97,6 +97,10 @@ MODULE ED_INPUT_VARS
   !Maximum value of the real frequency range
   ! :Default wfin:`5d0`
   !
+  real(c_double),bind(c, name="Tmax")                                :: Tmax              !
+  !Maximum value of the real-time range for Krylov complexity
+  ! :Default Tmax:`10d0`
+  !
   real(c_double),bind(c, name="xmin")                                :: xmin              !
   !Minimum of the x-range for the local lattice 
   ! probability distribution function (phonons)
@@ -502,6 +506,10 @@ MODULE ED_INPUT_VARS
   !Number of imaginary time points 
   ! :Default Ltau:`1024`
   !
+  integer(c_int),bind(c, name="Ltimes")            :: Ltimes !
+  !Number of real-time points for Krylov complexity
+  ! :Default Ltimes:`1000`
+  !
   integer(c_int),bind(c, name="Lpos")              :: Lpos  !
   !Number of points in Probability Distribution Function lattice for phonons 
   !:Default Lpos:`100`
@@ -686,6 +694,8 @@ contains
     call parse_input_variable(Lmats,"LMATS",INPUTunit,default=4096,comment="Number of Matsubara frequencies.")
     call parse_input_variable(Lreal,"LREAL",INPUTunit,default=5000,comment="Number of real-axis frequencies.")
     call parse_input_variable(Ltau,"LTAU",INPUTunit,default=1024,comment="Number of imaginary time points.")
+    call parse_input_variable(Ltimes,"LTIMES",INPUTunit,default=1000,comment="Number of real-time points for Krylov complexity.")
+    if(Ltimes<2)stop "ED_READ_INPUT ERROR: LTIMES must be >= 2"
     call parse_input_variable(Lfit,"LFIT",INPUTunit,default=1000,comment="Number of Matsubara frequencies used in the \Chi2 fit.")
     call parse_input_variable(Lpos,"LPOS",INPUTunit,default=100,comment="Number of points for the lattice PDF.")
     !
@@ -698,6 +708,8 @@ contains
     !
     call parse_input_variable(wini,"WINI",INPUTunit,default=-5.d0,comment="Smallest real-axis frequency")
     call parse_input_variable(wfin,"WFIN",INPUTunit,default=5.d0,comment="Largest real-axis frequency")
+    call parse_input_variable(Tmax,"TMAX",INPUTunit,default=10.d0,comment="Largest real time for Krylov complexity")
+    if(Tmax<=0d0)stop "ED_READ_INPUT ERROR: TMAX must be > 0"
     call parse_input_variable(xmin,"XMIN",INPUTunit,default=-3.d0,comment="Smallest position for the lattice PDF")
     call parse_input_variable(xmax,"XMAX",INPUTunit,default=3.d0,comment="Largest position for the lattice PDF")
     !

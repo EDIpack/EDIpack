@@ -379,6 +379,46 @@ MODULE ED_IO
   end interface ed_get_denmat
 
 
+  interface ed_get_Kcdg
+     module procedure :: ed_get_Kcdg_n1
+     module procedure :: ed_get_Kcdg_n3
+  end interface ed_get_Kcdg
+
+  interface ed_get_Scdg
+     module procedure :: ed_get_Scdg_n1
+     module procedure :: ed_get_Scdg_n3
+  end interface ed_get_Scdg
+
+  interface ed_get_Normcdg
+     module procedure :: ed_get_Normcdg_n1
+     module procedure :: ed_get_Normcdg_n3
+  end interface ed_get_Normcdg
+
+  interface ed_get_Pcdg
+     module procedure :: ed_get_Pcdg_n2
+     module procedure :: ed_get_Pcdg_n4
+  end interface ed_get_Pcdg
+
+  interface ed_get_Kn
+     module procedure :: ed_get_Kn_n1
+     module procedure :: ed_get_Kn_n3
+  end interface ed_get_Kn
+
+  interface ed_get_Sn
+     module procedure :: ed_get_Sn_n1
+     module procedure :: ed_get_Sn_n3
+  end interface ed_get_Sn
+
+  interface ed_get_Normn
+     module procedure :: ed_get_Normn_n1
+     module procedure :: ed_get_Normn_n3
+  end interface ed_get_Normn
+
+  interface ed_get_Pn
+     module procedure :: ed_get_Pn_n2
+     module procedure :: ed_get_Pn_n4
+  end interface ed_get_Pn
+
 
 
 
@@ -413,6 +453,14 @@ MODULE ED_IO
   public :: ed_get_sp_dm
   public :: ed_get_impurity_rdm
   public :: ed_get_denmat
+  public :: ed_get_Kcdg
+  public :: ed_get_Scdg
+  public :: ed_get_Normcdg
+  public :: ed_get_Pcdg
+  public :: ed_get_Kn
+  public :: ed_get_Sn
+  public :: ed_get_Normn
+  public :: ed_get_Pn
   public :: ed_get_quantum_SOC_operators
   public :: ed_get_imp_info
   public :: ed_get_evals
@@ -420,8 +468,8 @@ MODULE ED_IO
   public :: ed_get_neigen_sector
   public :: ed_set_neigen_sector
 
-  !****************************************************************************************!
-  !****************************************************************************************!
+  !************************************************************************!
+  !************************************************************************!
 
 
   character(len=64)                           :: suffix
@@ -504,6 +552,7 @@ contains
 #include "get_energy.f90"
 #include "get_doubles.f90"
 #include "get_phon.f90"
+#include "get_krylov.f90"
 #else
   include "get_dens.f90"
   include "get_mag.f90"
@@ -513,6 +562,7 @@ contains
   include "get_energy.f90"
   include "get_doubles.f90"
   include "get_phon.f90"
+  include "get_krylov.f90"
 #endif
 
 
@@ -596,7 +646,6 @@ contains
 
 
 END MODULE ED_IO
-
 
 
 
