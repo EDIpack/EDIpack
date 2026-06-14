@@ -490,6 +490,14 @@ contains
     if(allocated(ed_Sn))deallocate(ed_Sn)
     if(allocated(ed_Normn))deallocate(ed_Normn)
     if(allocated(ed_Pn))deallocate(ed_Pn)
+    if(allocated(ed_KOCcdg))deallocate(ed_KOCcdg)
+    if(allocated(ed_SOCcdg))deallocate(ed_SOCcdg)
+    if(allocated(ed_NormOCcdg))deallocate(ed_NormOCcdg)
+    if(allocated(ed_POCcdg))deallocate(ed_POCcdg)
+    if(allocated(ed_KOCn))deallocate(ed_KOCn)
+    if(allocated(ed_SOCn))deallocate(ed_SOCn)
+    if(allocated(ed_NormOCn))deallocate(ed_NormOCn)
+    if(allocated(ed_POCn))deallocate(ed_POCn)
     if(allocated(spin_field))deallocate(spin_field)
     call delete_input
   end subroutine delete_ed_structure
@@ -1096,7 +1104,6 @@ contains
 
 
 end MODULE ED_SETUP
-
 
 
 

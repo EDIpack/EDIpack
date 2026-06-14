@@ -35,8 +35,10 @@ MODULE ED_KRYLOV
   
 
   public :: krylov_state_complexity
+  public :: krylov_operator_complexity
 
   integer :: KSCmax=0
+  integer :: KOCmax=0
 
 
 contains
@@ -44,7 +46,138 @@ contains
 
 
 
+  !#################################################
+  !          Krylov-operator complexity      
+  !#################################################
+  subroutine krylov_operator_complexity(bath)
+    !
+    ! Build the T=0 Krylov-operator complexity for d^+_{a,sigma} and N_a.
+    ! Phase 1 supports only the NORMAL channel.
+    !
+    real(8),dimension(:),intent(in),optional :: bath
+    real(8),dimension(:),allocatable         :: Kt,Sk,Nt
+    real(8),dimension(:,:),allocatable       :: Pnk
+    real(8),dimension(1)                     :: bath_dummy
+    integer                                  :: iorb,ispin
+    logical                                  :: bath_allocated_here,check
+    !
+    !
+    if(MpiMaster)write(LOGfile,*)'Krylov operator complexity'
+    !
+    !Checks:
+    if(ed_mode/="normal")stop "krylov_operator_complexity error: ed_mode=normal only."
+    if(finiteT)stop "krylov_operator_complexity error: T=0 only."
+    if(.not.state_list%status.OR.state_list%size==0)&
+      stop "krylov_operator_complexity error: state_list is empty."
+    !
+    !Check and allocate dmft bath  
+    bath_allocated_here = .false.
+    if(present(bath))then
+      if(Nbath>0)then
+        check = check_bath_dimension(bath)
+        if(.not.check)stop "krylov_operator_complexity error: wrong bath dimensions"
+      endif
+      call allocate_dmft_bath()
+      call set_dmft_bath(bath)
+      bath_allocated_here = .true.
+    elseif(.not.dmft_bath%status)then
+      if(Nbath>0)stop "krylov_operator_complexity error: no bath given && dmft_bath.status=F && Nbath>0."
+      bath_dummy = zero
+      call allocate_dmft_bath()
+      call set_dmft_bath(bath_dummy)
+      bath_allocated_here = .true.
+    endif
+    !
+    call allocate_grids()
+    KOCmax = max_krylov_size()
+    !
+    if(allocated(ed_KOCcdg))   deallocate(ed_KOCcdg)
+    if(allocated(ed_SOCcdg))   deallocate(ed_SOCcdg)
+    if(allocated(ed_NormOCcdg))deallocate(ed_NormOCcdg)
+    if(allocated(ed_POCcdg))   deallocate(ed_POCcdg)
+    if(allocated(ed_KOCn))     deallocate(ed_KOCn)
+    if(allocated(ed_SOCn))     deallocate(ed_SOCn)
+    if(allocated(ed_NormOCn))  deallocate(ed_NormOCn)
+    if(allocated(ed_POCn))     deallocate(ed_POCn)
+    allocate(ed_KOCcdg(Nspin,Norb,Ltimes))
+    allocate(ed_SOCcdg(Nspin,Norb,Ltimes))
+    allocate(ed_NormOCcdg(Nspin,Norb,Ltimes))
+    allocate(ed_POCcdg(Nspin,Norb,KOCmax,Ltimes))
+    allocate(ed_KOCn(Nspin,Norb,Ltimes))
+    allocate(ed_SOCn(Nspin,Norb,Ltimes))
+    allocate(ed_NormOCn(Nspin,Norb,Ltimes))
+    allocate(ed_POCn(Nspin,Norb,KOCmax,Ltimes))
+    ed_KOCcdg=0d0;ed_SOCcdg=0d0;ed_NormOCcdg=0d0;ed_POCcdg=0d0
+    ed_KOCn=0d0;ed_SOCn=0d0;ed_NormOCn=0d0;ed_POCn=0d0
+    !
+    !
+    !States with orbital resolved density d^dgr_{iorb,sigma}
+    do ispin=1,Nspin
+      do iorb=1,Norb
+        call KOC_build_Op("cdg",iorb,ispin,Kt,Sk,Pnk,Nt)
+        ed_KOCcdg(ispin,iorb,:)    = Kt
+        ed_SOCcdg(ispin,iorb,:)    = Sk
+        ed_NormOCcdg(ispin,iorb,:) = Nt
+        ed_POCcdg(ispin,iorb,:,:)  = Pnk
+        if(allocated(Kt)) deallocate(Kt)
+        if(allocated(Sk)) deallocate(Sk)
+        if(allocated(Pnk))deallocate(Pnk)
+        if(allocated(Nt)) deallocate(Nt)
+      enddo
+    enddo
+    do iorb=1,Norb
+      call KOC_build_Op("N",iorb,1,Kt,Sk,Pnk,Nt)
+      ed_KOCn(1,iorb,:)    = Kt
+      ed_SOCn(1,iorb,:)    = Sk
+      ed_NormOCn(1,iorb,:) = Nt
+      ed_POCn(1,iorb,:,:)  = Pnk
+      if(allocated(Kt)) deallocate(Kt)
+      if(allocated(Sk)) deallocate(Sk)
+      if(allocated(Pnk))deallocate(Pnk)
+      if(allocated(Nt)) deallocate(Nt)
+    enddo
+    !
+    if(MPIMASTER)call KOC_write()
+    if(bath_allocated_here)call deallocate_dmft_bath()
+    !
+  end subroutine krylov_operator_complexity
+
+
+  subroutine KOC_build_Op(op,iorb,ispin,Kt,Sk,Pnk,Nt)
+    character(len=*),intent(in)                    :: op
+    integer,intent(in)                             :: iorb,ispin
+    real(8),dimension(:),allocatable,intent(out)   :: Kt
+    real(8),dimension(:),allocatable,intent(out)   :: Sk
+    real(8),dimension(:,:),allocatable,intent(out) :: Pnk
+    real(8),dimension(:),allocatable,intent(out)   :: Nt
+    real(8),dimension(:),allocatable               :: alanc,blanc
+    real(8),dimension(:,:),allocatable             :: Ptmp
+    real(8)                                        :: norm2
+    integer                                        :: Nk
+    !
+    call KOC_Krylov_Basis_normal(op,iorb,ispin,alanc,blanc,norm2)
+    call KSC_Build_Complexity(alanc,blanc,Kt,Sk,Ptmp,Nt)
+    allocate(Pnk(KOCmax,Ltimes))
+    Pnk= 0d0
+    Nk = min(size(Ptmp,1),KOCmax)
+    Pnk(1:Nk,:) = Ptmp(1:Nk,:)
+    if(allocated(Ptmp)) deallocate(Ptmp)
+    if(allocated(alanc))deallocate(alanc)
+    if(allocated(blanc))deallocate(blanc)
+  end subroutine KOC_build_Op
+
+
+
+
+
       
+
+
+
+
+  !#################################################
+  !          Krylov-state complexity      
+  !#################################################
   subroutine krylov_state_complexity(bath)
     !
     ! Build the Krylov-state complexity for the impurity problem for the states obtained 
@@ -57,6 +190,8 @@ contains
     real(8),dimension(1)                               :: bath_dummy
     integer                                            :: iorb,ispin
     logical                                            :: bath_allocated_here,check
+    !
+    if(MpiMaster)write(LOGfile,*)'Krylov state complexity'
     !
     if(.not.state_list%status.OR.state_list%size==0)&
       stop "krylov_state_complexity error: state_list is empty."
@@ -140,7 +275,11 @@ contains
     if(MPIMASTER)call KSC_write()
     if(bath_allocated_here)call deallocate_dmft_bath()
     !
+    if(MpiMaster)write(LOGfile,*)'...Done'
   end subroutine krylov_state_complexity      
+
+
+
 
 
 
@@ -297,13 +436,6 @@ contains
   end subroutine KSC_ApplyOp_StateList_nonsu2
 
 
-
-
-
-
-
-
-
   !INTERFACED ABOVE TO SINGLE FUNCTION: KSC_AddState
   subroutine KSC_AddFromState_d(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
     integer,intent(in)                   :: istate,jsector
@@ -375,9 +507,6 @@ contains
 
 
 
-
-
-
   !INTERFACE TO GENERAL PROCEDURE KSC_Krylov_Basis
   subroutine KSC_Krylov_Basis_d(isector,vvinit,alanc,blanc,norm2)
     integer,intent(in)                 :: isector
@@ -407,7 +536,10 @@ contains
 
 
 
-
+  !#################################################
+  !#################################################
+  !#################################################
+  !#################################################
 
 
 
@@ -584,6 +716,41 @@ contains
       call KSC_write_prob("KSC_PN",iorb,1,ed_Pn(1,iorb,:,:))
     enddo
   end subroutine KSC_write
+
+
+  subroutine KOC_write()
+    integer :: iorb,ispin
+    !
+    if(.not.allocated(times))call allocate_grids()
+    if(.not.allocated(ed_KOCcdg))return
+    call KOC_write_info()
+    do ispin=1,Nspin
+      do iorb=1,Norb
+        call KSC_write_trace("KOC_cdg",iorb,ispin,ed_KOCcdg(ispin,iorb,:),ed_SOCcdg(ispin,iorb,:),ed_NormOCcdg(ispin,iorb,:))
+        call KSC_write_prob("KOC_Pcdg",iorb,ispin,ed_POCcdg(ispin,iorb,:,:))
+      enddo
+    enddo
+    do iorb=1,Norb
+      call KSC_write_trace("KOC_N",iorb,1,ed_KOCn(1,iorb,:),ed_SOCn(1,iorb,:),ed_NormOCn(1,iorb,:))
+      call KSC_write_prob("KOC_PN",iorb,1,ed_POCn(1,iorb,:,:))
+    enddo
+  end subroutine KOC_write
+
+
+  subroutine KOC_write_info()
+    integer :: unit
+
+    open(free_unit(unit),file="KOC_info"//reg(ed_file_suffix)//".ed")
+    write(unit,"(A)")"# Krylov-operator complexity output"
+    write(unit,"(A)")"# Phase 1: T=0, ed_mode=normal."
+    write(unit,"(A)")"# Trace files: columns are time, K_OC(t), S_OC(t), norm(t)."
+    write(unit,"(A)")"# Probability files: columns are time, P_1(t), ..., P_Nk(t)."
+    write(unit,"(A)")"# cdg files are spin/orbital resolved d^+_{a,sigma} operator channels."
+    write(unit,"(A)")"# N files are total orbital density N_a operator channels; spin index is fixed to 1 in phase 1."
+    write(unit,"(A,I8)")"# Ltimes = ",Ltimes
+    write(unit,"(A,I8)")"# KOCmax = ",KOCmax
+    close(unit)
+  end subroutine KOC_write_info
 
 
   subroutine KSC_write_info()

@@ -419,6 +419,46 @@ MODULE ED_IO
      module procedure :: ed_get_Pn_n4
   end interface ed_get_Pn
 
+  interface ed_get_KOCcdg
+     module procedure :: ed_get_KOCcdg_n1
+     module procedure :: ed_get_KOCcdg_n3
+  end interface ed_get_KOCcdg
+
+  interface ed_get_SOCcdg
+     module procedure :: ed_get_SOCcdg_n1
+     module procedure :: ed_get_SOCcdg_n3
+  end interface ed_get_SOCcdg
+
+  interface ed_get_NormOCcdg
+     module procedure :: ed_get_NormOCcdg_n1
+     module procedure :: ed_get_NormOCcdg_n3
+  end interface ed_get_NormOCcdg
+
+  interface ed_get_POCcdg
+     module procedure :: ed_get_POCcdg_n2
+     module procedure :: ed_get_POCcdg_n4
+  end interface ed_get_POCcdg
+
+  interface ed_get_KOCn
+     module procedure :: ed_get_KOCn_n1
+     module procedure :: ed_get_KOCn_n3
+  end interface ed_get_KOCn
+
+  interface ed_get_SOCn
+     module procedure :: ed_get_SOCn_n1
+     module procedure :: ed_get_SOCn_n3
+  end interface ed_get_SOCn
+
+  interface ed_get_NormOCn
+     module procedure :: ed_get_NormOCn_n1
+     module procedure :: ed_get_NormOCn_n3
+  end interface ed_get_NormOCn
+
+  interface ed_get_POCn
+     module procedure :: ed_get_POCn_n2
+     module procedure :: ed_get_POCn_n4
+  end interface ed_get_POCn
+
 
 
 
@@ -461,6 +501,14 @@ MODULE ED_IO
   public :: ed_get_Sn
   public :: ed_get_Normn
   public :: ed_get_Pn
+  public :: ed_get_KOCcdg
+  public :: ed_get_SOCcdg
+  public :: ed_get_NormOCcdg
+  public :: ed_get_POCcdg
+  public :: ed_get_KOCn
+  public :: ed_get_SOCn
+  public :: ed_get_NormOCn
+  public :: ed_get_POCn
   public :: ed_get_quantum_SOC_operators
   public :: ed_get_imp_info
   public :: ed_get_evals
@@ -646,7 +694,6 @@ contains
 
 
 END MODULE ED_IO
-
 
 
 

@@ -113,19 +113,27 @@ MODULE EDIPACK
        ed_get_imp_info        , &
        ed_get_impurity_rdm    , &
        ed_get_Kcdg            , &
+       ed_get_KOCcdg          , &
+       ed_get_KOCn            , &
        ed_get_Kn              , &
        ed_get_mag             , &
        ed_get_neigen_sector   , &
        ed_get_Normcdg         , &
+       ed_get_NormOCcdg       , &
+       ed_get_NormOCn         , &
        ed_get_Normn           , &
        ed_get_nsectors        , &
        ed_get_Pcdg            , &
+       ed_get_POCcdg          , &
+       ed_get_POCn            , &
        ed_get_pairChi         , &
        ed_get_Pn              , &
        ed_get_phi             , &
        ed_get_phon            , &
        ed_get_Scdg            , &
        ed_get_sigma           , &
+       ed_get_SOCcdg          , &
+       ed_get_SOCn            , &
        ed_get_Sn              , &
        ed_get_sp_dm           , &
        ed_get_spinChi         , &
@@ -155,7 +163,8 @@ MODULE EDIPACK
        ed_build_spinChi  => get_spinChi
 
   USE ED_KRYLOV, only: &
-       ed_build_krylov_state_complexity => krylov_state_complexity
+       ed_build_krylov_state_complexity => krylov_state_complexity, &
+       ed_build_krylov_operator_complexity => krylov_operator_complexity
 
   
   USE ED_MAIN, only:    &
