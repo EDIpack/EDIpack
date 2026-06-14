@@ -94,10 +94,6 @@ MODULE ED_SPARSE_MATRIX
      module procedure :: sp_copy_matrix_csr_d
   end interface sp_copy_matrix
 
-  interface sp_scale_matrix
-     module procedure :: sp_scale_matrix_csr_d
-  end interface sp_scale_matrix
-
   interface sp_axpy_matrix
      module procedure :: sp_axpy_matrix_csr_d
   end interface sp_axpy_matrix
@@ -110,9 +106,10 @@ MODULE ED_SPARSE_MATRIX
      module procedure :: sp_matvec_matrix_csr_d
   end interface sp_matvec_matrix
 
-  interface sp_dot_matrix
-     module procedure :: sp_dot_matrix_csr_d
-  end interface sp_dot_matrix
+
+  interface sp_Tmatvec_matrix
+      module procedure :: sp_transpose_matvec_matrix_csr_d
+  end interface sp_Tmatvec_matrix
 
 #ifdef _MPI  
   interface sp_set_mpi_matrix
@@ -131,11 +128,10 @@ MODULE ED_SPARSE_MATRIX
   public :: sp_insert_element
   public :: sp_dump_matrix
   public :: sp_copy_matrix
-  public :: sp_scale_matrix
   public :: sp_axpy_matrix
   public :: sp_matmul_matrix
   public :: sp_matvec_matrix
-  public :: sp_dot_matrix
+  public :: sp_Tmatvec_matrix
 #ifdef _MPI
   public :: sp_set_mpi_matrix
 #endif
@@ -565,22 +561,6 @@ contains
 
 
   !+------------------------------------------------------------------+
-  !PURPOSE: real sparse matrix scaling B = alpha*A
-  !+------------------------------------------------------------------+
-  subroutine sp_scale_matrix_csr_d(alpha,A,B)
-    real(8),intent(in)                    :: alpha
-    type(sparse_matrix_csr),intent(in)    :: A
-    type(sparse_matrix_csr),intent(inout) :: B
-    integer                               :: i
-    !
-    call sp_copy_matrix(A,B)
-    do i=1,B%Nrow
-       if(B%row(i)%size>0)B%row(i)%dvals = alpha*B%row(i)%dvals
-    enddo
-  end subroutine sp_scale_matrix_csr_d
-
-
-  !+------------------------------------------------------------------+
   !PURPOSE: real sparse matrix linear combination C = alpha*A + beta*B
   !+------------------------------------------------------------------+
   subroutine sp_axpy_matrix_csr_d(alpha,A,beta,B,C,tol)
@@ -660,28 +640,23 @@ contains
   end subroutine sp_matvec_matrix_csr_d
 
 
-  !+------------------------------------------------------------------+
-  !PURPOSE: real sparse Frobenius contraction dot = Tr(A^T*B)
-  !+------------------------------------------------------------------+
-  function sp_dot_matrix_csr_d(A,B) result(dot)
-    type(sparse_matrix_csr),intent(in) :: A,B
-    real(8)                            :: dot
-    integer                            :: i,j,pos
-    !
-    if(.not.A%status)stop "sp_dot_matrix_csr_d ERROR: A is not allocated"
-    if(.not.B%status)stop "sp_dot_matrix_csr_d ERROR: B is not allocated"
-    if(A%Nrow/=B%Nrow)stop "sp_dot_matrix_csr_d ERROR: Nrow mismatch"
-    if(A%Ncol/=B%Ncol)stop "sp_dot_matrix_csr_d ERROR: Ncol mismatch"
-    dot = 0d0
-    do i=1,A%Nrow
-       do j=1,A%row(i)%size
-          if(any(B%row(i)%cols==A%row(i)%cols(j)))then
-             pos = binary_search_spmat(B%row(i)%cols,A%row(i)%cols(j))
-             dot = dot + A%row(i)%dvals(j)*B%row(i)%dvals(pos)
-          endif
-       enddo
-    enddo
-  end function sp_dot_matrix_csr_d
+  subroutine sp_transpose_matvec_matrix_csr_d(A,v,Atv)
+   type(sparse_matrix_csr),intent(in) :: A
+   real(8),dimension(:),intent(in)    :: v
+   real(8),dimension(:),intent(out)   :: Atv
+   integer                            :: i,j
+   !
+   if(size(v)/=A%Nrow)stop "sp_transpose_matvec_matrix_csr_d error: input vector dimension mismatch"
+   if(size(Atv)/=A%Ncol)stop "sp_transpose_matvec_matrix_csr_d error: output vector dimension mismatch"
+   Atv=0d0
+   do i=1,A%Nrow
+      do j=1,A%row(i)%size
+         Atv(A%row(i)%cols(j)) = Atv(A%row(i)%cols(j)) + A%row(i)%dvals(j)*v(i)
+      enddo
+   enddo
+ end subroutine   sp_transpose_matvec_matrix_csr_d
+
+
 
 #ifdef _MPI
   subroutine mpi_sp_dump_matrix_csr_d(MpiComm,sparse,matrix)
@@ -980,7 +955,6 @@ contains
 
 
 end module ED_SPARSE_MATRIX
-
 
 
 

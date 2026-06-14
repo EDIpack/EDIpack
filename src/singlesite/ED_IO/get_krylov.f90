@@ -190,3 +190,156 @@ subroutine ed_get_Pn_n4(self)
   call assert_shape(self,shape(ed_Pn),'ed_get_Pn','Pn')
   self = ed_Pn
 end subroutine ed_get_Pn_n4
+
+
+subroutine ed_get_KOCcdg_n1(self,ispin,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Nspin,Norb,Ltimes
+#endif
+  real(8),dimension(:) :: self
+  integer,intent(in)   :: ispin,iorb
+  if(.not.allocated(ed_KOCcdg))stop "ed_get_KOCcdg error: ed_KOCcdg not allocated"
+  if(ispin>Nspin.OR.iorb>Norb)stop "ed_get_KOCcdg error: index out of bounds"
+  call assert_shape(self,[Ltimes],'ed_get_KOCcdg','KOCcdg')
+  self = ed_KOCcdg(ispin,iorb,:)
+end subroutine ed_get_KOCcdg_n1
+
+subroutine ed_get_KOCcdg_n3(self)
+  real(8),dimension(:,:,:) :: self
+  if(.not.allocated(ed_KOCcdg))stop "ed_get_KOCcdg error: ed_KOCcdg not allocated"
+  call assert_shape(self,shape(ed_KOCcdg),'ed_get_KOCcdg','KOCcdg')
+  self = ed_KOCcdg
+end subroutine ed_get_KOCcdg_n3
+
+subroutine ed_get_SOCcdg_n1(self,ispin,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Nspin,Norb,Ltimes
+#endif
+  real(8),dimension(:) :: self
+  integer,intent(in)   :: ispin,iorb
+  if(.not.allocated(ed_SOCcdg))stop "ed_get_SOCcdg error: ed_SOCcdg not allocated"
+  if(ispin>Nspin.OR.iorb>Norb)stop "ed_get_SOCcdg error: index out of bounds"
+  call assert_shape(self,[Ltimes],'ed_get_SOCcdg','SOCcdg')
+  self = ed_SOCcdg(ispin,iorb,:)
+end subroutine ed_get_SOCcdg_n1
+
+subroutine ed_get_SOCcdg_n3(self)
+  real(8),dimension(:,:,:) :: self
+  if(.not.allocated(ed_SOCcdg))stop "ed_get_SOCcdg error: ed_SOCcdg not allocated"
+  call assert_shape(self,shape(ed_SOCcdg),'ed_get_SOCcdg','SOCcdg')
+  self = ed_SOCcdg
+end subroutine ed_get_SOCcdg_n3
+
+subroutine ed_get_NormOCcdg_n1(self,ispin,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Nspin,Norb,Ltimes
+#endif
+  real(8),dimension(:) :: self
+  integer,intent(in)   :: ispin,iorb
+  if(.not.allocated(ed_NormOCcdg))stop "ed_get_NormOCcdg error: ed_NormOCcdg not allocated"
+  if(ispin>Nspin.OR.iorb>Norb)stop "ed_get_NormOCcdg error: index out of bounds"
+  call assert_shape(self,[Ltimes],'ed_get_NormOCcdg','NormOCcdg')
+  self = ed_NormOCcdg(ispin,iorb,:)
+end subroutine ed_get_NormOCcdg_n1
+
+subroutine ed_get_NormOCcdg_n3(self)
+  real(8),dimension(:,:,:) :: self
+  if(.not.allocated(ed_NormOCcdg))stop "ed_get_NormOCcdg error: ed_NormOCcdg not allocated"
+  call assert_shape(self,shape(ed_NormOCcdg),'ed_get_NormOCcdg','NormOCcdg')
+  self = ed_NormOCcdg
+end subroutine ed_get_NormOCcdg_n3
+
+subroutine ed_get_POCcdg_n2(self,ispin,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Nspin,Norb,Ltimes
+#endif
+  real(8),dimension(:,:) :: self
+  integer,intent(in)     :: ispin,iorb
+  if(.not.allocated(ed_POCcdg))stop "ed_get_POCcdg error: ed_POCcdg not allocated"
+  if(ispin>Nspin.OR.iorb>Norb)stop "ed_get_POCcdg error: index out of bounds"
+  call assert_shape(self,[size(ed_POCcdg,3),Ltimes],'ed_get_POCcdg','POCcdg')
+  self = ed_POCcdg(ispin,iorb,:,:)
+end subroutine ed_get_POCcdg_n2
+
+subroutine ed_get_POCcdg_n4(self)
+  real(8),dimension(:,:,:,:) :: self
+  if(.not.allocated(ed_POCcdg))stop "ed_get_POCcdg error: ed_POCcdg not allocated"
+  call assert_shape(self,shape(ed_POCcdg),'ed_get_POCcdg','POCcdg')
+  self = ed_POCcdg
+end subroutine ed_get_POCcdg_n4
+
+subroutine ed_get_KOCn_n1(self,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Norb,Ltimes
+#endif
+  real(8),dimension(:) :: self
+  integer,intent(in)   :: iorb
+  if(.not.allocated(ed_KOCn))stop "ed_get_KOCn error: ed_KOCn not allocated"
+  if(iorb>Norb)stop "ed_get_KOCn error: orbital index out of bounds"
+  call assert_shape(self,[Ltimes],'ed_get_KOCn','KOCn')
+  self = ed_KOCn(1,iorb,:)
+end subroutine ed_get_KOCn_n1
+
+subroutine ed_get_KOCn_n3(self)
+  real(8),dimension(:,:,:) :: self
+  if(.not.allocated(ed_KOCn))stop "ed_get_KOCn error: ed_KOCn not allocated"
+  call assert_shape(self,shape(ed_KOCn),'ed_get_KOCn','KOCn')
+  self = ed_KOCn
+end subroutine ed_get_KOCn_n3
+
+subroutine ed_get_SOCn_n1(self,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Norb,Ltimes
+#endif
+  real(8),dimension(:) :: self
+  integer,intent(in)   :: iorb
+  if(.not.allocated(ed_SOCn))stop "ed_get_SOCn error: ed_SOCn not allocated"
+  if(iorb>Norb)stop "ed_get_SOCn error: orbital index out of bounds"
+  call assert_shape(self,[Ltimes],'ed_get_SOCn','SOCn')
+  self = ed_SOCn(1,iorb,:)
+end subroutine ed_get_SOCn_n1
+
+subroutine ed_get_SOCn_n3(self)
+  real(8),dimension(:,:,:) :: self
+  if(.not.allocated(ed_SOCn))stop "ed_get_SOCn error: ed_SOCn not allocated"
+  call assert_shape(self,shape(ed_SOCn),'ed_get_SOCn','SOCn')
+  self = ed_SOCn
+end subroutine ed_get_SOCn_n3
+
+subroutine ed_get_NormOCn_n1(self,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Norb,Ltimes
+#endif
+  real(8),dimension(:) :: self
+  integer,intent(in)   :: iorb
+  if(.not.allocated(ed_NormOCn))stop "ed_get_NormOCn error: ed_NormOCn not allocated"
+  if(iorb>Norb)stop "ed_get_NormOCn error: orbital index out of bounds"
+  call assert_shape(self,[Ltimes],'ed_get_NormOCn','NormOCn')
+  self = ed_NormOCn(1,iorb,:)
+end subroutine ed_get_NormOCn_n1
+
+subroutine ed_get_NormOCn_n3(self)
+  real(8),dimension(:,:,:) :: self
+  if(.not.allocated(ed_NormOCn))stop "ed_get_NormOCn error: ed_NormOCn not allocated"
+  call assert_shape(self,shape(ed_NormOCn),'ed_get_NormOCn','NormOCn')
+  self = ed_NormOCn
+end subroutine ed_get_NormOCn_n3
+
+subroutine ed_get_POCn_n2(self,iorb)
+#if __INTEL_COMPILER
+  use ED_INPUT_VARS, only: Norb,Ltimes
+#endif
+  real(8),dimension(:,:) :: self
+  integer,intent(in)     :: iorb
+  if(.not.allocated(ed_POCn))stop "ed_get_POCn error: ed_POCn not allocated"
+  if(iorb>Norb)stop "ed_get_POCn error: orbital index out of bounds"
+  call assert_shape(self,[size(ed_POCn,3),Ltimes],'ed_get_POCn','POCn')
+  self = ed_POCn(1,iorb,:,:)
+end subroutine ed_get_POCn_n2
+
+subroutine ed_get_POCn_n4(self)
+  real(8),dimension(:,:,:,:) :: self
+  if(.not.allocated(ed_POCn))stop "ed_get_POCn error: ed_POCn not allocated"
+  call assert_shape(self,shape(ed_POCn),'ed_get_POCn','POCn')
+  self = ed_POCn
+end subroutine ed_get_POCn_n4

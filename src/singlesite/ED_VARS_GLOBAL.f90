@@ -268,6 +268,14 @@ MODULE ED_VARS_GLOBAL
   real(8),dimension(:,:,:),allocatable               :: ed_Sn
   real(8),dimension(:,:,:),allocatable               :: ed_Normn
   real(8),dimension(:,:,:,:),allocatable             :: ed_Pn
+  real(8),dimension(:,:,:),allocatable               :: ed_KOCcdg
+  real(8),dimension(:,:,:),allocatable               :: ed_SOCcdg
+  real(8),dimension(:,:,:),allocatable               :: ed_NormOCcdg
+  real(8),dimension(:,:,:,:),allocatable             :: ed_POCcdg
+  real(8),dimension(:,:,:),allocatable               :: ed_KOCn
+  real(8),dimension(:,:,:),allocatable               :: ed_SOCn
+  real(8),dimension(:,:,:),allocatable               :: ed_NormOCn
+  real(8),dimension(:,:,:,:),allocatable             :: ed_POCn
 
 
   !Frequency and time arrays:
