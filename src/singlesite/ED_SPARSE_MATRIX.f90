@@ -90,6 +90,30 @@ MODULE ED_SPARSE_MATRIX
 #endif
   end interface sp_dump_matrix
 
+  interface sp_copy_matrix
+     module procedure :: sp_copy_matrix_csr_d
+  end interface sp_copy_matrix
+
+  interface sp_scale_matrix
+     module procedure :: sp_scale_matrix_csr_d
+  end interface sp_scale_matrix
+
+  interface sp_axpy_matrix
+     module procedure :: sp_axpy_matrix_csr_d
+  end interface sp_axpy_matrix
+
+  interface sp_matmul_matrix
+     module procedure :: sp_matmul_matrix_csr_d
+  end interface sp_matmul_matrix
+
+  interface sp_matvec_matrix
+     module procedure :: sp_matvec_matrix_csr_d
+  end interface sp_matvec_matrix
+
+  interface sp_dot_matrix
+     module procedure :: sp_dot_matrix_csr_d
+  end interface sp_dot_matrix
+
 #ifdef _MPI  
   interface sp_set_mpi_matrix
      !
@@ -106,6 +130,12 @@ MODULE ED_SPARSE_MATRIX
   public :: sp_delete_matrix
   public :: sp_insert_element
   public :: sp_dump_matrix
+  public :: sp_copy_matrix
+  public :: sp_scale_matrix
+  public :: sp_axpy_matrix
+  public :: sp_matmul_matrix
+  public :: sp_matvec_matrix
+  public :: sp_dot_matrix
 #ifdef _MPI
   public :: sp_set_mpi_matrix
 #endif
@@ -506,6 +536,153 @@ contains
     enddo
   end subroutine sp_dump_matrix_csr_c
 
+
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: copy a real sparse matrix without aliasing pointer rows
+  !+------------------------------------------------------------------+
+  subroutine sp_copy_matrix_csr_d(A,B)
+    type(sparse_matrix_csr),intent(in)    :: A
+    type(sparse_matrix_csr),intent(inout) :: B
+    integer                               :: i,nn
+    !
+    if(.not.A%status)stop "sp_copy_matrix_csr_d ERROR: A is not allocated"
+    if(B%status)call sp_delete_matrix(B)
+    call sp_init_matrix(B,A%Nrow,A%Ncol)
+    do i=1,A%Nrow
+       nn = A%row(i)%size
+       if(nn==0)cycle
+       B%row(i)%size = nn
+       deallocate(B%row(i)%dvals,B%row(i)%cvals,B%row(i)%cols)
+       allocate(B%row(i)%dvals(nn))
+       allocate(B%row(i)%cvals(0))
+       allocate(B%row(i)%cols(nn))
+       B%row(i)%dvals = A%row(i)%dvals
+       B%row(i)%cols  = A%row(i)%cols
+    enddo
+  end subroutine sp_copy_matrix_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse matrix scaling B = alpha*A
+  !+------------------------------------------------------------------+
+  subroutine sp_scale_matrix_csr_d(alpha,A,B)
+    real(8),intent(in)                    :: alpha
+    type(sparse_matrix_csr),intent(in)    :: A
+    type(sparse_matrix_csr),intent(inout) :: B
+    integer                               :: i
+    !
+    call sp_copy_matrix(A,B)
+    do i=1,B%Nrow
+       if(B%row(i)%size>0)B%row(i)%dvals = alpha*B%row(i)%dvals
+    enddo
+  end subroutine sp_scale_matrix_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse matrix linear combination C = alpha*A + beta*B
+  !+------------------------------------------------------------------+
+  subroutine sp_axpy_matrix_csr_d(alpha,A,beta,B,C,tol)
+    real(8),intent(in)                    :: alpha,beta
+    type(sparse_matrix_csr),intent(in)    :: A,B
+    type(sparse_matrix_csr),intent(inout) :: C
+    real(8),intent(in),optional           :: tol
+    real(8)                               :: threshold,value
+    integer                               :: i,j
+    !
+    if(.not.A%status)stop "sp_axpy_matrix_csr_d ERROR: A is not allocated"
+    if(.not.B%status)stop "sp_axpy_matrix_csr_d ERROR: B is not allocated"
+    if(A%Nrow/=B%Nrow)stop "sp_axpy_matrix_csr_d ERROR: Nrow mismatch"
+    if(A%Ncol/=B%Ncol)stop "sp_axpy_matrix_csr_d ERROR: Ncol mismatch"
+    threshold = 0d0;if(present(tol))threshold=tol
+    if(C%status)call sp_delete_matrix(C)
+    call sp_init_matrix(C,A%Nrow,A%Ncol)
+    do i=1,A%Nrow
+       do j=1,A%row(i)%size
+          value = alpha*A%row(i)%dvals(j)
+          if(abs(value)>threshold)call sp_insert_element(C,value,i,A%row(i)%cols(j))
+       enddo
+       do j=1,B%row(i)%size
+          value = beta*B%row(i)%dvals(j)
+          if(abs(value)>threshold)call sp_insert_element(C,value,i,B%row(i)%cols(j))
+       enddo
+    enddo
+  end subroutine sp_axpy_matrix_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse matrix product C = A*B
+  !+------------------------------------------------------------------+
+  subroutine sp_matmul_matrix_csr_d(A,B,C,tol)
+    type(sparse_matrix_csr),intent(in)    :: A,B
+    type(sparse_matrix_csr),intent(inout) :: C
+    real(8),intent(in),optional           :: tol
+    real(8)                               :: threshold,value
+    integer                               :: i,j,k,icol
+    !
+    if(.not.A%status)stop "sp_matmul_matrix_csr_d ERROR: A is not allocated"
+    if(.not.B%status)stop "sp_matmul_matrix_csr_d ERROR: B is not allocated"
+    if(A%Ncol/=B%Nrow)stop "sp_matmul_matrix_csr_d ERROR: matrix dimensions mismatch"
+    threshold = 0d0;if(present(tol))threshold=tol
+    if(C%status)call sp_delete_matrix(C)
+    call sp_init_matrix(C,A%Nrow,B%Ncol)
+    do i=1,A%Nrow
+       do j=1,A%row(i)%size
+          k = A%row(i)%cols(j)
+          do icol=1,B%row(k)%size
+             value = A%row(i)%dvals(j)*B%row(k)%dvals(icol)
+             if(abs(value)>threshold)call sp_insert_element(C,value,i,B%row(k)%cols(icol))
+          enddo
+       enddo
+    enddo
+  end subroutine sp_matmul_matrix_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse matrix-vector product Hv = H*v
+  !+------------------------------------------------------------------+
+  subroutine sp_matvec_matrix_csr_d(H,v,Hv)
+    type(sparse_matrix_csr),intent(in) :: H
+    real(8),dimension(:),intent(in)    :: v
+    real(8),dimension(:),intent(out)   :: Hv
+    integer                            :: i,j
+    !
+    if(.not.H%status)stop "sp_matvec_matrix_csr_d ERROR: H is not allocated"
+    if(size(v)/=H%Ncol)stop "sp_matvec_matrix_csr_d ERROR: input vector dimension mismatch"
+    if(size(Hv)/=H%Nrow)stop "sp_matvec_matrix_csr_d ERROR: output vector dimension mismatch"
+    Hv = 0d0
+    do i=1,H%Nrow
+       do j=1,H%row(i)%size
+          Hv(i) = Hv(i) + H%row(i)%dvals(j)*v(H%row(i)%cols(j))
+       enddo
+    enddo
+  end subroutine sp_matvec_matrix_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse Frobenius contraction dot = Tr(A^T*B)
+  !+------------------------------------------------------------------+
+  function sp_dot_matrix_csr_d(A,B) result(dot)
+    type(sparse_matrix_csr),intent(in) :: A,B
+    real(8)                            :: dot
+    integer                            :: i,j,pos
+    !
+    if(.not.A%status)stop "sp_dot_matrix_csr_d ERROR: A is not allocated"
+    if(.not.B%status)stop "sp_dot_matrix_csr_d ERROR: B is not allocated"
+    if(A%Nrow/=B%Nrow)stop "sp_dot_matrix_csr_d ERROR: Nrow mismatch"
+    if(A%Ncol/=B%Ncol)stop "sp_dot_matrix_csr_d ERROR: Ncol mismatch"
+    dot = 0d0
+    do i=1,A%Nrow
+       do j=1,A%row(i)%size
+          if(any(B%row(i)%cols==A%row(i)%cols(j)))then
+             pos = binary_search_spmat(B%row(i)%cols,A%row(i)%cols(j))
+             dot = dot + A%row(i)%dvals(j)*B%row(i)%dvals(pos)
+          endif
+       enddo
+    enddo
+  end function sp_dot_matrix_csr_d
+
 #ifdef _MPI
   subroutine mpi_sp_dump_matrix_csr_d(MpiComm,sparse,matrix)
     integer                              :: MpiComm !MPI global communicator
@@ -803,7 +980,6 @@ contains
 
 
 end module ED_SPARSE_MATRIX
-
 
 
 
