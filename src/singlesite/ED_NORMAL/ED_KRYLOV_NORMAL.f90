@@ -30,18 +30,23 @@ MODULE ED_KRYLOV_NORMAL
      type(koc_block_normal),dimension(:),allocatable :: block
   end type koc_vector_normal
 
+  type koc_hblock_cache_normal
+     integer                 :: sector=0
+     type(sparse_matrix_csr) :: H
+  end type koc_hblock_cache_normal
 
-  real(8),parameter :: OpTol=1d-14
+  real(8),parameter                                      :: OpTol=1d-14
+  type(koc_hblock_cache_normal),dimension(:),allocatable :: KOC_Hcache
 
 contains
 
   !Krylov State Complexity: Build the Krylov basis |k_n> from given |v>=O|\psi>
   subroutine KSC_Krylov_Basis_normal(isector,vvinit,alanc,blanc,norm2)
-    integer,intent(in)                  :: isector
-    real(8),dimension(:),intent(inout)    :: vvinit
-    real(8),dimension(:),allocatable     :: alanc
-    real(8),dimension(:),allocatable     :: blanc
-    real(8)                             :: norm2
+    integer,intent(in)                 :: isector
+    real(8),dimension(:),intent(inout) :: vvinit
+    real(8),dimension(:),allocatable   :: alanc
+    real(8),dimension(:),allocatable   :: blanc
+    real(8)                            :: norm2
     call tridiag_Hv_sector_normal(isector,vvinit,alanc,blanc,norm2)
   end subroutine KSC_Krylov_Basis_normal
 
@@ -66,6 +71,7 @@ contains
     btmp=0d0
     !
     if(MpiMaster)write(LOGfile,*)'Evaluating Krylov basis for operator: ',op
+    call KOC_init_hamiltonian_cache()
     !
     !Build the initial vector |Op)
     call KOC_build_seed_normal(op,iorb,ispin,qcurr)
@@ -75,6 +81,8 @@ contains
        allocate(alanc(1));alanc=0d0
        allocate(blanc(1));blanc=0d0
        call KOC_delete_vector(qcurr)
+       call KOC_clear_hamiltonian_cache()
+       deallocate(atmp,btmp)
        return
     endif
     call KOC_scale_vector(1d0/sqrt(norm2),qcurr)
@@ -82,8 +90,7 @@ contains
     !Start the Krylov basis construction
     beta_prev = 0d0
     Nlanc     = 1
-    do n=1,Nmax
-      print*,"DEBUG",n
+    do n=1,10!Nmax
       !L|Op_n)=|Op_{n+1}>
       call KOC_apply_liouvillian_normal(qcurr,w)
       !a_n=(Op_n,Op_{n+1})
@@ -108,6 +115,7 @@ contains
       call koc_delete_vector(w)
       beta_prev = beta
       Nlanc = n+1
+      print*,"DEBUG",n,atmp(n),btmp(n)
     enddo
     !
     allocate(alanc(Nlanc),blanc(Nlanc))
@@ -117,6 +125,7 @@ contains
     call koc_delete_vector(qprev)
     call koc_delete_vector(qcurr)
     call koc_delete_vector(w)
+    call KOC_clear_hamiltonian_cache()
     deallocate(atmp,btmp)
   end subroutine KOC_Krylov_Basis_normal
 
@@ -181,8 +190,8 @@ contains
       LA%block(ib)%right_sector = A%block(ib)%right_sector
       !
       !Build the H^{qLeft/qRight} operator matrices
-      call KOC_build_hamiltonian_block(A%block(ib)%left_sector,Hl)
-      call KOC_build_hamiltonian_block(A%block(ib)%right_sector,Hr)
+      call KOC_get_hamiltonian_block(A%block(ib)%left_sector,Hl)
+      call KOC_get_hamiltonian_block(A%block(ib)%right_sector,Hr)
       !H^{qLeft} @ A
       call sp_matmul_matrix(Hl,A%block(ib)%mat,HlA,OpTol)
       !A @ H^{qRight}
@@ -197,6 +206,59 @@ contains
       call sp_delete_matrix(AHr)
     enddo
   end subroutine koc_apply_liouvillian_normal
+
+
+  subroutine KOC_init_hamiltonian_cache()
+    call KOC_clear_hamiltonian_cache()
+    allocate(KOC_Hcache(0))
+  end subroutine KOC_init_hamiltonian_cache
+
+
+  subroutine KOC_get_hamiltonian_block(isector,H)
+    integer,intent(in)                    :: isector
+    type(sparse_matrix_csr),intent(inout) :: H
+    type(koc_hblock_cache_normal),allocatable :: tmp(:)
+    type(sparse_matrix_csr)               :: Hnew
+    integer                               :: icache,Nold
+    !
+    if(.not.allocated(KOC_Hcache))call KOC_init_hamiltonian_cache()
+    !
+    do icache=1,size(KOC_Hcache)
+       if(KOC_Hcache(icache)%sector==isector)then
+          call sp_copy_matrix(KOC_Hcache(icache)%H,H)
+          return
+       endif
+    enddo
+    !
+    call KOC_build_hamiltonian_block(isector,Hnew)
+    if(ed_verbose>2.AND.MpiMaster)write(LOGfile,"(A,I8)")&
+         "KOC Hamiltonian cache miss, building sector ",isector
+    !
+    Nold=size(KOC_Hcache)
+    allocate(tmp(Nold+1))
+    do icache=1,Nold
+       tmp(icache)%sector = KOC_Hcache(icache)%sector
+       call sp_copy_matrix(KOC_Hcache(icache)%H,tmp(icache)%H)
+       call sp_delete_matrix(KOC_Hcache(icache)%H)
+    enddo
+    if(allocated(KOC_Hcache))deallocate(KOC_Hcache)
+    call move_alloc(tmp,KOC_Hcache)
+    !
+    KOC_Hcache(Nold+1)%sector = isector
+    call sp_copy_matrix(Hnew,KOC_Hcache(Nold+1)%H)
+    call sp_copy_matrix(Hnew,H)
+    call sp_delete_matrix(Hnew)
+  end subroutine KOC_get_hamiltonian_block
+
+
+  subroutine KOC_clear_hamiltonian_cache()
+    integer :: icache
+    if(.not.allocated(KOC_Hcache))return
+    do icache=1,size(KOC_Hcache)
+       call sp_delete_matrix(KOC_Hcache(icache)%H)
+    enddo
+    deallocate(KOC_Hcache)
+  end subroutine KOC_clear_hamiltonian_cache
 
 
   subroutine koc_build_hamiltonian_block(isector,H)
