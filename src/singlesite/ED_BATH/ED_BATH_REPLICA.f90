@@ -576,7 +576,6 @@ contains
     Hmask=.false.
     where(abs(H)>1d-6)Hmask=.true.
     !
-    print*,"AAAAAAAAAAA"
     if(ED_MODE=="normal" .and. Nspin==2)then
       Hmask(1,2,:,:)=.false.
       Hmask(2,1,:,:)=.false.

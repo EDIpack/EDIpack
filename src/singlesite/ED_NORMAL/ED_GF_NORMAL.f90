@@ -758,6 +758,10 @@ contains
     logical(8),dimension(Nspin,Nspin,Norb,Norb) :: Hmask
     integer                                     :: iorb,jorb,ispin,jspin
     Hmask= .true.
+    if(Nspin==2)then
+      Hmask(1,2,:,:)=.false.
+      Hmask(2,1,:,:)=.false.
+    endif
     if(.not.ed_all_g)then
        if(bath_type=="replica")Hmask=Hreplica_mask(wdiag=.true.,uplo=.false.)
        if(bath_type=="general")Hmask=Hgeneral_mask(wdiag=.true.,uplo=.false.)
@@ -780,6 +784,10 @@ contains
     integer                                     :: iorb,jorb,ispin,jspin
     logical                                     :: bool
     Hmask= .true.
+    if(Nspin==2)then
+      Hmask(1,2,:,:)=.false.
+      Hmask(2,1,:,:)=.false.
+    endif
     if(.not.ed_all_g)then
        if(bath_type=="replica")Hmask=Hreplica_mask(wdiag=.true.,uplo=.false.)
        if(bath_type=="general")Hmask=Hgeneral_mask(wdiag=.true.,uplo=.false.)
