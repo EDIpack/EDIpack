@@ -278,7 +278,7 @@ contains
        endif
        !
        !
-       !APPLY (-xi*c_{jorb,jspin} + c_{iorb,ispin})|gs> =  [1,-1j].[C_{-1},C_{-1}].[iorb,jorb].[ispin,jspin]
+       !APPLY (-i*c_{jorb,jspin} + c_{iorb,ispin})|gs> =  [1,-1j].[C_{-1},C_{-1}].[iorb,jorb].[ispin,jspin]
        jsector = getCsector(1,ispin,isector)
        if(Jz_basis)then
           jsector = getCsector_Jz(iorb,ispin,isector)

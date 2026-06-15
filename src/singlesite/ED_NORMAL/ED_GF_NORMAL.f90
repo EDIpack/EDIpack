@@ -244,7 +244,7 @@ contains
        !
        !
 #ifdef _CMPLX_NORMAL
-       !(c^+_iorb + c^+_jorb)|gs> = [1,1].[C_{+1},C_{+1}].[iorb,jorb].[ispin,ispin]
+       !(+i*c^+_iorb + c^+_jorb)|gs> = [1,1].[C_{+1},C_{+1}].[iorb,jorb].[ispin,ispin]
        jsector = getCDGsector(ialfa,ispin,isector)
        if(jsector/=0)then
           vvinit = apply_Cops(v_state,[one,xi],[1,1],[iorb,jorb],[ispin,ispin],isector,jsector)
@@ -255,7 +255,7 @@ contains
           call allocate_GFmatrix(impGmatrix(ispin,ispin,iorb,jorb),istate,ichan=3,Nexc=0)
        endif
        !
-       !(c_iorb + c_jorb)|gs> = [1,1].[C_{-1},C_{-1}].[iorb,jorb].[ispin,ispin]
+       !(-i*c_iorb + c_jorb)|gs> = [1,1].[C_{-1},C_{-1}].[iorb,jorb].[ispin,ispin]
        jsector = getCsector(ialfa,ispin,isector)
        if(jsector/=0)then
           vvinit =  apply_Cops(v_state,[one,-xi],[-1,-1],[iorb,jorb],[ispin,ispin],isector,jsector)
