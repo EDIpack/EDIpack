@@ -379,95 +379,35 @@ MODULE ED_IO
   end interface ed_get_denmat
 
 
-  interface ed_get_Kcdg
-     module procedure :: ed_get_Kcdg_n1
-     module procedure :: ed_get_Kcdg_n3
-  end interface ed_get_Kcdg
+  interface ed_get_KSC
+     module procedure :: ed_get_KSC_n1
+     module procedure :: ed_get_KSC_n4
+  end interface ed_get_KSC
 
-  interface ed_get_Scdg
-     module procedure :: ed_get_Scdg_n1
-     module procedure :: ed_get_Scdg_n3
-  end interface ed_get_Scdg
+  interface ed_get_SSC
+     module procedure :: ed_get_SSC_n1
+     module procedure :: ed_get_SSC_n4
+  end interface ed_get_SSC
 
-  interface ed_get_Pcdg
-     module procedure :: ed_get_Pcdg_n2
-     module procedure :: ed_get_Pcdg_n4
-  end interface ed_get_Pcdg
+  interface ed_get_PSC
+     module procedure :: ed_get_PSC_n2
+     module procedure :: ed_get_PSC_n5
+  end interface ed_get_PSC
 
-  interface ed_get_Kc
-     module procedure :: ed_get_Kc_n1
-     module procedure :: ed_get_Kc_n3
-  end interface ed_get_Kc
+  interface ed_get_KOC
+     module procedure :: ed_get_KOC_n1
+     module procedure :: ed_get_KOC_n4
+  end interface ed_get_KOC
 
-  interface ed_get_Sc
-     module procedure :: ed_get_Sc_n1
-     module procedure :: ed_get_Sc_n3
-  end interface ed_get_Sc
+  interface ed_get_SOC
+     module procedure :: ed_get_SOC_n1
+     module procedure :: ed_get_SOC_n4
+  end interface ed_get_SOC
 
-  interface ed_get_Pc
-     module procedure :: ed_get_Pc_n2
-     module procedure :: ed_get_Pc_n4
-  end interface ed_get_Pc
-
-  interface ed_get_Kg1
-     module procedure :: ed_get_Kg1_n1
-     module procedure :: ed_get_Kg1_n3
-  end interface ed_get_Kg1
-
-  interface ed_get_Sg1
-     module procedure :: ed_get_Sg1_n1
-     module procedure :: ed_get_Sg1_n3
-  end interface ed_get_Sg1
-
-  interface ed_get_Pg1
-     module procedure :: ed_get_Pg1_n2
-     module procedure :: ed_get_Pg1_n4
-  end interface ed_get_Pg1
-
-  interface ed_get_KOCcdg
-     module procedure :: ed_get_KOCcdg_n1
-     module procedure :: ed_get_KOCcdg_n3
-  end interface ed_get_KOCcdg
-
-  interface ed_get_SOCcdg
-     module procedure :: ed_get_SOCcdg_n1
-     module procedure :: ed_get_SOCcdg_n3
-  end interface ed_get_SOCcdg
-
-  interface ed_get_POCcdg
-     module procedure :: ed_get_POCcdg_n2
-     module procedure :: ed_get_POCcdg_n4
-  end interface ed_get_POCcdg
-
-  interface ed_get_KOCc
-     module procedure :: ed_get_KOCc_n1
-     module procedure :: ed_get_KOCc_n3
-  end interface ed_get_KOCc
-
-  interface ed_get_SOCc
-     module procedure :: ed_get_SOCc_n1
-     module procedure :: ed_get_SOCc_n3
-  end interface ed_get_SOCc
-
-  interface ed_get_POCc
-     module procedure :: ed_get_POCc_n2
-     module procedure :: ed_get_POCc_n4
-  end interface ed_get_POCc
-
-  interface ed_get_KOCg1
-     module procedure :: ed_get_KOCg1_n1
-     module procedure :: ed_get_KOCg1_n3
-  end interface ed_get_KOCg1
-
-  interface ed_get_SOCg1
-     module procedure :: ed_get_SOCg1_n1
-     module procedure :: ed_get_SOCg1_n3
-  end interface ed_get_SOCg1
-
-  interface ed_get_POCg1
-     module procedure :: ed_get_POCg1_n2
-     module procedure :: ed_get_POCg1_n4
-  end interface ed_get_POCg1
+  interface ed_get_POC
+     module procedure :: ed_get_POC_n2
+     module procedure :: ed_get_POC_n5
+  end interface ed_get_POC
 
 
 
@@ -503,24 +443,12 @@ MODULE ED_IO
   public :: ed_get_sp_dm
   public :: ed_get_impurity_rdm
   public :: ed_get_denmat
-  public :: ed_get_Kcdg
-  public :: ed_get_Scdg
-  public :: ed_get_Pcdg
-  public :: ed_get_Kc
-  public :: ed_get_Sc
-  public :: ed_get_Pc
-  public :: ed_get_Kg1
-  public :: ed_get_Sg1
-  public :: ed_get_Pg1
-  public :: ed_get_KOCcdg
-  public :: ed_get_SOCcdg
-  public :: ed_get_POCcdg
-  public :: ed_get_KOCc
-  public :: ed_get_SOCc
-  public :: ed_get_POCc
-  public :: ed_get_KOCg1
-  public :: ed_get_SOCg1
-  public :: ed_get_POCg1
+  public :: ed_get_KSC
+  public :: ed_get_SSC
+  public :: ed_get_PSC
+  public :: ed_get_KOC
+  public :: ed_get_SOC
+  public :: ed_get_POC
   public :: ed_get_quantum_SOC_operators
   public :: ed_get_imp_info
   public :: ed_get_evals
@@ -706,6 +634,5 @@ contains
 
 
 END MODULE ED_IO
-
 
 
