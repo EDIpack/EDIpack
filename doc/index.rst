@@ -14,16 +14,17 @@ Quantum Impurity problems, exploiting MPI distributed memory parallelization.
 
 List of Features
 """""""""""""""""""
-* Support for zero and low temperature calculations
-* Support for multiple star bath geometries
+* Zero and low temperature calculations
+* Multiple star bath geometries
 * Support for superconductive systems
-* Support for systems where spin degrees freedom is not fully conserved
+* Support for systems where spin is not conserved (e.g. in-plane ordering)
 * One and two-particle response function on imaginary frequency, real frequency and imaginary time axes
-* Support for reduce density matrices
-* Support for Holstein phonon modes
+* Various static observables
+* Reduced density matrices
+* Holstein phonon modes
 * Support for inequivalent impurity sites through a Real-Space DMFT module
-* APIs for FORTRAN, C++, Python and Julia
-* Interoperability with the TRIQS software suite through a fully-featured thin compatibility layer
+* API for FORTRAN, C++, Python and Julia
+* Interoperability with the `TRIQS <https://triqs.github.io/triqs/latest/>`_ software suite through a fully-featured `thin compatibility layer <https://edipack.github.io/edipack2triqs/>`_
 * Published in `SciPost Physics Codebases <https://scipost.org/SciPostPhysCodeb.58>`_
 
 Authors
