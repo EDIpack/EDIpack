@@ -183,7 +183,7 @@ contains
           !C^+_{a,dw}|tmp>=|vvinit>
           vvinit = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,+1,iorb,jorb,2,1,istate)
+          call add_to_lanczos_exctChi(one*norm2,e_state,alfa_,beta_,+1,iorb,jorb,2,1,istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
        else
           call allocate_GFmatrix(exctChiMatrix(2,iorb,jorb),istate,1,Nexc=0)
@@ -198,7 +198,7 @@ contains
           !C^+_{b,up}|tmp>=|vvinit>
           vvinit = apply_op_CDG(vtmp,jorb,1,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,-1,iorb,jorb,2,2,istate)
+          call add_to_lanczos_exctChi(one*norm2,e_state,alfa_,beta_,-1,iorb,jorb,2,2,istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
        else
           call allocate_GFmatrix(exctChiMatrix(2,iorb,jorb),istate,2,Nexc=0)
@@ -213,7 +213,7 @@ contains
           !C^+_{a,up}|tmp>=|vvinit>
           vvinit = apply_op_CDG(vtmp,iorb,1,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,+1,iorb,jorb,2,3,istate)
+          call add_to_lanczos_exctChi(one*norm2,e_state,alfa_,beta_,+1,iorb,jorb,2,3,istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
        else
           call allocate_GFmatrix(exctChiMatrix(2,iorb,jorb),istate,3,Nexc=0)
@@ -228,7 +228,7 @@ contains
           !C^+_{b,dw}|tmp>=|vvinit>
           vvinit = apply_op_CDG(vtmp,jorb,2,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_exctChi(norm2,e_state,alfa_,beta_,-1,iorb,jorb,2,4,istate)
+          call add_to_lanczos_exctChi(one*norm2,e_state,alfa_,beta_,-1,iorb,jorb,2,4,istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
        else
           call allocate_GFmatrix(exctChiMatrix(2,iorb,jorb),istate,4,Nexc=0)
@@ -297,7 +297,7 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     integer                                    :: iorb,jorb,ichan,indx,isign,istate
-    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso,vnorm2
+    complex(8)                                 :: pesoF,pesoAB,pesoBZ,peso,vnorm2
     real(8)                                    :: Ei,Ej,Egs,de
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
@@ -582,7 +582,7 @@ contains
       endif
       !
       !save weights and poles
-      call add_to_lanczos_exctChi(norm2, e_state, alfa_, beta_, isign, iorb, jorb, indx, ichan, istate)
+      call add_to_lanczos_exctChi(one*norm2, e_state, alfa_, beta_, isign, iorb, jorb, indx, ichan, istate)
       !
       !cleanup
       deallocate(alfa_,beta_,vtmp)
