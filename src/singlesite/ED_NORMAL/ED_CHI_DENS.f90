@@ -185,11 +185,7 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     integer                                    :: iorb,jorb,ichan
-#ifdef _CMPLX_NORMAL
     complex(8)                                 :: pesoF,pesoAB,pesoBZ,peso,vnorm2  
-#else
-    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso,vnorm2  
-#endif
     real(8)                                    :: Ei,Ej,Egs,de
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
