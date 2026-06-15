@@ -66,7 +66,12 @@ contains
     !
     if(Norb>1)then
        do iorb=1,Norb
+#ifdef _CMPLX_NORMAL
+          do jorb=1,Norb
+             if(iorb==jorb)cycle
+#else
           do jorb=iorb+1,Norb
+#endif
              call allocate_GFmatrix(densChimatrix(iorb,jorb),Nstate=state_list%size)
              call lanc_ed_build_densChi_mix(iorb,jorb)
           end do
@@ -112,7 +117,7 @@ contains
        !
        vvinit = apply_op_N(v_state,iorb,isector)
        call tridiag_Hv_sector_normal(isector,vvinit,alfa_,beta_,norm2)
-       call add_to_lanczos_densChi(norm2,e_state,alfa_,beta_,iorb,iorb)
+       call add_to_lanczos_densChi(one*norm2,e_state,alfa_,beta_,iorb,iorb,1)
        deallocate(alfa_,beta_,vvinit)
        if(allocated(v_state))deallocate(v_state)
     enddo
@@ -136,7 +141,11 @@ contains
     write(LOGfile,"(A)")"Get Chi_dens_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
     !
     do istate=1,state_list%size
+#ifdef _CMPLX_NORMAL
+       call allocate_GFmatrix(densChimatrix(iorb,jorb),istate,Nchan=2)
+#else
        call allocate_GFmatrix(densChimatrix(iorb,jorb),istate,Nchan=1)
+#endif
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
 #ifdef _CMPLX_NORMAL
@@ -149,8 +158,16 @@ contains
        vI = apply_op_N(v_state,iorb,isector)
        vJ = apply_op_N(v_state,jorb,isector)
        call tridiag_Hv_sector_normal(isector,vI+vJ,alfa_,beta_,norm2)
-       call add_to_lanczos_densChi(norm2,e_state,alfa_,beta_,iorb,jorb)
+       call add_to_lanczos_densChi(one*norm2,e_state,alfa_,beta_,iorb,jorb,1)
        deallocate(alfa_,beta_,vI,vJ)
+#ifdef _CMPLX_NORMAL
+       !EVALUATE (i*N_jorb + N_iorb)|gs> = N_jorb|gs> + N_iorb|gs>
+       vI = apply_op_N(v_state,iorb,isector)
+       vJ = apply_op_N(v_state,jorb,isector)
+       call tridiag_Hv_sector_normal(isector,xi*vI + vJ ,alfa_,beta_,norm2)
+       call add_to_lanczos_densChi(-xi*norm2,e_state,alfa_,beta_,iorb,jorb,2)
+       deallocate(alfa_,beta_,vI,vJ)
+#endif
        if(allocated(v_state))deallocate(v_state)
     enddo
     return
@@ -163,12 +180,16 @@ contains
 
 
 
-  subroutine add_to_lanczos_densChi(vnorm2,Ei,alanc,blanc,iorb,jorb)
+  subroutine add_to_lanczos_densChi(vnorm2,Ei,alanc,blanc,iorb,jorb,ichan)
 #if __INTEL_COMPILER
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
-    integer                                    :: iorb,jorb
+    integer                                    :: iorb,jorb,ichan
+#ifdef _CMPLX_NORMAL
+    complex(8)                                 :: pesoF,pesoAB,pesoBZ,peso,vnorm2  
+#else
     real(8)                                    :: pesoF,pesoAB,pesoBZ,peso,vnorm2  
+#endif
     real(8)                                    :: Ei,Ej,Egs,de
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
@@ -210,7 +231,7 @@ contains
 #endif
     call eigh(diag(1:Nlanc),subdiag(2:Nlanc),Ev=Z(:Nlanc,:Nlanc))
     !
-    call allocate_GFmatrix(densChiMatrix(iorb,jorb),istate,1,Nlanc)
+    call allocate_GFmatrix(densChiMatrix(iorb,jorb),istate,ichan,Nlanc)
     !
     do j=1,nlanc
        Ej     = diag(j)
@@ -218,8 +239,8 @@ contains
        pesoAB = Z(1,j)*Z(1,j)
        peso   = pesoF*pesoAB*pesoBZ
        !
-       densChiMatrix(iorb,jorb)%state(istate)%channel(1)%weight(j) = peso
-       densChiMatrix(iorb,jorb)%state(istate)%channel(1)%poles(j)  = de
+       densChiMatrix(iorb,jorb)%state(istate)%channel(ichan)%weight(j) = peso
+       densChiMatrix(iorb,jorb)%state(istate)%channel(ichan)%poles(j)  = de
        !
     enddo
     !
@@ -267,11 +288,19 @@ contains
     !
     if(Norb>1)then
        do iorb=1,Norb
+#ifdef _CMPLX_NORMAL
+          do jorb=1,Norb
+             if(iorb==jorb) cycle
+             call get_Chiab(iorb,jorb)
+             Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:) - (one-xi) * Chi(iorb,iorb,:) - (one-xi) * Chi(jorb,jorb,:))
+          enddo
+#else
           do jorb=iorb+1,Norb
              call get_Chiab(iorb,jorb)
              Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:)-Chi(iorb,iorb,:)-Chi(jorb,jorb,:))
              Chi(jorb,iorb,:) = Chi(iorb,jorb,:)
           enddo
+#endif
        enddo
     end if
     !
@@ -285,7 +314,12 @@ contains
       integer            :: Nstates,istate
       integer            :: Nchannels,ichan
       integer            :: Nexcs,iexc
-      real(8)            :: peso,de
+      real(8)            :: de
+#ifdef _CMPLX_NORMAL
+      complex(8)         :: peso
+#else
+      real(8)            :: peso
+#endif
       !
       write(LOGfile,"(A)")"Get Chi_dens_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
       if(.not.allocated(densChimatrix(iorb,jorb)%state)) return

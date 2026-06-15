@@ -48,10 +48,6 @@ contains
          write(Logfile,"(A)")"DEBUG buildChi_impurity: build susceptibilities Chi"
 #endif
     !
-#ifdef _CMPLX_NORMAL
-    write(Logfile,"(A)")"WARNING: the calculation of susceptibilities with CMPLX_NORMAL enabled is not available at present."
-    return
-#endif
     !
     call deallocate_GFmatrix(spinChimatrix)
     call deallocate_GFmatrix(densChimatrix)
