@@ -389,35 +389,40 @@ MODULE ED_IO
      module procedure :: ed_get_Scdg_n3
   end interface ed_get_Scdg
 
-  interface ed_get_Normcdg
-     module procedure :: ed_get_Normcdg_n1
-     module procedure :: ed_get_Normcdg_n3
-  end interface ed_get_Normcdg
-
   interface ed_get_Pcdg
      module procedure :: ed_get_Pcdg_n2
      module procedure :: ed_get_Pcdg_n4
   end interface ed_get_Pcdg
 
-  interface ed_get_Kn
-     module procedure :: ed_get_Kn_n1
-     module procedure :: ed_get_Kn_n3
-  end interface ed_get_Kn
+  interface ed_get_Kc
+     module procedure :: ed_get_Kc_n1
+     module procedure :: ed_get_Kc_n3
+  end interface ed_get_Kc
 
-  interface ed_get_Sn
-     module procedure :: ed_get_Sn_n1
-     module procedure :: ed_get_Sn_n3
-  end interface ed_get_Sn
+  interface ed_get_Sc
+     module procedure :: ed_get_Sc_n1
+     module procedure :: ed_get_Sc_n3
+  end interface ed_get_Sc
 
-  interface ed_get_Normn
-     module procedure :: ed_get_Normn_n1
-     module procedure :: ed_get_Normn_n3
-  end interface ed_get_Normn
+  interface ed_get_Pc
+     module procedure :: ed_get_Pc_n2
+     module procedure :: ed_get_Pc_n4
+  end interface ed_get_Pc
 
-  interface ed_get_Pn
-     module procedure :: ed_get_Pn_n2
-     module procedure :: ed_get_Pn_n4
-  end interface ed_get_Pn
+  interface ed_get_Kg1
+     module procedure :: ed_get_Kg1_n1
+     module procedure :: ed_get_Kg1_n3
+  end interface ed_get_Kg1
+
+  interface ed_get_Sg1
+     module procedure :: ed_get_Sg1_n1
+     module procedure :: ed_get_Sg1_n3
+  end interface ed_get_Sg1
+
+  interface ed_get_Pg1
+     module procedure :: ed_get_Pg1_n2
+     module procedure :: ed_get_Pg1_n4
+  end interface ed_get_Pg1
 
   interface ed_get_KOCcdg
      module procedure :: ed_get_KOCcdg_n1
@@ -429,35 +434,40 @@ MODULE ED_IO
      module procedure :: ed_get_SOCcdg_n3
   end interface ed_get_SOCcdg
 
-  interface ed_get_NormOCcdg
-     module procedure :: ed_get_NormOCcdg_n1
-     module procedure :: ed_get_NormOCcdg_n3
-  end interface ed_get_NormOCcdg
-
   interface ed_get_POCcdg
      module procedure :: ed_get_POCcdg_n2
      module procedure :: ed_get_POCcdg_n4
   end interface ed_get_POCcdg
 
-  interface ed_get_KOCn
-     module procedure :: ed_get_KOCn_n1
-     module procedure :: ed_get_KOCn_n3
-  end interface ed_get_KOCn
+  interface ed_get_KOCc
+     module procedure :: ed_get_KOCc_n1
+     module procedure :: ed_get_KOCc_n3
+  end interface ed_get_KOCc
 
-  interface ed_get_SOCn
-     module procedure :: ed_get_SOCn_n1
-     module procedure :: ed_get_SOCn_n3
-  end interface ed_get_SOCn
+  interface ed_get_SOCc
+     module procedure :: ed_get_SOCc_n1
+     module procedure :: ed_get_SOCc_n3
+  end interface ed_get_SOCc
 
-  interface ed_get_NormOCn
-     module procedure :: ed_get_NormOCn_n1
-     module procedure :: ed_get_NormOCn_n3
-  end interface ed_get_NormOCn
+  interface ed_get_POCc
+     module procedure :: ed_get_POCc_n2
+     module procedure :: ed_get_POCc_n4
+  end interface ed_get_POCc
 
-  interface ed_get_POCn
-     module procedure :: ed_get_POCn_n2
-     module procedure :: ed_get_POCn_n4
-  end interface ed_get_POCn
+  interface ed_get_KOCg1
+     module procedure :: ed_get_KOCg1_n1
+     module procedure :: ed_get_KOCg1_n3
+  end interface ed_get_KOCg1
+
+  interface ed_get_SOCg1
+     module procedure :: ed_get_SOCg1_n1
+     module procedure :: ed_get_SOCg1_n3
+  end interface ed_get_SOCg1
+
+  interface ed_get_POCg1
+     module procedure :: ed_get_POCg1_n2
+     module procedure :: ed_get_POCg1_n4
+  end interface ed_get_POCg1
 
 
 
@@ -495,20 +505,22 @@ MODULE ED_IO
   public :: ed_get_denmat
   public :: ed_get_Kcdg
   public :: ed_get_Scdg
-  public :: ed_get_Normcdg
   public :: ed_get_Pcdg
-  public :: ed_get_Kn
-  public :: ed_get_Sn
-  public :: ed_get_Normn
-  public :: ed_get_Pn
+  public :: ed_get_Kc
+  public :: ed_get_Sc
+  public :: ed_get_Pc
+  public :: ed_get_Kg1
+  public :: ed_get_Sg1
+  public :: ed_get_Pg1
   public :: ed_get_KOCcdg
   public :: ed_get_SOCcdg
-  public :: ed_get_NormOCcdg
   public :: ed_get_POCcdg
-  public :: ed_get_KOCn
-  public :: ed_get_SOCn
-  public :: ed_get_NormOCn
-  public :: ed_get_POCn
+  public :: ed_get_KOCc
+  public :: ed_get_SOCc
+  public :: ed_get_POCc
+  public :: ed_get_KOCg1
+  public :: ed_get_SOCg1
+  public :: ed_get_POCg1
   public :: ed_get_quantum_SOC_operators
   public :: ed_get_imp_info
   public :: ed_get_evals
@@ -694,8 +706,6 @@ contains
 
 
 END MODULE ED_IO
-
-
 
 
 

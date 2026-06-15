@@ -51,11 +51,12 @@ contains
   !#################################################
   subroutine krylov_operator_complexity(bath)
     !
-    ! Build the T=0 Krylov-operator complexity for d^+_{a,sigma} and N_a.
+    ! Build the T=0 Krylov-operator complexity for d^+_{a,sigma},
+    ! d_{a,sigma}, and gamma1=d^+_{a,sigma}+d_{a,sigma}.
     ! Phase 1 supports only the NORMAL channel.
     !
     real(8),dimension(:),intent(in),optional :: bath
-    real(8),dimension(:),allocatable         :: Kt,Sk,Nt
+    real(8),dimension(:),allocatable         :: Kt,Sk
     real(8),dimension(:,:),allocatable       :: Pnk
     real(8),dimension(1)                     :: bath_dummy
     integer                                  :: iorb,ispin
@@ -93,48 +94,51 @@ contains
     !
     if(allocated(ed_KOCcdg))   deallocate(ed_KOCcdg)
     if(allocated(ed_SOCcdg))   deallocate(ed_SOCcdg)
-    if(allocated(ed_NormOCcdg))deallocate(ed_NormOCcdg)
     if(allocated(ed_POCcdg))   deallocate(ed_POCcdg)
-    if(allocated(ed_KOCn))     deallocate(ed_KOCn)
-    if(allocated(ed_SOCn))     deallocate(ed_SOCn)
-    if(allocated(ed_NormOCn))  deallocate(ed_NormOCn)
-    if(allocated(ed_POCn))     deallocate(ed_POCn)
+    if(allocated(ed_KOCc))     deallocate(ed_KOCc)
+    if(allocated(ed_SOCc))     deallocate(ed_SOCc)
+    if(allocated(ed_POCc))     deallocate(ed_POCc)
+    if(allocated(ed_KOCg1))    deallocate(ed_KOCg1)
+    if(allocated(ed_SOCg1))    deallocate(ed_SOCg1)
+    if(allocated(ed_POCg1))    deallocate(ed_POCg1)
     allocate(ed_KOCcdg(Nspin,Norb,Ltimes))
     allocate(ed_SOCcdg(Nspin,Norb,Ltimes))
-    allocate(ed_NormOCcdg(Nspin,Norb,Ltimes))
     allocate(ed_POCcdg(Nspin,Norb,KOCmax,Ltimes))
-    allocate(ed_KOCn(Nspin,Norb,Ltimes))
-    allocate(ed_SOCn(Nspin,Norb,Ltimes))
-    allocate(ed_NormOCn(Nspin,Norb,Ltimes))
-    allocate(ed_POCn(Nspin,Norb,KOCmax,Ltimes))
-    ed_KOCcdg=0d0;ed_SOCcdg=0d0;ed_NormOCcdg=0d0;ed_POCcdg=0d0
-    ed_KOCn=0d0;ed_SOCn=0d0;ed_NormOCn=0d0;ed_POCn=0d0
+    allocate(ed_KOCc(Nspin,Norb,Ltimes))
+    allocate(ed_SOCc(Nspin,Norb,Ltimes))
+    allocate(ed_POCc(Nspin,Norb,KOCmax,Ltimes))
+    allocate(ed_KOCg1(Nspin,Norb,Ltimes))
+    allocate(ed_SOCg1(Nspin,Norb,Ltimes))
+    allocate(ed_POCg1(Nspin,Norb,KOCmax,Ltimes))
+    ed_KOCcdg=0d0;ed_SOCcdg=0d0;ed_POCcdg=0d0
+    ed_KOCc=0d0;ed_SOCc=0d0;ed_POCc=0d0
+    ed_KOCg1=0d0;ed_SOCg1=0d0;ed_POCg1=0d0
     !
     !
-    !States with orbital resolved density d^dgr_{iorb,sigma}
     do ispin=1,Nspin
       do iorb=1,Norb
-        call KOC_build_Op("cdg",iorb,ispin,Kt,Sk,Pnk,Nt)
+        call KOC_build_Op("cdg",iorb,ispin,Kt,Sk,Pnk)
         ed_KOCcdg(ispin,iorb,:)    = Kt
         ed_SOCcdg(ispin,iorb,:)    = Sk
-        ed_NormOCcdg(ispin,iorb,:) = Nt
         ed_POCcdg(ispin,iorb,:,:)  = Pnk
         if(allocated(Kt)) deallocate(Kt)
         if(allocated(Sk)) deallocate(Sk)
         if(allocated(Pnk))deallocate(Pnk)
-        if(allocated(Nt)) deallocate(Nt)
+        call KOC_build_Op("c",iorb,ispin,Kt,Sk,Pnk)
+        ed_KOCc(ispin,iorb,:)    = Kt
+        ed_SOCc(ispin,iorb,:)    = Sk
+        ed_POCc(ispin,iorb,:,:)  = Pnk
+        if(allocated(Kt)) deallocate(Kt)
+        if(allocated(Sk)) deallocate(Sk)
+        if(allocated(Pnk))deallocate(Pnk)
+        call KOC_build_Op("g1",iorb,ispin,Kt,Sk,Pnk)
+        ed_KOCg1(ispin,iorb,:)    = Kt
+        ed_SOCg1(ispin,iorb,:)    = Sk
+        ed_POCg1(ispin,iorb,:,:)  = Pnk
+        if(allocated(Kt)) deallocate(Kt)
+        if(allocated(Sk)) deallocate(Sk)
+        if(allocated(Pnk))deallocate(Pnk)
       enddo
-    enddo
-    do iorb=1,Norb
-      call KOC_build_Op("N",iorb,1,Kt,Sk,Pnk,Nt)
-      ed_KOCn(1,iorb,:)    = Kt
-      ed_SOCn(1,iorb,:)    = Sk
-      ed_NormOCn(1,iorb,:) = Nt
-      ed_POCn(1,iorb,:,:)  = Pnk
-      if(allocated(Kt)) deallocate(Kt)
-      if(allocated(Sk)) deallocate(Sk)
-      if(allocated(Pnk))deallocate(Pnk)
-      if(allocated(Nt)) deallocate(Nt)
     enddo
     !
     if(MPIMASTER)call KOC_write()
@@ -143,20 +147,20 @@ contains
   end subroutine krylov_operator_complexity
 
 
-  subroutine KOC_build_Op(op,iorb,ispin,Kt,Sk,Pnk,Nt)
+  subroutine KOC_build_Op(op,iorb,ispin,Kt,Sk,Pnk)
     character(len=*),intent(in)                    :: op
     integer,intent(in)                             :: iorb,ispin
     real(8),dimension(:),allocatable,intent(out)   :: Kt
     real(8),dimension(:),allocatable,intent(out)   :: Sk
     real(8),dimension(:,:),allocatable,intent(out) :: Pnk
-    real(8),dimension(:),allocatable,intent(out)   :: Nt
     real(8),dimension(:),allocatable               :: alanc,blanc
     real(8),dimension(:,:),allocatable             :: Ptmp
     real(8)                                        :: norm2
     integer                                        :: Nk
     !
     call KOC_Krylov_Basis_normal(op,iorb,ispin,alanc,blanc,norm2)
-    call KSC_Build_Complexity(alanc,blanc,Kt,Sk,Ptmp,Nt)
+    call KSC_write_coeff("KOC_coeff_"//trim(to_lower(op)),iorb,ispin,alanc,blanc)
+    call KSC_Build_Complexity(alanc,blanc,Kt,Sk,Ptmp)
     allocate(Pnk(KOCmax,Ltimes))
     Pnk= 0d0
     Nk = min(size(Ptmp,1),KOCmax)
@@ -181,11 +185,10 @@ contains
   subroutine krylov_state_complexity(bath)
     !
     ! Build the Krylov-state complexity for the impurity problem for the states obtained 
-    ! adding one electrons with a defined spin and orbital index AND for the states with 
-    ! given orbital resolved charge density. 
+    ! applying d^+_{a,sigma}, d_{a,sigma}, and gamma1=d^+_{a,sigma}+d_{a,sigma}.
     !
     real(8),dimension(:),intent(in),optional          :: bath
-    real(8),dimension(:),allocatable                   :: Kt,Sk,Nt
+    real(8),dimension(:),allocatable                   :: Kt,Sk
     real(8),dimension(:,:),allocatable                 :: Pnk
     real(8),dimension(1)                               :: bath_dummy
     integer                                            :: iorb,ispin
@@ -221,55 +224,57 @@ contains
     !
     if(allocated(ed_Kcdg))   deallocate(ed_Kcdg)
     if(allocated(ed_Scdg))   deallocate(ed_Scdg)
-    if(allocated(ed_Normcdg))deallocate(ed_Normcdg)
     if(allocated(ed_Pcdg))   deallocate(ed_Pcdg)
-    if(allocated(ed_Kn))     deallocate(ed_Kn)
-    if(allocated(ed_Sn))     deallocate(ed_Sn)
-    if(allocated(ed_Normn))  deallocate(ed_Normn)
-    if(allocated(ed_Pn))     deallocate(ed_Pn)
+    if(allocated(ed_Kc))     deallocate(ed_Kc)
+    if(allocated(ed_Sc))     deallocate(ed_Sc)
+    if(allocated(ed_Pc))     deallocate(ed_Pc)
+    if(allocated(ed_Kg1))    deallocate(ed_Kg1)
+    if(allocated(ed_Sg1))    deallocate(ed_Sg1)
+    if(allocated(ed_Pg1))    deallocate(ed_Pg1)
     allocate(ed_Kcdg(Nspin,Norb,Ltimes))
     allocate(ed_Scdg(Nspin,Norb,Ltimes))
-    allocate(ed_Normcdg(Nspin,Norb,Ltimes))
     allocate(ed_Pcdg(Nspin,Norb,KSCmax,Ltimes))
-    allocate(ed_Kn(Nspin,Norb,Ltimes))
-    allocate(ed_Sn(Nspin,Norb,Ltimes))
-    allocate(ed_Normn(Nspin,Norb,Ltimes))
-    allocate(ed_Pn(Nspin,Norb,KSCmax,Ltimes))
+    allocate(ed_Kc(Nspin,Norb,Ltimes))
+    allocate(ed_Sc(Nspin,Norb,Ltimes))
+    allocate(ed_Pc(Nspin,Norb,KSCmax,Ltimes))
+    allocate(ed_Kg1(Nspin,Norb,Ltimes))
+    allocate(ed_Sg1(Nspin,Norb,Ltimes))
+    allocate(ed_Pg1(Nspin,Norb,KSCmax,Ltimes))
     !
     ed_Kcdg   =0d0
     ed_Scdg   =0d0
-    ed_Normcdg=0d0
     ed_Pcdg   =0d0
-    ed_Kn     =0d0
-    ed_Sn     =0d0
-    ed_Normn  =0d0
-    ed_Pn     =0d0
+    ed_Kc     =0d0
+    ed_Sc     =0d0
+    ed_Pc     =0d0
+    ed_Kg1    =0d0
+    ed_Sg1    =0d0
+    ed_Pg1    =0d0
     !
-    !States with one electron with a given spin and orbital index C^+_{iorb,ispin}
     do ispin=1,Nspin
       do iorb=1,Norb
-          call KSC_build_OpStateList("cdg",iorb,ispin,Kt,Sk,Pnk,Nt)
+          call KSC_build_OpStateList("cdg",iorb,ispin,Kt,Sk,Pnk)
           ed_Kcdg(ispin,iorb,:)    = Kt
           ed_Scdg(ispin,iorb,:)    = Sk
-          ed_Normcdg(ispin,iorb,:) = Nt
           ed_Pcdg(ispin,iorb,:,:)  = Pnk
           if(allocated(Kt)) deallocate(Kt)
           if(allocated(Sk)) deallocate(Sk)
           if(allocated(Pnk))deallocate(Pnk)
-          if(allocated(Nt)) deallocate(Nt)
+          call KSC_build_OpStateList("c",iorb,ispin,Kt,Sk,Pnk)
+          ed_Kc(ispin,iorb,:)    = Kt
+          ed_Sc(ispin,iorb,:)    = Sk
+          ed_Pc(ispin,iorb,:,:)  = Pnk
+          if(allocated(Kt)) deallocate(Kt)
+          if(allocated(Sk)) deallocate(Sk)
+          if(allocated(Pnk))deallocate(Pnk)
+          call KSC_build_OpStateList("g1",iorb,ispin,Kt,Sk,Pnk)
+          ed_Kg1(ispin,iorb,:)    = Kt
+          ed_Sg1(ispin,iorb,:)    = Sk
+          ed_Pg1(ispin,iorb,:,:)  = Pnk
+          if(allocated(Kt)) deallocate(Kt)
+          if(allocated(Sk)) deallocate(Sk)
+          if(allocated(Pnk))deallocate(Pnk)
       enddo
-    enddo
-    !States with orbital resolved density N_{iorb}
-    do iorb=1,Norb
-      call KSC_build_OpStateList("N",iorb,1,Kt,Sk,Pnk,Nt)
-      ed_Kn(1,iorb,:)    = Kt
-      ed_Sn(1,iorb,:)    = Sk
-      ed_Normn(1,iorb,:) = Nt
-      ed_Pn(1,iorb,:,:)  = Pnk
-      if(allocated(Kt)) deallocate(Kt)
-      if(allocated(Sk)) deallocate(Sk)
-      if(allocated(Pnk))deallocate(Pnk)
-      if(allocated(Nt)) deallocate(Nt)
     enddo
     !
     if(MPIMASTER)call KSC_write()
@@ -288,30 +293,28 @@ contains
 
 
   !Build the Krylov-complexity for the states in the states_list with an applied Op.  
-  subroutine KSC_build_OpStateList(op,iorb,ispin,Kt,Sk,Pnk,Nt)
+  subroutine KSC_build_OpStateList(op,iorb,ispin,Kt,Sk,Pnk)
     character(len=*),intent(in)                    :: op
     integer,intent(in)                             :: iorb,ispin
     real(8),dimension(:),allocatable,intent(out)   :: Kt
     real(8),dimension(:),allocatable,intent(out)   :: Sk
     real(8),dimension(:,:),allocatable,intent(out) :: Pnk
-    real(8),dimension(:),allocatable,intent(out)   :: Nt
     real(8)                                        :: spectral_weight
     !
     if(KSCmax==0)stop "build_ksc_OpStateList error: KSCmax=0"
     !
     allocate(Kt(Ltimes),Sk(Ltimes))
     allocate(Pnk(KSCmax,Ltimes))
-    allocate(Nt(Ltimes))
     Kt              = 0d0
     Sk              = 0d0
     Pnk             = 0d0
-    Nt              = 0d0
     spectral_weight = 0d0
+    if(MPIMASTER)call KSC_init_state_coeff_file(op,iorb,ispin)
     !
     select case(ed_mode)
-      case default  ;call KSC_ApplyOp_StateList_normal(op,iorb,ispin,Kt,Sk,Pnk,Nt,spectral_weight)   
-      case("superc");call KSC_ApplyOp_StateList_superc(op,iorb,ispin,Kt,Sk,Pnk,Nt,spectral_weight)
-      case("nonsu2");call KSC_ApplyOp_StateList_nonsu2(op,iorb,ispin,Kt,Sk,Pnk,Nt,spectral_weight)
+      case default  ;call KSC_ApplyOp_StateList_normal(op,iorb,ispin,Kt,Sk,Pnk,spectral_weight)
+      case("superc");call KSC_ApplyOp_StateList_superc(op,iorb,ispin,Kt,Sk,Pnk,spectral_weight)
+      case("nonsu2");call KSC_ApplyOp_StateList_nonsu2(op,iorb,ispin,Kt,Sk,Pnk,spectral_weight)
     end select
     !
     if(spectral_weight==0d0)then
@@ -324,19 +327,17 @@ contains
       Kt  = Kt/spectral_weight
       Sk  = Sk/spectral_weight
       Pnk = Pnk/spectral_weight
-      Nt  = Nt/spectral_weight
     endif
     !
   end subroutine KSC_build_OpStateList
 
 
 
-  subroutine KSC_ApplyOp_StateList_normal(op,iorb,ispin,Kt,Sk,Pnk,Nt,spectral_weight)
+  subroutine KSC_ApplyOp_StateList_normal(op,iorb,ispin,Kt,Sk,Pnk,spectral_weight)
     character(len=*),intent(in)          :: op
     integer,intent(in)                   :: iorb,ispin
     real(8),dimension(:),intent(inout)   :: Kt,Sk
     real(8),dimension(:,:),intent(inout) :: Pnk
-    real(8),dimension(:),intent(inout)   :: Nt
     real(8),intent(inout)                :: spectral_weight
     real(8),dimension(:),allocatable     :: v_state,vvinit
     integer                              :: istate,isector,jsector,ialfa
@@ -351,28 +352,42 @@ contains
           jsector = getCDGsector(ialfa,ispin,isector)
           if(jsector/=0)then
              vvinit = apply_op_CDG(v_state,iorb,ispin,isector,jsector)
-             call KSC_AddFromState(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
              if(allocated(vvinit))deallocate(vvinit)
           endif
-       case("n")
-          jsector = isector
-          vvinit = apply_op_N(v_state,iorb,isector)
-          call KSC_AddFromState(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
-          if(allocated(vvinit))deallocate(vvinit)
+       case("c")
+          jsector = getCsector(ialfa,ispin,isector)
+          if(jsector/=0)then
+             vvinit = apply_op_C(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
+       case("g1")
+          jsector = getCDGsector(ialfa,ispin,isector)
+          if(jsector/=0)then
+             vvinit = apply_op_CDG(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
+          jsector = getCsector(ialfa,ispin,isector)
+          if(jsector/=0)then
+             vvinit = apply_op_C(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
        case default
-          stop "ed_build_krylov_operator: op must be 'cdg' or 'N'"
+          stop "ed_build_krylov_operator: op must be 'cdg', 'c', or 'g1'"
        end select
        if(allocated(v_state))deallocate(v_state)
     enddo
   end subroutine KSC_ApplyOp_StateList_normal
 
 
-  subroutine KSC_ApplyOp_StateList_superc(op,iorb,ispin,Kt,Sk,Pnk,Nt,spectral_weight)
+  subroutine KSC_ApplyOp_StateList_superc(op,iorb,ispin,Kt,Sk,Pnk,spectral_weight)
     character(len=*),intent(in)                    :: op
     integer,intent(in)                             :: iorb,ispin
     real(8),dimension(:),intent(inout)             :: Kt,Sk
     real(8),dimension(:,:),intent(inout)           :: Pnk
-    real(8),dimension(:),intent(inout),optional    :: Nt
     real(8),intent(inout)                          :: spectral_weight
     complex(8),dimension(:),allocatable            :: v_state,vvinit
     integer                                        :: istate,isector,jsector
@@ -385,28 +400,42 @@ contains
           jsector = getCDGsector(1,ispin,isector)
           if(jsector/=0)then
              vvinit = apply_op_CDG(v_state,iorb,ispin,isector,jsector)
-             call KSC_AddFromState(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
              if(allocated(vvinit))deallocate(vvinit)
           endif
-       case("n")
-          jsector = isector
-          vvinit = apply_op_N(v_state,iorb,isector)
-          call KSC_AddFromState(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
-          if(allocated(vvinit))deallocate(vvinit)
+       case("c")
+          jsector = getCsector(1,ispin,isector)
+          if(jsector/=0)then
+             vvinit = apply_op_C(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
+       case("g1")
+          jsector = getCDGsector(1,ispin,isector)
+          if(jsector/=0)then
+             vvinit = apply_op_CDG(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
+          jsector = getCsector(1,ispin,isector)
+          if(jsector/=0)then
+             vvinit = apply_op_C(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
        case default
-          stop "ed_build_krylov_operator: op must be 'cdg' or 'N'"
+          stop "ed_build_krylov_operator: op must be 'cdg', 'c', or 'g1'"
        end select
        if(allocated(v_state))deallocate(v_state)
     enddo
   end subroutine KSC_ApplyOp_StateList_superc
 
 
-  subroutine KSC_ApplyOp_StateList_nonsu2(op,iorb,ispin,Kt,Sk,Pnk,Nt,spectral_weight)
+  subroutine KSC_ApplyOp_StateList_nonsu2(op,iorb,ispin,Kt,Sk,Pnk,spectral_weight)
     character(len=*),intent(in)                    :: op
     integer,intent(in)                             :: iorb,ispin
     real(8),dimension(:),intent(inout)             :: Kt,Sk
     real(8),dimension(:,:),intent(inout)           :: Pnk
-    real(8),dimension(:),intent(inout),optional    :: Nt
     real(8),intent(inout)                          :: spectral_weight
     complex(8),dimension(:),allocatable            :: v_state,vvinit
     integer                                        :: istate,isector,jsector
@@ -420,16 +449,34 @@ contains
           if(Jz_basis)jsector = getCDGsector_Jz(iorb,ispin,isector)
           if(getN(isector)/=Nlevels.and.jsector>=0)then
              vvinit = apply_op_CDG(v_state,iorb,ispin,isector,jsector)
-             call KSC_AddFromState(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
              if(allocated(vvinit))deallocate(vvinit)
           endif
-       case("n")
-          jsector = isector
-          vvinit = apply_op_N(v_state,iorb,isector)
-          call KSC_AddFromState(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
-          if(allocated(vvinit))deallocate(vvinit)
+       case("c")
+          jsector = getCsector(1,ispin,isector)
+          if(Jz_basis)jsector = getCsector_Jz(iorb,ispin,isector)
+          if(getN(isector)/=0.and.jsector>=0)then
+             vvinit = apply_op_C(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
+       case("g1")
+          jsector = getCDGsector(1,ispin,isector)
+          if(Jz_basis)jsector = getCDGsector_Jz(iorb,ispin,isector)
+          if(getN(isector)/=Nlevels.and.jsector>=0)then
+             vvinit = apply_op_CDG(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
+          jsector = getCsector(1,ispin,isector)
+          if(Jz_basis)jsector = getCsector_Jz(iorb,ispin,isector)
+          if(getN(isector)/=0.and.jsector>=0)then
+             vvinit = apply_op_C(v_state,iorb,ispin,isector,jsector)
+             call KSC_AddFromState(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+             if(allocated(vvinit))deallocate(vvinit)
+          endif
        case default
-          stop "ed_build_krylov_operator: op must be 'cdg' or 'N'"
+          stop "ed_build_krylov_operator: op must be 'cdg', 'c', or 'g1'"
        end select
        if(allocated(v_state))deallocate(v_state)
     enddo
@@ -437,14 +484,14 @@ contains
 
 
   !INTERFACED ABOVE TO SINGLE FUNCTION: KSC_AddState
-  subroutine KSC_AddFromState_d(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
-    integer,intent(in)                   :: istate,jsector
+  subroutine KSC_AddFromState_d(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+    character(len=*),intent(in)          :: op
+    integer,intent(in)                   :: iorb,ispin,istate,jsector
     real(8),dimension(:),intent(inout)   :: vvinit
     real(8),dimension(:),intent(inout)   :: Kt,Sk
     real(8),dimension(:,:),intent(inout) :: Pnk
-    real(8),dimension(:),intent(inout)   :: Nt
     real(8),intent(inout)                :: spectral_weight
-    real(8),dimension(:),allocatable     :: alanc,blanc,Ktmp,Stmp,Ntmp
+    real(8),dimension(:),allocatable     :: alanc,blanc,Ktmp,Stmp
     real(8),dimension(:,:),allocatable   :: Ptmp
     real(8)                              :: norm2,weight
     !
@@ -458,27 +505,27 @@ contains
     call KSC_Krylov_Basis(jsector,vvinit,alanc,blanc,norm2)
     if(norm2 <= 0d0)return
     !
-    call KSC_Build_Complexity(alanc,blanc,Ktmp,Stmp,Ptmp,Ntmp)
+    call KSC_Build_Complexity(alanc,blanc,Ktmp,Stmp,Ptmp)
     weight = thermal_weight(istate)*norm2
-    call KSC_add_weighted_krylov(weight,Ktmp,Stmp,Ptmp,Ntmp,Kt,Sk,Pnk,Nt,spectral_weight)
+    if(MPIMASTER)call KSC_append_state_coeff(op,iorb,ispin,istate,jsector,weight,alanc,blanc)
+    call KSC_add_weighted_krylov(weight,Ktmp,Stmp,Ptmp,Kt,Sk,Pnk,spectral_weight)
     !
     if(allocated(alanc))deallocate(alanc)
     if(allocated(blanc))deallocate(blanc)
     if(allocated(Ktmp)) deallocate(Ktmp)
     if(allocated(Stmp)) deallocate(Stmp)
     if(allocated(Ptmp)) deallocate(Ptmp)
-    if(allocated(Ntmp)) deallocate(Ntmp)
   end subroutine KSC_AddFromState_d
 
 
-  subroutine KSC_AddFromState_c(istate,jsector,vvinit,Kt,Sk,Pnk,Nt,spectral_weight)
-    integer,intent(in)                    :: istate,jsector
+  subroutine KSC_AddFromState_c(op,iorb,ispin,istate,jsector,vvinit,Kt,Sk,Pnk,spectral_weight)
+    character(len=*),intent(in)           :: op
+    integer,intent(in)                    :: iorb,ispin,istate,jsector
     complex(8),dimension(:),intent(inout) :: vvinit
     real(8),dimension(:),intent(inout)    :: Kt,Sk
     real(8),dimension(:,:),intent(inout)  :: Pnk
-    real(8),dimension(:),intent(inout)    :: Nt
     real(8),intent(inout)                 :: spectral_weight
-    real(8),dimension(:),allocatable      :: alanc,blanc,Ktmp,Stmp,Ntmp
+    real(8),dimension(:),allocatable      :: alanc,blanc,Ktmp,Stmp
     real(8),dimension(:,:),allocatable    :: Ptmp
     real(8)                               :: norm2,weight
     !
@@ -493,16 +540,16 @@ contains
     call KSC_Krylov_Basis(jsector,vvinit,alanc,blanc,norm2)
     if(norm2 <= 0d0)return
     !
-    call KSC_Build_Complexity(alanc,blanc,Ktmp,Stmp,Ptmp,Ntmp)
+    call KSC_Build_Complexity(alanc,blanc,Ktmp,Stmp,Ptmp)
     weight = thermal_weight(istate)*norm2
-    call KSC_add_weighted_krylov(weight,Ktmp,Stmp,Ptmp,Ntmp,Kt,Sk,Pnk,Nt,spectral_weight)
+    if(MPIMASTER)call KSC_append_state_coeff(op,iorb,ispin,istate,jsector,weight,alanc,blanc)
+    call KSC_add_weighted_krylov(weight,Ktmp,Stmp,Ptmp,Kt,Sk,Pnk,spectral_weight)
     !
     if(allocated(alanc))deallocate(alanc)
     if(allocated(blanc))deallocate(blanc)
     if(allocated(Ktmp)) deallocate(Ktmp)
     if(allocated(Stmp)) deallocate(Stmp)
     if(allocated(Ptmp)) deallocate(Ptmp)
-    if(allocated(Ntmp)) deallocate(Ntmp)
   end subroutine KSC_AddFromState_c
 
 
@@ -549,13 +596,12 @@ contains
 
   !Build the Krylov coefficients dyanamics \phi_n(t) so that \Psi(t) = \sum_n \phi_n(t) |k_n>
   !and return the Krylov complexity Kt, Sk, Pnk
-  subroutine KSC_Build_Complexity(alanc,blanc,Kt,Sk,Pnk,Nt)
+  subroutine KSC_Build_Complexity(alanc,blanc,Kt,Sk,Pnk)
     real(8),dimension(:),intent(in)                :: alanc
     real(8),dimension(size(alanc)),intent(in)      :: blanc
     real(8),dimension(:),allocatable,intent(out)   :: Kt
     real(8),dimension(:),allocatable,intent(out)   :: Sk
     real(8),dimension(:,:),allocatable,intent(out) :: Pnk
-    real(8),dimension(:),allocatable,intent(out)   :: Nt
     complex(8),dimension(:,:),allocatable          :: phi
     real(8)                                        :: P
     integer                                        :: it,in,Nlanc
@@ -570,7 +616,6 @@ contains
     allocate(Kt(Ltimes))       ;Kt =0d0
     allocate(Sk(Ltimes))       ;Sk =0d0
     allocate(Pnk(Nlanc,Ltimes));Pnk=0d0
-    allocate(Nt(Ltimes))       ;Nt =0d0
     !
     do it=1,Ltimes
       do in=1,Nlanc
@@ -578,7 +623,6 @@ contains
           Pnk(in,it) = P
           Kt(it)     = Kt(it) + dble(in-1)*P
           if(P>0d0)Sk(it)   = Sk(it) - P*log(P)
-          Nt(it) = Nt(it) + P
       enddo
     enddo
     !
@@ -707,13 +751,13 @@ contains
     call KSC_write_info()
     do ispin=1,Nspin
       do iorb=1,Norb
-        call KSC_write_trace("KSC_cdg",iorb,ispin,ed_Kcdg(ispin,iorb,:),ed_Scdg(ispin,iorb,:),ed_Normcdg(ispin,iorb,:))
+        call KSC_write_trace("KSC_cdg",iorb,ispin,ed_Kcdg(ispin,iorb,:),ed_Scdg(ispin,iorb,:))
         call KSC_write_prob("KSC_Pcdg",iorb,ispin,ed_Pcdg(ispin,iorb,:,:))
+        call KSC_write_trace("KSC_c",iorb,ispin,ed_Kc(ispin,iorb,:),ed_Sc(ispin,iorb,:))
+        call KSC_write_prob("KSC_Pc",iorb,ispin,ed_Pc(ispin,iorb,:,:))
+        call KSC_write_trace("KSC_g1",iorb,ispin,ed_Kg1(ispin,iorb,:),ed_Sg1(ispin,iorb,:))
+        call KSC_write_prob("KSC_Pg1",iorb,ispin,ed_Pg1(ispin,iorb,:,:))
       enddo
-    enddo
-    do iorb=1,Norb
-      call KSC_write_trace("KSC_N",iorb,1,ed_Kn(1,iorb,:),ed_Sn(1,iorb,:),ed_Normn(1,iorb,:))
-      call KSC_write_prob("KSC_PN",iorb,1,ed_Pn(1,iorb,:,:))
     enddo
   end subroutine KSC_write
 
@@ -726,13 +770,13 @@ contains
     call KOC_write_info()
     do ispin=1,Nspin
       do iorb=1,Norb
-        call KSC_write_trace("KOC_cdg",iorb,ispin,ed_KOCcdg(ispin,iorb,:),ed_SOCcdg(ispin,iorb,:),ed_NormOCcdg(ispin,iorb,:))
+        call KSC_write_trace("KOC_cdg",iorb,ispin,ed_KOCcdg(ispin,iorb,:),ed_SOCcdg(ispin,iorb,:))
         call KSC_write_prob("KOC_Pcdg",iorb,ispin,ed_POCcdg(ispin,iorb,:,:))
+        call KSC_write_trace("KOC_c",iorb,ispin,ed_KOCc(ispin,iorb,:),ed_SOCc(ispin,iorb,:))
+        call KSC_write_prob("KOC_Pc",iorb,ispin,ed_POCc(ispin,iorb,:,:))
+        call KSC_write_trace("KOC_g1",iorb,ispin,ed_KOCg1(ispin,iorb,:),ed_SOCg1(ispin,iorb,:))
+        call KSC_write_prob("KOC_Pg1",iorb,ispin,ed_POCg1(ispin,iorb,:,:))
       enddo
-    enddo
-    do iorb=1,Norb
-      call KSC_write_trace("KOC_N",iorb,1,ed_KOCn(1,iorb,:),ed_SOCn(1,iorb,:),ed_NormOCn(1,iorb,:))
-      call KSC_write_prob("KOC_PN",iorb,1,ed_POCn(1,iorb,:,:))
     enddo
   end subroutine KOC_write
 
@@ -743,10 +787,12 @@ contains
     open(free_unit(unit),file="KOC_info"//reg(ed_file_suffix)//".ed")
     write(unit,"(A)")"# Krylov-operator complexity output"
     write(unit,"(A)")"# Phase 1: T=0, ed_mode=normal."
-    write(unit,"(A)")"# Trace files: columns are time, K_OC(t), S_OC(t), norm(t)."
+    write(unit,"(A)")"# Trace files: columns are time, K_OC(t), S_OC(t)."
     write(unit,"(A)")"# Probability files: columns are time, P_1(t), ..., P_Nk(t)."
+    write(unit,"(A)")"# Coefficient files: columns are n, alpha_n, beta_n."
     write(unit,"(A)")"# cdg files are spin/orbital resolved d^+_{a,sigma} operator channels."
-    write(unit,"(A)")"# N files are total orbital density N_a operator channels; spin index is fixed to 1 in phase 1."
+    write(unit,"(A)")"# c files are spin/orbital resolved d_{a,sigma} operator channels."
+    write(unit,"(A)")"# g1 files are spin/orbital resolved gamma1=d^+_{a,sigma}+d_{a,sigma} operator channels."
     write(unit,"(A,I8)")"# Ltimes = ",Ltimes
     write(unit,"(A,I8)")"# KOCmax = ",KOCmax
     close(unit)
@@ -758,30 +804,76 @@ contains
 
     open(free_unit(unit),file="KSC_info"//reg(ed_file_suffix)//".ed")
     write(unit,"(A)")"# Krylov-state complexity output"
-    write(unit,"(A)")"# Trace files: columns are time, K(t), S_K(t), norm(t)."
+    write(unit,"(A)")"# Trace files: columns are time, K(t), S_K(t)."
     write(unit,"(A)")"# Probability files: columns are time, P_1(t), ..., P_Nk(t)."
+    write(unit,"(A)")"# Coefficient files: columns are state, sector, weight, n, alpha_n, beta_n."
     write(unit,"(A)")"# cdg files are spin/orbital resolved d^+_{a,sigma}|state> channels."
-    write(unit,"(A)")"# N files are total orbital density N_a|state> channels; spin index is fixed to 1 in phase 1."
+    write(unit,"(A)")"# c files are spin/orbital resolved d_{a,sigma}|state> channels."
+    write(unit,"(A)")"# g1 files are spin/orbital resolved gamma1|state> channels."
     write(unit,"(A,I8)")"# Ltimes = ",Ltimes
     write(unit,"(A,I8)")"# KSCmax = ",KSCmax
     close(unit)
   end subroutine KSC_write_info
 
 
-  subroutine KSC_write_trace(prefix,iorb,ispin,Kt,Sk,Nt)
+  subroutine KSC_write_trace(prefix,iorb,ispin,Kt,Sk)
     character(len=*),intent(in)      :: prefix
     integer,intent(in)               :: iorb,ispin
-    real(8),dimension(:),intent(in)  :: Kt,Sk,Nt
+    real(8),dimension(:),intent(in)  :: Kt,Sk
     character(len=256)               :: file
     integer                          :: unit,it
     file = trim(prefix)//"_l"//reg(str(iorb))//"_s"//reg(str(ispin))//reg(ed_file_suffix)//".ed"
     open(free_unit(unit),file=file)
-    write(unit,"(A)")"# time K(t) S_K(t) norm(t)"
+    write(unit,"(A)")"# time K(t) S_K(t)"
     do it=1,Ltimes
-      write(unit,"(4ES24.16)")times(it),Kt(it),Sk(it),Nt(it)
+      write(unit,"(3ES24.16)")times(it),Kt(it),Sk(it)
     enddo
     close(unit)
   end subroutine KSC_write_trace
+
+
+  subroutine KSC_write_coeff(prefix,iorb,ispin,alanc,blanc)
+    character(len=*),intent(in)     :: prefix
+    integer,intent(in)              :: iorb,ispin
+    real(8),dimension(:),intent(in) :: alanc,blanc
+    character(len=256)              :: file
+    integer                         :: unit,in
+    file = trim(prefix)//"_l"//reg(str(iorb))//"_s"//reg(str(ispin))//reg(ed_file_suffix)//".ed"
+    open(free_unit(unit),file=file)
+    write(unit,"(A)")"# n alpha_n beta_n"
+    do in=1,size(alanc)
+      write(unit,"(I8,2ES24.16)")in,alanc(in),blanc(in)
+    enddo
+    close(unit)
+  end subroutine KSC_write_coeff
+
+
+  subroutine KSC_init_state_coeff_file(op,iorb,ispin)
+    character(len=*),intent(in) :: op
+    integer,intent(in)          :: iorb,ispin
+    character(len=256)          :: file
+    integer                     :: unit
+    file = "KSC_coeff_"//trim(to_lower(op))//"_l"//reg(str(iorb))//"_s"//reg(str(ispin))//reg(ed_file_suffix)//".ed"
+    open(free_unit(unit),file=file)
+    write(unit,"(A)")"# state sector weight n alpha_n beta_n"
+    close(unit)
+  end subroutine KSC_init_state_coeff_file
+
+
+  subroutine KSC_append_state_coeff(op,iorb,ispin,istate,isector,weight,alanc,blanc)
+    character(len=*),intent(in)     :: op
+    integer,intent(in)              :: iorb,ispin,istate,isector
+    real(8),intent(in)              :: weight
+    real(8),dimension(:),intent(in) :: alanc,blanc
+    character(len=256)              :: file
+    integer                         :: unit,in
+    file = "KSC_coeff_"//trim(to_lower(op))//"_l"//reg(str(iorb))//"_s"//reg(str(ispin))//reg(ed_file_suffix)//".ed"
+    open(free_unit(unit),file=file,position="append")
+    do in=1,size(alanc)
+      write(unit,"(2I8,ES24.16,I8,2ES24.16)")istate,isector,weight,in,alanc(in),blanc(in)
+    enddo
+    close(unit)
+  end subroutine KSC_append_state_coeff
 
 
   subroutine KSC_write_prob(prefix,iorb,ispin,Pnk)
@@ -802,20 +894,18 @@ contains
 
 
 
-  subroutine KSC_add_weighted_krylov(weight,Ktmp,Stmp,Ptmp,Ntmp,Kt,Sk,Pnk,Nt,spectral_weight)
+  subroutine KSC_add_weighted_krylov(weight,Ktmp,Stmp,Ptmp,Kt,Sk,Pnk,spectral_weight)
     real(8),intent(in)                   :: weight
-    real(8),dimension(:),intent(in)      :: Ktmp,Stmp,Ntmp
+    real(8),dimension(:),intent(in)      :: Ktmp,Stmp
     real(8),dimension(:,:),intent(in)    :: Ptmp
     real(8),dimension(:),intent(inout)   :: Kt,Sk
     real(8),dimension(:,:),intent(inout) :: Pnk
-    real(8),dimension(:),intent(inout)   :: Nt
     real(8),intent(inout)                :: spectral_weight
     if(weight<=0d0)return
     !
     Kt = Kt  + weight*Ktmp
     Sk = Sk  + weight*Stmp
     Pnk= Pnk + weight*Ptmp
-    Nt = Nt  + weight*Ntmp
     spectral_weight = spectral_weight + weight
     !
   end subroutine KSC_add_weighted_krylov
