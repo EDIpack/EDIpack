@@ -169,7 +169,7 @@ contains
        vI = apply_op_Sz(v_state,iorb,isector)
        vJ = apply_op_Sz(v_state,jorb,isector)
        call tridiag_Hv_sector_normal(isector,xi*vI + vJ ,alfa_,beta_,norm2)
-       call add_to_lanczos_densChi(-xi*norm2,e_state,alfa_,beta_,iorb,jorb,2)
+       call add_to_lanczos_spinChi(-xi*norm2,e_state,alfa_,beta_,iorb,jorb,2)
        deallocate(alfa_,beta_,vI,vJ)
 #endif
        if(allocated(v_state))deallocate(v_state)

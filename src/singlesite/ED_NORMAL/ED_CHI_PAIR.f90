@@ -66,7 +66,12 @@ contains
     !
     if(Norb>1)then
        do iorb=1,Norb
+#ifdef _CMPLX_NORMAL
+          do jorb=1,Norb
+             if(iorb==jorb)cycle
+#else
           do jorb=iorb+1,Norb
+#endif
              call allocate_GFmatrix(pairChimatrix(iorb,jorb),Nstate=state_list%size)
              call lanc_ed_build_pairChi_mix(iorb,jorb)
           end do
@@ -129,7 +134,7 @@ contains
           !C_up|tmp> = C_up[C_dw|gs>] = |vvinit>
           vvinit = apply_op_C(vtmp,iorb,1,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,+1,iorb,iorb,ichan=1,istate=istate)
+          call add_to_lanczos_pairChi(one*norm2,e_state,alfa_,beta_,+1,iorb,iorb,ichan=1,istate=istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
        else
           call allocate_GFmatrix(pairChiMatrix(iorb,iorb),istate,1,Nexc=0)
@@ -145,7 +150,7 @@ contains
           !C^+_dw|tmp> = C^+_dw[C^+_up|gs>] = |vvinit>
           vvinit = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,vvinit,alfa_,beta_,norm2)
-          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,-1,iorb,iorb,ichan=2,istate=istate)
+          call add_to_lanczos_pairChi(one*norm2,e_state,alfa_,beta_,-1,iorb,iorb,ichan=2,istate=istate)
           deallocate(alfa_,beta_,vtmp,vvinit)
        else
           call allocate_GFmatrix(pairChiMatrix(iorb,iorb),istate,2,Nexc=0)
@@ -168,7 +173,7 @@ contains
 #endif
     integer                             :: iorb,jorb
 #ifdef _CMPLX_NORMAL
-    complex(8),dimension(:),allocatable    :: va,vb,vtmp
+    complex(8),dimension(:),allocatable :: va,vb,vtmp
 #else
     real(8),dimension(:),allocatable    :: va,vb,vtmp
 #endif
@@ -181,7 +186,11 @@ contains
     endif
     !
     do istate=1,state_list%size
-       call allocate_GFmatrix(pairChimatrix(iorb,jorb),istate,Nchan=2) !Nchan+4 for complex case
+#ifdef _CMPLX_NORMAL
+       call allocate_GFmatrix(pairChimatrix(iorb,jorb),istate,Nchan=4)
+#else
+       call allocate_GFmatrix(pairChimatrix(iorb,jorb),istate,Nchan=2)
+#endif
        isector    =  es_return_sector(state_list,istate)
        e_state    =  es_return_energy(state_list,istate)
 #ifdef _CMPLX_NORMAL
@@ -206,7 +215,7 @@ contains
           !C_b.up|tmp> = C_b.up[C_b.dw|gs>] = |vvinit>
           vb   = apply_op_C(vtmp,jorb,1,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,va+vb,alfa_,beta_,norm2)
-          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,+1,iorb,jorb,ichan=1,istate=istate)
+          call add_to_lanczos_pairChi(one*norm2,e_state,alfa_,beta_,+1,iorb,jorb,ichan=1,istate=istate)
           deallocate(alfa_,beta_,vtmp,va,vb)
        else
           call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,1,Nexc=0)
@@ -228,58 +237,58 @@ contains
           !C^+_b.dw|tmp> = C^+_b.dw[C^+_b.up|gs>] = |vvinit>
           vb   = apply_op_CDG(vtmp,jorb,2,ksector,jsector)
           call tridiag_Hv_sector_normal(jsector,va+vb,alfa_,beta_,norm2)
-          call add_to_lanczos_pairChi(norm2,e_state,alfa_,beta_,-1,iorb,jorb,ichan=2,istate=istate)
+          call add_to_lanczos_pairChi(one*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ichan=2,istate=istate)
           deallocate(alfa_,beta_,vtmp,va,vb)
        else
           call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,2,Nexc=0)
        endif
        !
-       !Uncomment for complex case
+#ifdef _CMPLX_NORMAL
        !!Second lesser
        !! --> Apply [C_a C_a - xi* C_b C_b]|state>
-       !ksector = getCsector(1,2,isector);jsector=0
-       !if(ksector/=0)jsector = getCsector(1,1,ksector)
-       !if(jsector/=0.AND.ksector/=0)then
-       !   !Apply C_a,up*C_a,dw:
-       !   !C_a.dw|gs>  = |tmp>
-       !   vtmp = apply_op_C(v_state,iorb,2,isector,ksector)
-       !   !C_a.up|tmp> = C_a.up[C_a.dw|gs>] = |vvinit>
-       !   va   = apply_op_C(vtmp,iorb,1,ksector,jsector)
-       !   !Apply + C_b,up*C_b,dw
-       !   !C_b.dw|gs>  = |tmp>
-       !   vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
-       !   !C_b.up|tmp> = C_b.up[C_b.dw|gs>] = |vvinit>
-       !   vb   = apply_op_C(vtmp,jorb,1,ksector,jsector)
-       !   call tridiag_Hv_sector_normal_complex(jsector,va - xi*vb,alfa_,beta_,norm2)
-       !   call add_to_lanczos_pairChi(-xi*norm2,e_state,alfa_,beta_,+1,iorb,jorb,ichan=3,istate=istate)
-       !   deallocate(alfa_,beta_,vtmp,va,vb)
-       !else
-       !   call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,3,Nexc=0)
-       !endif
+       ksector = getCsector(1,2,isector);jsector=0
+       if(ksector/=0)jsector = getCsector(1,1,ksector)
+       if(jsector/=0.AND.ksector/=0)then
+          !Apply C_a,up*C_a,dw:
+          !C_a.dw|gs>  = |tmp>
+          vtmp = apply_op_C(v_state,iorb,2,isector,ksector)
+          !C_a.up|tmp> = C_a.up[C_a.dw|gs>] = |vvinit>
+          va   = apply_op_C(vtmp,iorb,1,ksector,jsector)
+          !Apply + C_b,up*C_b,dw
+          !C_b.dw|gs>  = |tmp>
+          vtmp = apply_op_C(v_state,jorb,2,isector,ksector)
+          !C_b.up|tmp> = C_b.up[C_b.dw|gs>] = |vvinit>
+          vb   = apply_op_C(vtmp,jorb,1,ksector,jsector)
+          call tridiag_Hv_sector_normal(jsector,va - xi*vb,alfa_,beta_,norm2)
+          call add_to_lanczos_pairChi(-xi*norm2,e_state,alfa_,beta_,+1,iorb,jorb,ichan=3,istate=istate)
+          deallocate(alfa_,beta_,vtmp,va,vb)
+       else
+          call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,3,Nexc=0)
+       endif
        !
        !!Second greater
        !! --> Apply [C^+_a C^+_a + xi* C^+_b C^+_b]|state>
-       !ksector = getCDGsector(1,1,isector);jsector=0
-       !if(ksector/=0)jsector = getCDGsector(1,2,ksector)
-       !if(jsector/=0.AND.ksector/=0)then
-       !   !Apply C^+_a,dw*C^+_a,up:
-       !   !C^+_a.up|gs>  = |tmp>
-       !   vtmp = apply_op_CDG(v_state,iorb,1,isector,ksector)
-       !   !C^+_a.dw|tmp> = C^+_a.dw[C^+_a.up|gs>] = |vvinit>
-       !   va   = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
-       !   !Apply + C^+_b,dw*C^+_b,up
-       !   !C^+_b.up|gs>  = |tmp>
-       !   vtmp = apply_op_CDG(v_state,jorb,1,isector,ksector)
-       !   !C^+_b.dw|tmp> = C^+_b.dw[C^+_b.up|gs>] = |vvinit>
-       !   vb   = apply_op_CDG(vtmp,jorb,2,ksector,jsector)
-       !   call tridiag_Hv_sector_normal_complex(jsector,va + xi*vb,alfa_,beta_,norm2)
-       !   call add_to_lanczos_pairChi(-xi*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ichan=4,istate=istate)
-       !   deallocate(alfa_,beta_,vtmp,va,vb)
-       !else
-       !   call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,4,Nexc=0)
-       !endif
-       !!
-       !if(allocated(v_state))deallocate(v_state)
+       ksector = getCDGsector(1,1,isector);jsector=0
+       if(ksector/=0)jsector = getCDGsector(1,2,ksector)
+       if(jsector/=0.AND.ksector/=0)then
+          !Apply C^+_a,dw*C^+_a,up:
+          !C^+_a.up|gs>  = |tmp>
+          vtmp = apply_op_CDG(v_state,iorb,1,isector,ksector)
+          !C^+_a.dw|tmp> = C^+_a.dw[C^+_a.up|gs>] = |vvinit>
+          va   = apply_op_CDG(vtmp,iorb,2,ksector,jsector)
+          !Apply + C^+_b,dw*C^+_b,up
+          !C^+_b.up|gs>  = |tmp>
+          vtmp = apply_op_CDG(v_state,jorb,1,isector,ksector)
+          !C^+_b.dw|tmp> = C^+_b.dw[C^+_b.up|gs>] = |vvinit>
+          vb   = apply_op_CDG(vtmp,jorb,2,ksector,jsector)
+          call tridiag_Hv_sector_normal(jsector,va + xi*vb,alfa_,beta_,norm2)
+          call add_to_lanczos_pairChi(-xi*norm2,e_state,alfa_,beta_,-1,iorb,jorb,ichan=4,istate=istate)
+          deallocate(alfa_,beta_,vtmp,va,vb)
+       else
+          call allocate_GFmatrix(pairChiMatrix(iorb,jorb),istate,4,Nexc=0)
+       endif
+#endif
+       if(allocated(v_state))deallocate(v_state)
     enddo
     return
   end subroutine lanc_ed_build_pairChi_mix
@@ -295,8 +304,8 @@ contains
     use ED_INPUT_VARS, only: Nspin,Norb
 #endif
     integer                                    :: iorb,jorb,ichan,isign,istate
-    real(8)                                    :: pesoF,pesoAB,pesoBZ,peso
-    real(8)                                    :: vnorm2
+    complex(8)                                 :: pesoF,pesoAB,pesoBZ,peso
+    complex(8)                                 :: vnorm2
     real(8)                                    :: Ei,Ej,Egs,de
     integer                                    :: nlanc
     real(8),dimension(:)                       :: alanc
@@ -398,16 +407,23 @@ contains
     !
     if(Norb>1)then
        do iorb=1,Norb
-          do jorb=iorb+1,Norb
-             !if (iorb /= jorb) then
+#ifdef _CMPLX_NORMAL
+          do jorb=1,Norb
+             if (iorb /= jorb) then
                 call get_Chiab(iorb,jorb)
-                !Uncomment for complex case
-                !Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:) - (1-xi)*Chi(iorb,iorb,:) - (1-xi)*Chi(jorb,jorb,:))
+                Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:) - (1-xi)*Chi(iorb,iorb,:) - (1-xi)*Chi(jorb,jorb,:))
+             endif
+          enddo
+       enddo
+#else
+          do jorb=iorb+1,Norb
+                call get_Chiab(iorb,jorb)
                 Chi(iorb,jorb,:) = 0.5d0*(Chi(iorb,jorb,:) - Chi(iorb,iorb,:) - Chi(jorb,jorb,:))
                 Chi(jorb,iorb,:) = Chi(iorb,jorb,:)
              !endif
           enddo
        enddo
+#endif
     end if
     !
   contains
@@ -420,7 +436,8 @@ contains
       integer            :: Nstates,istate
       integer            :: Nchannels,ichan
       integer            :: Nexcs,iexc
-      real(8)            :: peso,de
+      real(8)            :: de
+      complex(8)         :: peso
       !
       write(LOGfile,"(A)")"Get Chi_pair_l"//reg(txtfy(iorb))//reg(txtfy(jorb))
       if(.not.allocated(pairChimatrix(iorb,jorb)%state)) return
