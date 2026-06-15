@@ -112,10 +112,6 @@ additional variables:
   * **Value:** ``yes``/``True`` or ``no``/``False``
     (default: ``False``).
     
-.. warning::
-   
-   :code:`DCMPLX_NORMAL=YES`  does not support the calculation of susceptibilities at this stage.  
-
 * ``-DVERBOSE``
 
   * **Scope:** Enable verbose CMake output. Superseded by
