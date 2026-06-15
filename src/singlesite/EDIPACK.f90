@@ -113,28 +113,30 @@ MODULE EDIPACK
        ed_get_imp_info        , &
        ed_get_impurity_rdm    , &
        ed_get_Kcdg            , &
+       ed_get_Kc              , &
+       ed_get_Kg1             , &
        ed_get_KOCcdg          , &
-       ed_get_KOCn            , &
-       ed_get_Kn              , &
+       ed_get_KOCc            , &
+       ed_get_KOCg1           , &
        ed_get_mag             , &
        ed_get_neigen_sector   , &
-       ed_get_Normcdg         , &
-       ed_get_NormOCcdg       , &
-       ed_get_NormOCn         , &
-       ed_get_Normn           , &
        ed_get_nsectors        , &
        ed_get_Pcdg            , &
+       ed_get_Pc              , &
+       ed_get_Pg1             , &
        ed_get_POCcdg          , &
-       ed_get_POCn            , &
+       ed_get_POCc            , &
+       ed_get_POCg1           , &
        ed_get_pairChi         , &
-       ed_get_Pn              , &
        ed_get_phi             , &
        ed_get_phon            , &
        ed_get_Scdg            , &
+       ed_get_Sc              , &
+       ed_get_Sg1             , &
        ed_get_sigma           , &
        ed_get_SOCcdg          , &
-       ed_get_SOCn            , &
-       ed_get_Sn              , &
+       ed_get_SOCc            , &
+       ed_get_SOCg1           , &
        ed_get_sp_dm           , &
        ed_get_spinChi         , &
        ed_set_neigen_sector

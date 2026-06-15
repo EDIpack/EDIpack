@@ -2,11 +2,11 @@
 !KOC=Krylov-operator complexity
 MODULE ED_KRYLOV_NORMAL
   !:synopsis: Low-level Krylov routines, :code:`NORMAL` case
-  USE SF_IOTOOLS, only: str,to_lower
+  USE SCIFOR, only: str,to_lower,start_timer,stop_timer,eta
   USE ED_INPUT_VARS
   USE ED_VARS_GLOBAL
   USE ED_EIGENSPACE
-  USE ED_AUX_FUNX, only: cdg,bdecomp,binary_search
+  USE ED_AUX_FUNX, only: c,cdg,bdecomp,binary_search
   USE ED_SECTOR
   USE ED_SPARSE_MATRIX
   USE ED_HAMILTONIAN_NORMAL
@@ -164,7 +164,7 @@ contains
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        select case(to_lower(trim(op)))
-       case default;stop "KOC_Krylov_Basis_normal error: op must be 'cdg' or 'N'"
+       case default;stop "KOC_Krylov_Basis_normal error: op must be 'cdg', 'c', or 'g1'"
        case("cdg")
           lsector = getCDGsector(ialfa,ispin,isector)
           rsector = isector
@@ -172,8 +172,26 @@ contains
           lsector = isector
           rsector = getCsector(ialfa,ispin,isector)
           if(rsector/=0)call koc_append_seed_block("cdg",iorb,ispin,lsector,rsector,O)
-       case("n")
-          call koc_append_seed_block("n",iorb,ispin,isector,isector,O)
+       case("c")
+          lsector = getCsector(ialfa,ispin,isector)
+          rsector = isector
+          if(lsector/=0)call koc_append_seed_block("c",iorb,ispin,lsector,rsector,O)
+          lsector = isector
+          rsector = getCDGsector(ialfa,ispin,isector)
+          if(rsector/=0)call koc_append_seed_block("c",iorb,ispin,lsector,rsector,O)
+       case("g1")
+          lsector = getCDGsector(ialfa,ispin,isector)
+          rsector = isector
+          if(lsector/=0)call koc_append_seed_block("cdg",iorb,ispin,lsector,rsector,O)
+          lsector = isector
+          rsector = getCsector(ialfa,ispin,isector)
+          if(rsector/=0)call koc_append_seed_block("cdg",iorb,ispin,lsector,rsector,O)
+          lsector = getCsector(ialfa,ispin,isector)
+          rsector = isector
+          if(lsector/=0)call koc_append_seed_block("c",iorb,ispin,lsector,rsector,O)
+          lsector = isector
+          rsector = getCDGsector(ialfa,ispin,isector)
+          if(rsector/=0)call koc_append_seed_block("c",iorb,ispin,lsector,rsector,O)
        end select
     enddo
   end subroutine KOC_build_seed_normal
@@ -344,10 +362,10 @@ contains
     select case(to_lower(trim(op)))
     case("cdg")
        call KOC_build_operator_cdg_block(iorb,ispin,lsector,rsector,Omat)
-    case("n")
-       call KOC_build_operator_n_block(iorb,lsector,rsector,Omat)
+    case("c")
+       call KOC_build_operator_c_block(iorb,ispin,lsector,rsector,Omat)
     case default
-       stop "KOC_build_operator_block error: op must be 'cdg' or 'N'"
+       stop "KOC_build_operator_block error: op must be 'cdg' or 'c'"
     end select
   end subroutine koc_build_operator_block
 
@@ -400,18 +418,17 @@ contains
   end subroutine KOC_build_operator_cdg_block
 
 
-  subroutine KOC_build_operator_n_block(iorb,lsector,rsector,Omat)
-    integer,intent(in)                    :: iorb,lsector,rsector
+  subroutine KOC_build_operator_c_block(iorb,ispin,lsector,rsector,Omat)
+    integer,intent(in)                    :: iorb,ispin,lsector,rsector
     type(sparse_matrix_csr),intent(inout) :: Omat
-    type(sector)                          :: sectorI
+    type(sector)                          :: sectorI,sectorJ
     real(8)                               :: sgn
-    integer                               :: ialfa,ipos
-    integer                               :: i,iph,i_el
-    integer,dimension(2*Ns_Ud)            :: Indices
+    integer                               :: ialfa,ibeta,ipos
+    integer                               :: i,j,r,iph,i_el,j_el
+    integer,dimension(2*Ns_Ud)            :: Indices,Jndices
     integer,dimension(2,Ns_Orb)           :: Nud
     integer,dimension(2)                  :: Iud
     !
-    if(lsector/=rsector)stop "KOC_build_operator_n_block error: density block must be diagonal in sector"
     if(Omat%status)call sp_delete_matrix(Omat)
     call sp_init_matrix(Omat,getDim(lsector),getDim(rsector))
     !
@@ -422,8 +439,10 @@ contains
        ialfa = iorb
        ipos  = 1
     endif
+    ibeta = ialfa + (ispin-1)*Ns_Ud
     !
     call build_sector(rsector,sectorI)
+    call build_sector(lsector,sectorJ)
     do i=1,sectorI%Dim
        iph  = (i-1)/(sectorI%DimEl) + 1
        i_el = mod(i-1,sectorI%DimEl) + 1
@@ -432,12 +451,18 @@ contains
        iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
        nud(1,:) = Bdecomp(iud(1),Ns_Orb)
        nud(2,:) = Bdecomp(iud(2),Ns_Orb)
-       sgn      = dble(nud(1,ipos))+dble(nud(2,ipos))
-       if(abs(sgn)>OpTol)call sp_insert_element(Omat,sgn,i,i)
+       if(Nud(ispin,ipos)/=1)cycle
+       call c(ipos,iud(ispin),r,sgn)
+       Jndices        = Indices
+       Jndices(ibeta) = binary_search(sectorJ%H(ibeta)%map,r)
+       call indices2state(Jndices,[sectorJ%DimUps,sectorJ%DimDws],j_el)
+       j = j_el + (iph-1)*sectorJ%DimEl
+       if(abs(sgn)>OpTol)call sp_insert_element(Omat,sgn,j,i)
     enddo
     !
     call delete_sector(sectorI)
-  end subroutine KOC_build_operator_n_block
+    call delete_sector(sectorJ)
+  end subroutine KOC_build_operator_c_block
 
 
 

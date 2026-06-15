@@ -484,20 +484,22 @@ contains
     if(allocated(ed_mag))deallocate(ed_mag)
     if(allocated(ed_Kcdg))deallocate(ed_Kcdg)
     if(allocated(ed_Scdg))deallocate(ed_Scdg)
-    if(allocated(ed_Normcdg))deallocate(ed_Normcdg)
     if(allocated(ed_Pcdg))deallocate(ed_Pcdg)
-    if(allocated(ed_Kn))deallocate(ed_Kn)
-    if(allocated(ed_Sn))deallocate(ed_Sn)
-    if(allocated(ed_Normn))deallocate(ed_Normn)
-    if(allocated(ed_Pn))deallocate(ed_Pn)
+    if(allocated(ed_Kc))deallocate(ed_Kc)
+    if(allocated(ed_Sc))deallocate(ed_Sc)
+    if(allocated(ed_Pc))deallocate(ed_Pc)
+    if(allocated(ed_Kg1))deallocate(ed_Kg1)
+    if(allocated(ed_Sg1))deallocate(ed_Sg1)
+    if(allocated(ed_Pg1))deallocate(ed_Pg1)
     if(allocated(ed_KOCcdg))deallocate(ed_KOCcdg)
     if(allocated(ed_SOCcdg))deallocate(ed_SOCcdg)
-    if(allocated(ed_NormOCcdg))deallocate(ed_NormOCcdg)
     if(allocated(ed_POCcdg))deallocate(ed_POCcdg)
-    if(allocated(ed_KOCn))deallocate(ed_KOCn)
-    if(allocated(ed_SOCn))deallocate(ed_SOCn)
-    if(allocated(ed_NormOCn))deallocate(ed_NormOCn)
-    if(allocated(ed_POCn))deallocate(ed_POCn)
+    if(allocated(ed_KOCc))deallocate(ed_KOCc)
+    if(allocated(ed_SOCc))deallocate(ed_SOCc)
+    if(allocated(ed_POCc))deallocate(ed_POCc)
+    if(allocated(ed_KOCg1))deallocate(ed_KOCg1)
+    if(allocated(ed_SOCg1))deallocate(ed_SOCg1)
+    if(allocated(ed_POCg1))deallocate(ed_POCg1)
     if(allocated(spin_field))deallocate(spin_field)
     call delete_input
   end subroutine delete_ed_structure
@@ -1104,8 +1106,6 @@ contains
 
 
 end MODULE ED_SETUP
-
-
 
 
 
