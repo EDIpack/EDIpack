@@ -44,7 +44,7 @@ authors:
     family-names: Amaricci
     orcid: https://orcid.org/0000-0003-0737-987X
 
-version: 6.0.0
+version: 6.1.0
 repository-code: https://github.com/EDIpack/EDIpack
 url: https://doi.org/10.21468/SciPostPhysCodeb.58
 
