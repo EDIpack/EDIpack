@@ -98,6 +98,14 @@ MODULE ED_SPARSE_MATRIX
      module procedure :: sp_axpy_matrix_csr_d
   end interface sp_axpy_matrix
 
+  interface sp_axpy_matrix_inplace
+     module procedure :: sp_axpy_matrix_inplace_csr_d
+  end interface sp_axpy_matrix_inplace
+
+  interface sp_scale_matrix
+     module procedure :: sp_scale_matrix_csr_d
+  end interface sp_scale_matrix
+
   interface sp_matmul_matrix
      module procedure :: sp_matmul_matrix_csr_d
   end interface sp_matmul_matrix
@@ -129,6 +137,8 @@ MODULE ED_SPARSE_MATRIX
   public :: sp_dump_matrix
   public :: sp_copy_matrix
   public :: sp_axpy_matrix
+  public :: sp_axpy_matrix_inplace
+  public :: sp_scale_matrix
   public :: sp_matmul_matrix
   public :: sp_matvec_matrix
   public :: sp_Tmatvec_matrix
@@ -569,7 +579,10 @@ contains
     type(sparse_matrix_csr),intent(inout) :: C
     real(8),intent(in),optional           :: tol
     real(8)                               :: threshold,value
-    integer                               :: i,j
+    real(8),dimension(:),allocatable      :: work
+    integer,dimension(:),allocatable      :: used_cols
+    logical,dimension(:),allocatable      :: used
+    integer                               :: i,j,col,nused
     !
     if(.not.A%status)stop "sp_axpy_matrix_csr_d ERROR: A is not allocated"
     if(.not.B%status)stop "sp_axpy_matrix_csr_d ERROR: B is not allocated"
@@ -578,17 +591,106 @@ contains
     threshold = 0d0;if(present(tol))threshold=tol
     if(C%status)call sp_delete_matrix(C)
     call sp_init_matrix(C,A%Nrow,A%Ncol)
+    allocate(work(A%Ncol),used_cols(A%Ncol),used(A%Ncol))
+    work=0d0
+    used=.false.
     do i=1,A%Nrow
+       nused=0
        do j=1,A%row(i)%size
-          value = alpha*A%row(i)%dvals(j)
-          if(abs(value)>threshold)call sp_insert_element(C,value,i,A%row(i)%cols(j))
+          col = A%row(i)%cols(j)
+          if(.not.used(col))then
+             nused=nused+1
+             used_cols(nused)=col
+             used(col)=.true.
+          endif
+          work(col) = work(col) + alpha*A%row(i)%dvals(j)
        enddo
        do j=1,B%row(i)%size
-          value = beta*B%row(i)%dvals(j)
-          if(abs(value)>threshold)call sp_insert_element(C,value,i,B%row(i)%cols(j))
+          col = B%row(i)%cols(j)
+          if(.not.used(col))then
+             nused=nused+1
+             used_cols(nused)=col
+             used(col)=.true.
+          endif
+          work(col) = work(col) + beta*B%row(i)%dvals(j)
+       enddo
+       call sp_set_row_csr_d(C,i,work,used_cols,nused,threshold)
+       do j=1,nused
+          col=used_cols(j)
+          work(col)=0d0
+          used(col)=.false.
        enddo
     enddo
+    deallocate(work,used_cols,used)
   end subroutine sp_axpy_matrix_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse matrix in-place update Y = alpha*A + Y
+  !+------------------------------------------------------------------+
+  subroutine sp_axpy_matrix_inplace_csr_d(alpha,A,Y,tol)
+    real(8),intent(in)                    :: alpha
+    type(sparse_matrix_csr),intent(in)    :: A
+    type(sparse_matrix_csr),intent(inout) :: Y
+    real(8),intent(in),optional           :: tol
+    real(8)                               :: threshold
+    real(8),dimension(:),allocatable      :: work
+    integer,dimension(:),allocatable      :: used_cols
+    logical,dimension(:),allocatable      :: used
+    integer                               :: i,j,col,nused
+    !
+    if(.not.A%status)stop "sp_axpy_matrix_inplace_csr_d ERROR: A is not allocated"
+    if(.not.Y%status)stop "sp_axpy_matrix_inplace_csr_d ERROR: Y is not allocated"
+    if(A%Nrow/=Y%Nrow)stop "sp_axpy_matrix_inplace_csr_d ERROR: Nrow mismatch"
+    if(A%Ncol/=Y%Ncol)stop "sp_axpy_matrix_inplace_csr_d ERROR: Ncol mismatch"
+    threshold = 0d0;if(present(tol))threshold=tol
+    allocate(work(Y%Ncol),used_cols(Y%Ncol),used(Y%Ncol))
+    work=0d0
+    used=.false.
+    do i=1,Y%Nrow
+       nused=0
+       do j=1,Y%row(i)%size
+          col = Y%row(i)%cols(j)
+          if(.not.used(col))then
+             nused=nused+1
+             used_cols(nused)=col
+             used(col)=.true.
+          endif
+          work(col) = work(col) + Y%row(i)%dvals(j)
+       enddo
+       do j=1,A%row(i)%size
+          col = A%row(i)%cols(j)
+          if(.not.used(col))then
+             nused=nused+1
+             used_cols(nused)=col
+             used(col)=.true.
+          endif
+          work(col) = work(col) + alpha*A%row(i)%dvals(j)
+       enddo
+       call sp_set_row_csr_d(Y,i,work,used_cols,nused,threshold)
+       do j=1,nused
+          col=used_cols(j)
+          work(col)=0d0
+          used(col)=.false.
+       enddo
+    enddo
+    deallocate(work,used_cols,used)
+  end subroutine sp_axpy_matrix_inplace_csr_d
+
+
+  !+------------------------------------------------------------------+
+  !PURPOSE: real sparse matrix in-place scale A = alpha*A
+  !+------------------------------------------------------------------+
+  subroutine sp_scale_matrix_csr_d(alpha,A)
+    real(8),intent(in)                    :: alpha
+    type(sparse_matrix_csr),intent(inout) :: A
+    integer                               :: i
+    !
+    if(.not.A%status)stop "sp_scale_matrix_csr_d ERROR: A is not allocated"
+    do i=1,A%Nrow
+       if(A%row(i)%size>0)A%row(i)%dvals = alpha*A%row(i)%dvals
+    enddo
+  end subroutine sp_scale_matrix_csr_d
 
 
   !+------------------------------------------------------------------+
@@ -599,7 +701,10 @@ contains
     type(sparse_matrix_csr),intent(inout) :: C
     real(8),intent(in),optional           :: tol
     real(8)                               :: threshold,value
-    integer                               :: i,j,k,icol
+    real(8),dimension(:),allocatable      :: work
+    integer,dimension(:),allocatable      :: used_cols
+    logical,dimension(:),allocatable      :: used
+    integer                               :: i,j,k,icol,col,nused
     !
     if(.not.A%status)stop "sp_matmul_matrix_csr_d ERROR: A is not allocated"
     if(.not.B%status)stop "sp_matmul_matrix_csr_d ERROR: B is not allocated"
@@ -607,16 +712,64 @@ contains
     threshold = 0d0;if(present(tol))threshold=tol
     if(C%status)call sp_delete_matrix(C)
     call sp_init_matrix(C,A%Nrow,B%Ncol)
+    allocate(work(B%Ncol),used_cols(B%Ncol),used(B%Ncol))
+    work=0d0
+    used=.false.
     do i=1,A%Nrow
+       nused=0
        do j=1,A%row(i)%size
           k = A%row(i)%cols(j)
           do icol=1,B%row(k)%size
+             col   = B%row(k)%cols(icol)
              value = A%row(i)%dvals(j)*B%row(k)%dvals(icol)
-             if(abs(value)>threshold)call sp_insert_element(C,value,i,B%row(k)%cols(icol))
+             if(.not.used(col))then
+                nused=nused+1
+                used_cols(nused)=col
+                used(col)=.true.
+             endif
+             work(col) = work(col) + value
           enddo
        enddo
+       call sp_set_row_csr_d(C,i,work,used_cols,nused,threshold)
+       do j=1,nused
+          col=used_cols(j)
+          work(col)=0d0
+          used(col)=.false.
+       enddo
     enddo
+    deallocate(work,used_cols,used)
   end subroutine sp_matmul_matrix_csr_d
+
+
+  subroutine sp_set_row_csr_d(A,i,work,used_cols,nused,threshold)
+    type(sparse_matrix_csr),intent(inout) :: A
+    integer,intent(in)                    :: i,nused
+    real(8),dimension(:),intent(in)       :: work
+    integer,dimension(:),intent(in)       :: used_cols
+    real(8),intent(in)                    :: threshold
+    integer                               :: j,col,nn
+    !
+    nn=0
+    do j=1,nused
+       col=used_cols(j)
+       if(abs(work(col))>threshold)nn=nn+1
+    enddo
+    if(allocated(A%row(i)%dvals))deallocate(A%row(i)%dvals)
+    if(allocated(A%row(i)%cvals))deallocate(A%row(i)%cvals)
+    if(allocated(A%row(i)%cols))deallocate(A%row(i)%cols)
+    A%row(i)%size=nn
+    allocate(A%row(i)%dvals(nn))
+    allocate(A%row(i)%cvals(0))
+    allocate(A%row(i)%cols(nn))
+    nn=0
+    do j=1,nused
+       col=used_cols(j)
+       if(abs(work(col))<=threshold)cycle
+       nn=nn+1
+       A%row(i)%dvals(nn)=work(col)
+       A%row(i)%cols(nn)=col
+    enddo
+  end subroutine sp_set_row_csr_d
 
 
   !+------------------------------------------------------------------+
@@ -955,7 +1108,6 @@ contains
 
 
 end module ED_SPARSE_MATRIX
-
 
 
 

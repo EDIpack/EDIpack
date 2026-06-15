@@ -6,6 +6,7 @@ MODULE ED_KRYLOV_NORMAL
   USE ED_INPUT_VARS
   USE ED_VARS_GLOBAL
   USE ED_EIGENSPACE
+  USE ED_AUX_FUNX, only: cdg,bdecomp,binary_search
   USE ED_SECTOR
   USE ED_SPARSE_MATRIX
   USE ED_HAMILTONIAN_NORMAL
@@ -50,6 +51,10 @@ contains
     call tridiag_Hv_sector_normal(isector,vvinit,alanc,blanc,norm2)
   end subroutine KSC_Krylov_Basis_normal
 
+
+
+
+
   !Kryloc Operator Complexity: Build the Krylov basis |k_n> for a given op vector |O)
   subroutine KOC_Krylov_Basis_normal(op,iorb,ispin,alanc,blanc,norm2)
     character(len=*),intent(in)        :: op
@@ -90,7 +95,8 @@ contains
     !Start the Krylov basis construction
     beta_prev = 0d0
     Nlanc     = 1
-    do n=1,10!Nmax
+    call start_timer()
+    do n=1,Nmax
       !L|Op_n)=|Op_{n+1}>
       call KOC_apply_liouvillian_normal(qcurr,w)
       !a_n=(Op_n,Op_{n+1})
@@ -115,8 +121,9 @@ contains
       call koc_delete_vector(w)
       beta_prev = beta
       Nlanc = n+1
-      print*,"DEBUG",n,atmp(n),btmp(n)
+      call eta(n,Nlanc,LOGfile)
     enddo
+    call stop_timer()
     !
     allocate(alanc(Nlanc),blanc(Nlanc))
     alanc = atmp(1:Nlanc)
@@ -333,29 +340,104 @@ contains
     character(len=*),intent(in)          :: op
     integer,intent(in)                   :: iorb,ispin,lsector,rsector
     type(sparse_matrix_csr),intent(inout):: Omat
-    real(8),dimension(:),allocatable     :: vin,vout
-    integer                              :: i,j
+    !
+    select case(to_lower(trim(op)))
+    case("cdg")
+       call KOC_build_operator_cdg_block(iorb,ispin,lsector,rsector,Omat)
+    case("n")
+       call KOC_build_operator_n_block(iorb,lsector,rsector,Omat)
+    case default
+       stop "KOC_build_operator_block error: op must be 'cdg' or 'N'"
+    end select
+  end subroutine koc_build_operator_block
+
+
+  subroutine KOC_build_operator_cdg_block(iorb,ispin,lsector,rsector,Omat)
+    integer,intent(in)                    :: iorb,ispin,lsector,rsector
+    type(sparse_matrix_csr),intent(inout) :: Omat
+    type(sector)                          :: sectorI,sectorJ
+    real(8)                               :: sgn
+    integer                               :: ialfa,ibeta,ipos
+    integer                               :: i,j,r,iph,i_el,j_el
+    integer,dimension(2*Ns_Ud)            :: Indices,Jndices
+    integer,dimension(2,Ns_Orb)           :: Nud
+    integer,dimension(2)                  :: Iud
     !
     if(Omat%status)call sp_delete_matrix(Omat)
-    !
     call sp_init_matrix(Omat,getDim(lsector),getDim(rsector))
     !
-    allocate(vin(getDim(rsector)))
-    do j=1,getDim(rsector)
-      vin   =0d0
-      vin(j)=1d0
-      select case(to_lower(trim(op)))
-      case("cdg");vout = apply_op_CDG(vin,iorb,ispin,rsector,lsector)
-      case("n")  ;vout = apply_op_N(vin,iorb,rsector)
-      end select
-      do i=1,size(vout)
-        if(abs(vout(i))>OpTol)call sp_insert_element(Omat,vout(i),i,j)
-      enddo
-      if(allocated(vout))deallocate(vout)
-    enddo
-    deallocate(vin)
+    if(ed_total_ud)then
+       ialfa = 1
+       ipos  = iorb
+    else
+       ialfa = iorb
+       ipos  = 1
+    endif
+    ibeta = ialfa + (ispin-1)*Ns_Ud
     !
-  end subroutine koc_build_operator_block
+    call build_sector(rsector,sectorI)
+    call build_sector(lsector,sectorJ)
+    !
+    do i=1,sectorI%Dim
+       iph  = (i-1)/(sectorI%DimEl) + 1
+       i_el = mod(i-1,sectorI%DimEl) + 1
+       call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+       iud(1)   = sectorI%H(ialfa)%map(Indices(ialfa))
+       iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
+       nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+       nud(2,:) = Bdecomp(iud(2),Ns_Orb)
+       if(Nud(ispin,ipos)/=0)cycle
+       call cdg(ipos,iud(ispin),r,sgn)
+       Jndices        = Indices
+       Jndices(ibeta) = binary_search(sectorJ%H(ibeta)%map,r)
+       call indices2state(Jndices,[sectorJ%DimUps,sectorJ%DimDws],j_el)
+       j = j_el + (iph-1)*sectorJ%DimEl
+       if(abs(sgn)>OpTol)call sp_insert_element(Omat,sgn,j,i)
+    enddo
+    !
+    call delete_sector(sectorI)
+    call delete_sector(sectorJ)
+  end subroutine KOC_build_operator_cdg_block
+
+
+  subroutine KOC_build_operator_n_block(iorb,lsector,rsector,Omat)
+    integer,intent(in)                    :: iorb,lsector,rsector
+    type(sparse_matrix_csr),intent(inout) :: Omat
+    type(sector)                          :: sectorI
+    real(8)                               :: sgn
+    integer                               :: ialfa,ipos
+    integer                               :: i,iph,i_el
+    integer,dimension(2*Ns_Ud)            :: Indices
+    integer,dimension(2,Ns_Orb)           :: Nud
+    integer,dimension(2)                  :: Iud
+    !
+    if(lsector/=rsector)stop "KOC_build_operator_n_block error: density block must be diagonal in sector"
+    if(Omat%status)call sp_delete_matrix(Omat)
+    call sp_init_matrix(Omat,getDim(lsector),getDim(rsector))
+    !
+    if(ed_total_ud)then
+       ialfa = 1
+       ipos  = iorb
+    else
+       ialfa = iorb
+       ipos  = 1
+    endif
+    !
+    call build_sector(rsector,sectorI)
+    do i=1,sectorI%Dim
+       iph  = (i-1)/(sectorI%DimEl) + 1
+       i_el = mod(i-1,sectorI%DimEl) + 1
+       call state2indices(i_el,[sectorI%DimUps,sectorI%DimDws],Indices)
+       iud(1)   = sectorI%H(ialfa)%map(Indices(ialfa))
+       iud(2)   = sectorI%H(ialfa+Ns_Ud)%map(Indices(ialfa+Ns_Ud))
+       nud(1,:) = Bdecomp(iud(1),Ns_Orb)
+       nud(2,:) = Bdecomp(iud(2),Ns_Orb)
+       sgn      = dble(nud(1,ipos))+dble(nud(2,ipos))
+       if(abs(sgn)>OpTol)call sp_insert_element(Omat,sgn,i,i)
+    enddo
+    !
+    call delete_sector(sectorI)
+  end subroutine KOC_build_operator_n_block
 
 
 
@@ -438,15 +520,12 @@ contains
   subroutine koc_scale_vector(alpha,A)
     real(8),intent(in)      :: alpha
     type(koc_vector_normal) :: A
-    integer                 :: ib,i
+    integer                 :: ib
     !
     if(.not.allocated(A%block))return
     !
     do ib=1,size(A%block)
-       do i=1,A%block(ib)%mat%Nrow
-          if(A%block(ib)%mat%row(i)%size>0)&
-             A%block(ib)%mat%row(i)%dvals = alpha*A%block(ib)%mat%row(i)%dvals
-       enddo
+       call sp_scale_matrix(alpha,A%block(ib)%mat)
     enddo
   end subroutine koc_scale_vector
 
@@ -455,7 +534,6 @@ contains
     real(8),intent(in)              :: alpha
     type(koc_vector_normal),intent(in) :: X
     type(koc_vector_normal)         :: Y
-    type(sparse_matrix_csr)         :: tmp
     integer                         :: ib
     !
     if(.not.allocated(X%block))return
@@ -469,10 +547,7 @@ contains
        if(X%block(ib)%left_sector/=Y%block(ib)%left_sector.OR.&
           X%block(ib)%right_sector/=Y%block(ib)%right_sector)&
           stop "koc_axpy_vector error: sector mismatch"
-       call sp_axpy_matrix(alpha,X%block(ib)%mat,1d0,Y%block(ib)%mat,tmp,OpTol)
-       call sp_delete_matrix(Y%block(ib)%mat)
-       call sp_copy_matrix(tmp,Y%block(ib)%mat)
-       call sp_delete_matrix(tmp)
+       call sp_axpy_matrix_inplace(alpha,X%block(ib)%mat,Y%block(ib)%mat,OpTol)
     enddo
   end subroutine koc_axpy_vector
 
