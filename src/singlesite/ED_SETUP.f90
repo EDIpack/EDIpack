@@ -482,24 +482,12 @@ contains
     if(allocated(ed_dens_up))deallocate(ed_dens_up)
     if(allocated(ed_dens_dw))deallocate(ed_dens_dw)
     if(allocated(ed_mag))deallocate(ed_mag)
-    if(allocated(ed_Kcdg))deallocate(ed_Kcdg)
-    if(allocated(ed_Scdg))deallocate(ed_Scdg)
-    if(allocated(ed_Pcdg))deallocate(ed_Pcdg)
-    if(allocated(ed_Kc))deallocate(ed_Kc)
-    if(allocated(ed_Sc))deallocate(ed_Sc)
-    if(allocated(ed_Pc))deallocate(ed_Pc)
-    if(allocated(ed_Kg1))deallocate(ed_Kg1)
-    if(allocated(ed_Sg1))deallocate(ed_Sg1)
-    if(allocated(ed_Pg1))deallocate(ed_Pg1)
-    if(allocated(ed_KOCcdg))deallocate(ed_KOCcdg)
-    if(allocated(ed_SOCcdg))deallocate(ed_SOCcdg)
-    if(allocated(ed_POCcdg))deallocate(ed_POCcdg)
-    if(allocated(ed_KOCc))deallocate(ed_KOCc)
-    if(allocated(ed_SOCc))deallocate(ed_SOCc)
-    if(allocated(ed_POCc))deallocate(ed_POCc)
-    if(allocated(ed_KOCg1))deallocate(ed_KOCg1)
-    if(allocated(ed_SOCg1))deallocate(ed_SOCg1)
-    if(allocated(ed_POCg1))deallocate(ed_POCg1)
+    if(allocated(ed_KSC))deallocate(ed_KSC)
+    if(allocated(ed_SSC))deallocate(ed_SSC)
+    if(allocated(ed_PSC))deallocate(ed_PSC)
+    if(allocated(ed_KOC))deallocate(ed_KOC)
+    if(allocated(ed_SOC))deallocate(ed_SOC)
+    if(allocated(ed_POC))deallocate(ed_POC)
     if(allocated(spin_field))deallocate(spin_field)
     call delete_input
   end subroutine delete_ed_structure
@@ -1106,7 +1094,6 @@ contains
 
 
 end MODULE ED_SETUP
-
 
 
 

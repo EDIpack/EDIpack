@@ -260,24 +260,12 @@ MODULE ED_VARS_GLOBAL
   real(8)                                            :: ed_dens_ph
   real(8)                                            :: ed_X_ph
   real(8)                                            :: ed_X2_ph
-  real(8),dimension(:,:,:),allocatable               :: ed_Kcdg
-  real(8),dimension(:,:,:),allocatable               :: ed_Scdg
-  real(8),dimension(:,:,:,:),allocatable             :: ed_Pcdg
-  real(8),dimension(:,:,:),allocatable               :: ed_Kc
-  real(8),dimension(:,:,:),allocatable               :: ed_Sc
-  real(8),dimension(:,:,:,:),allocatable             :: ed_Pc
-  real(8),dimension(:,:,:),allocatable               :: ed_Kg1
-  real(8),dimension(:,:,:),allocatable               :: ed_Sg1
-  real(8),dimension(:,:,:,:),allocatable             :: ed_Pg1
-  real(8),dimension(:,:,:),allocatable               :: ed_KOCcdg
-  real(8),dimension(:,:,:),allocatable               :: ed_SOCcdg
-  real(8),dimension(:,:,:,:),allocatable             :: ed_POCcdg
-  real(8),dimension(:,:,:),allocatable               :: ed_KOCc
-  real(8),dimension(:,:,:),allocatable               :: ed_SOCc
-  real(8),dimension(:,:,:,:),allocatable             :: ed_POCc
-  real(8),dimension(:,:,:),allocatable               :: ed_KOCg1
-  real(8),dimension(:,:,:),allocatable               :: ed_SOCg1
-  real(8),dimension(:,:,:,:),allocatable             :: ed_POCg1
+  real(8),dimension(:,:,:,:),allocatable             :: ed_KSC
+  real(8),dimension(:,:,:,:),allocatable             :: ed_SSC
+  real(8),dimension(:,:,:,:,:),allocatable           :: ed_PSC
+  real(8),dimension(:,:,:,:),allocatable             :: ed_KOC
+  real(8),dimension(:,:,:,:),allocatable             :: ed_SOC
+  real(8),dimension(:,:,:,:,:),allocatable           :: ed_POC
 
 
   !Frequency and time arrays:
