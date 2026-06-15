@@ -522,7 +522,7 @@ contains
     enddo
     !
     if(offdiag_gf_flag)then
-       call PrintHmask()
+       !call PrintHmask()
        !
        do ispin=1,Nspin
           do iorb=1,Norb
