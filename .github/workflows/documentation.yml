@@ -23,7 +23,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y doxygen
-          pip install numpy sphinx sphinx_rtd_theme myst-parser sphinxfortran-ng breathe charset_normalizer
+          pip install six numpy sphinx sphinx_rtd_theme myst-parser sphinxfortran-ng breathe charset_normalizer
       - name: Build documentation (Sphinx + Doxygen via conf.py)
         run: sphinx-build doc _build
       - name: Upload artifact
