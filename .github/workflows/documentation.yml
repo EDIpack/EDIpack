@@ -11,21 +11,37 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
+      - name: Determine tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+          else
+            TAG=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest \
+              | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'])")
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+      
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref }}
+          ref: ${{ steps.tag.outputs.tag }}
+      
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y doxygen
           pip install six numpy sphinx sphinx_rtd_theme myst-parser sphinxfortran-ng breathe charset_normalizer
+      
       - name: Build documentation (Sphinx + Doxygen via conf.py)
         run: sphinx-build doc _build
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
