@@ -152,10 +152,11 @@ MODULE EDIPACK
        ed_build_pairChi  => get_pairChi , &
        ed_build_spinChi  => get_spinChi
 
+#ifndef _CMPLX_NORMAL
   USE ED_KRYLOV, only: &
        ed_build_krylov_state_complexity => krylov_state_complexity, &
        ed_build_krylov_operator_complexity => krylov_operator_complexity
-
+#endif
   
   USE ED_MAIN, only:    &
        ed_finalize_solver , &
