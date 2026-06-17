@@ -35,7 +35,7 @@ contains
     write(Logfile,"(A)")"DEBUG ed_checks_global: Checking input inconsistencies"
 #endif
     !
-    if(Lfit>Lmats)Lfit=Lmats
+    !if(Lfit>Lmats)Lfit=Lmats
     if(Nspin>2)stop "ED ERROR: Nspin > 2 is currently not supported"
     if(Norb>5 .and. ed_use_kanamori)stop "ED ERROR: Norb > 5 and ED_USE_KANAMORI=T are incompatible."
     !
