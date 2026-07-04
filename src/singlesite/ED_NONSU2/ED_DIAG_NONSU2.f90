@@ -411,7 +411,7 @@ contains
        call save_state_list(unit)
        close(unit)
     endif
-    if(ed_verbose>=2)call print_state_list(LOGfile)
+    if(ed_verbose>=1)call print_state_list(LOGfile)
     !
     zeta_function=0d0
     Egs = state_list%emin
