@@ -40,7 +40,7 @@ MODULE ED_OBSERVABLES_NORMAL
   real(8),dimension(:),allocatable   :: pdf_ph ! Phonon probability distribution :f:func:`prob_distr_ph`
   real(8),dimension(:,:),allocatable :: pdf_part ! Lattice probability distribution as obtained by :f:func:`prob_distr_ph`
   !
-  integer                            :: iorb,jorb,iorb1,jorb1
+  integer                            :: iorb,jorb,iorb1,jorb1,io,jo,kp,ialfa
   integer                            :: ispin,jspin
   integer                            :: isite,jsite
   integer                            :: ibath
@@ -311,6 +311,7 @@ contains
     allocate(single_particle_density_matrix(Nspin,Nspin,Norb,Norb));single_particle_density_matrix=zero
     if(allocated(full_denmat)) deallocate(full_denmat)
     allocate(full_denmat(Nspin,Nspin,Ns,Ns));full_denmat=zero
+    !
     do istate=1,state_list%size
        isector = es_return_sector(state_list,istate)
        Ei      = es_return_energy(state_list,istate)
@@ -343,16 +344,19 @@ contains
                 do iorb=1,Norb
                    single_particle_density_matrix(ispin,ispin,iorb,iorb) = &
                         single_particle_density_matrix(ispin,ispin,iorb,iorb) + &
+#ifdef _CMPLX_NORMAL
+                        peso*nud(ispin,iorb)*(v_state(i))*conjg(v_state(i))
+#else                        
                         peso*nud(ispin,iorb)*(v_state(i))*v_state(i)
+#endif
                 enddo
              enddo
              !
-             !Off-diagonal
+             !Off-diagonal terms only if `ed_total_ud=T`
              if(ed_total_ud)then
                 do ispin=1,Nspin
                    do iorb=1,Norb
                       do jorb=1,Norb
-                         !
                          if((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
                             iud(1) = sectorI%H(1)%map(Indices(1))
                             iud(2) = sectorI%H(2)%map(Indices(2))
@@ -367,45 +371,52 @@ contains
                             !
                             single_particle_density_matrix(ispin,ispin,iorb,jorb) = &
                                  single_particle_density_matrix(ispin,ispin,iorb,jorb) + &
+#ifdef _CMPLX_NORMAL                                    
+                                 peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+#else                                 
                                  peso*sgn1*v_state(i)*sgn2*(v_state(j))
+#endif
                          endif
                       enddo
                    enddo
                 enddo
              endif
-             do ispin=1,Nspin
-               do iorb=1,Ns
-                  do jorb=1,Ns
-                  ! diagonal
-                  if(iorb==jorb )then
-                     full_denmat(ispin,ispin,iorb,jorb) = &
+             !
+             !Full density matrix: <C^+_io C_jo>    
+             if(ed_total_ud)then                      
+               do ispin=1,Nspin               
+                  do io=1,Ns
+                     ! diagonal <C^+_io C_io>
+                     full_denmat(ispin,ispin,io,io) = &
 #ifdef _CMPLX_NORMAL
-                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*conjg(v_state(i))
+                     full_denmat(ispin,ispin,io,io) + Nud(ispin,io)*peso*(v_state(i))*conjg(v_state(i))
 #else
-                     full_denmat(ispin,ispin,iorb,jorb) + Nud(ispin,iorb)*peso*(v_state(i))*v_state(i)
+                     full_denmat(ispin,ispin,io,io) + Nud(ispin,io)*peso*(v_state(i))*v_state(i)
 #endif
-                  elseif((Nud(ispin,jorb)==1).and.(Nud(ispin,iorb)==0))then
-                     iud(1) = sectorI%H(1)%map(Indices(1))
-                     iud(2) = sectorI%H(2)%map(Indices(2))
-                     call c(jorb,iud(ispin),r,sgn1)
-                     call cdg(iorb,r,k,sgn2)
-                     Jndices = Indices
-                     Jndices(1+(ispin-1)*Ns_Ud) = &
-                           binary_search(sectorI%H(1+(ispin-1)*Ns_Ud)%map,k)
-                     call indices2state(Jndices,[sectorI%DimUps,sectorI%DimDws],j)
-                     !
-                     j = j + (iph-1)*sectorI%DimEl
-                     !
-                     full_denmat(ispin,ispin,iorb,jorb) = &
+                     ! off-diagonal <C^+_io C_jo>
+                     do jo=1,Ns
+                        if((Nud(ispin,jo)==1).and.(Nud(ispin,io)==0))then
+                           iud(1) = sectorI%H(1)%map(Indices(1))
+                           iud(2) = sectorI%H(2)%map(Indices(2))
+                           call c(jo,iud(ispin),r,sgn1)
+                           call cdg(io,r,k,sgn2)
+                           Jndices = Indices
+                           Jndices(1+(ispin-1)*Ns_Ud) = binary_search(sectorI%H(1+(ispin-1)*Ns_Ud)%map,k)
+                           call indices2state(Jndices,[sectorI%DimUps,sectorI%DimDws],j)
+                           !
+                           j = j + (iph-1)*sectorI%DimEl
+                           !
+                           full_denmat(ispin,ispin,io,jo) = &
 #ifdef _CMPLX_NORMAL                   
-                     full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
+                           full_denmat(ispin,ispin,io,jo) + peso*sgn1*v_state(i)*sgn2*conjg(v_state(j))
 #else
-                     full_denmat(ispin,ispin,iorb,jorb) + peso*sgn1*v_state(i)*sgn2*v_state(j)
+                           full_denmat(ispin,ispin,io,jo) + peso*sgn1*v_state(i)*sgn2*v_state(j)
 #endif                       
-                  endif
+                        endif
+                     enddo
                   enddo
-               enddo
-             enddo
+              enddo
+            endif 
              !
              !
           enddo
