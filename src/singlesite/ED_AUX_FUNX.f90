@@ -654,7 +654,8 @@ contains
     integer                          :: MpiComm
     complex(8),dimension(:)          :: v    !size[N]
     complex(8),dimension(:)          :: vloc !size[Nloc]
-    integer                          :: i,irank,Nloc,N
+    integer                          :: i,iph,irank,Nloc,N
+    integer                          :: v_start,v_end,vloc_start,vloc_end
     integer,dimension(:),allocatable :: Counts,Offset
     integer                          :: MpiSize,MpiIerr
     logical                          :: MpiMaster
@@ -663,7 +664,8 @@ contains
     if(ed_verbose>4)write(Logfile,"(A)")"DEBUG c_scatter_vector_MPI: scatter v into vloc"
 #endif
     !
-    if( MpiComm == MPI_UNDEFINED ) stop "scatter_vector_MPI error: MpiComm == MPI_UNDEFINED"
+    if( MpiComm == MPI_UNDEFINED .OR. MpiComm == Mpi_Comm_Null )return
+    ! stop "scatter_vector_MPI error: MpiComm == MPI_UNDEFINED"
     !
     MpiSize   = get_size_MPI(MpiComm)
     MpiMaster = get_master_MPI(MpiComm)
@@ -677,7 +679,7 @@ contains
     allocate(Offset(0:MpiSize-1)) ; Offset=0
     !
     !Get Counts;
-    call MPI_AllGather(Nloc,1,MPI_INTEGER,Counts,1,MPI_INTEGER,MpiComm,MpiIerr)
+    call MPI_AllGather(Nloc/DimPh,1,MPI_INTEGER,Counts,1,MPI_INTEGER,MpiComm,MpiIerr)
     !
     !Get Offset:
     Offset(0)=0
@@ -685,8 +687,20 @@ contains
        Offset(i) = Offset(i-1) + Counts(i-1)
     enddo
     !
-    Vloc=0
-    call MPI_Scatterv(V,Counts,Offset,MPI_DOUBLE_COMPLEX,Vloc,Nloc,MPI_DOUBLE_COMPLEX,0,MpiComm,MpiIerr)
+    Vloc=zero
+    do iph=1,Dimph
+       if(MpiMaster)then
+          v_start = 1 + (iph-1)*(N/Dimph)
+          v_end = iph*(N/Dimph)
+       else
+          v_start = 1
+          v_end = 1
+       endif
+       vloc_start = 1 + (iph-1)*(Nloc/Dimph)
+       vloc_end = iph*(Nloc/Dimph)
+       call MPI_Scatterv(V(v_start:v_end),Counts,Offset,MPI_DOUBLE_COMPLEX,&
+            Vloc(vloc_start:vloc_end),Nloc/DimPh,MPI_DOUBLE_COMPLEX,0,MpiComm,MpiIerr)
+    enddo
     !
     return
   end subroutine c_scatter_vector_MPI
@@ -798,7 +812,8 @@ contains
     integer                          :: MpiComm
     complex(8),dimension(:)          :: vloc !size[Nloc]
     complex(8),dimension(:)          :: v    !size[N]
-    integer                          :: i,irank,Nloc,N
+    integer                          :: i,iph,irank,Nloc,N
+    integer                          :: v_start,v_end,vloc_start,vloc_end
     integer,dimension(:),allocatable :: Counts,Offset
     integer                          :: MpiSize,MpiIerr
     logical                          :: MpiMaster
@@ -807,7 +822,8 @@ contains
     if(ed_verbose>4)write(Logfile,"(A)")"DEBUG c_gather_basis_MPI: gather  v"
 #endif
     !
-    if( MpiComm == MPI_UNDEFINED ) stop "gather_vector_MPI error: MpiComm == MPI_UNDEFINED"
+    if(  MpiComm == MPI_UNDEFINED .OR. MpiComm == Mpi_Comm_Null ) return
+    !stop "gather_vector_MPI error: MpiComm == MPI_UNDEFINED"
     !
     MpiSize   = get_size_MPI(MpiComm)
     MpiMaster = get_master_MPI(MpiComm)
@@ -821,7 +837,7 @@ contains
     allocate(Offset(0:MpiSize-1)) ; Offset=0
     !
     !Get Counts;
-    call MPI_AllGather(Nloc,1,MPI_INTEGER,Counts,1,MPI_INTEGER,MpiComm,MpiIerr)
+    call MPI_AllGather(Nloc/Dimph,1,MPI_INTEGER,Counts,1,MPI_INTEGER,MpiComm,MpiIerr)
     !
     !Get Offset:
     Offset(0)=0
@@ -829,7 +845,20 @@ contains
        Offset(i) = Offset(i-1) + Counts(i-1)
     enddo
     !
-    call MPI_Gatherv(Vloc,Nloc,MPI_DOUBLE_COMPLEX,V,Counts,Offset,MPI_DOUBLE_COMPLEX,0,MpiComm,MpiIerr)
+    do iph=1,Dimph
+       if(MpiMaster)then
+          v_start = 1 + (iph-1)*(N/Dimph)
+          v_end = iph*(N/Dimph)
+       else
+          v_start = 1
+          v_end = 1
+       endif
+       vloc_start = 1 + (iph-1)*(Nloc/Dimph)
+       vloc_end = iph*(Nloc/Dimph)
+       !
+       call MPI_Gatherv(Vloc(vloc_start:vloc_end),Nloc/DimPh,MPI_DOUBLE_COMPLEX,&
+            V(v_start:v_end),Counts,Offset,MPI_DOUBLE_COMPLEX,0,MpiComm,MpiIerr)
+    enddo
     !
     return
   end subroutine c_gather_vector_MPI
@@ -891,7 +920,8 @@ contains
     integer                          :: MpiComm
     complex(8),dimension(:)          :: vloc !size[Nloc]
     complex(8),dimension(:)          :: v    !size[N]
-    integer                          :: i,irank,Nloc,N
+    integer                          :: i,iph,irank,Nloc,N
+    integer                          :: v_start,v_end,vloc_start,vloc_end
     integer,dimension(:),allocatable :: Counts,Offset
     integer                          :: MpiSize,MpiIerr
     logical                          :: MpiMaster
@@ -900,21 +930,22 @@ contains
     if(ed_verbose>4)write(Logfile,"(A)")"DEBUG c_allgather_basis_MPI: allgather v"
 #endif
     !
-    if( MpiComm == MPI_UNDEFINED ) stop "gather_vector_MPI error: MpiComm == MPI_UNDEFINED"
+    if(  MpiComm == MPI_UNDEFINED .OR. MpiComm == Mpi_Comm_Null ) return
+    ! stop "gather_vector_MPI error: MpiComm == MPI_UNDEFINED"
     !
     MpiSize   = get_size_MPI(MpiComm)
     MpiMaster = get_master_MPI(MpiComm)
     !
     Nloc = size(Vloc)
-    N = 0
+    N    = 0
     call AllReduce_MPI(MpiComm,Nloc,N)
-    if(MpiMaster.AND.N /= size(V)) stop "gather_vector_MPI error: size(V) != Mpi_Allreduce(Nloc)"
+    if(MpiMaster.AND.N /= size(V)) stop "allgather_vector_MPI error: size(V) != Mpi_Allreduce(Nloc)"
     !
     allocate(Counts(0:MpiSize-1)) ; Counts=0
     allocate(Offset(0:MpiSize-1)) ; Offset=0
     !
     !Get Counts;
-    call MPI_AllGather(Nloc,1,MPI_INTEGER,Counts,1,MPI_INTEGER,MpiComm,MpiIerr)
+    call MPI_AllGather(Nloc/Dimph,1,MPI_INTEGER,Counts,1,MPI_INTEGER,MpiComm,MpiIerr)
     !
     !Get Offset:
     Offset(0)=0
@@ -922,7 +953,15 @@ contains
        Offset(i) = Offset(i-1) + Counts(i-1)
     enddo
     !
-    call MPI_AllGatherv(Vloc,Nloc,MPI_DOUBLE_COMPLEX,V,Counts,Offset,MPI_DOUBLE_COMPLEX,MpiComm,MpiIerr)
+    V = zero
+    do iph=1,Dimph
+       v_start = 1 + (iph-1)*(N/Dimph)
+       v_end = iph*(N/Dimph)
+       vloc_start = 1 + (iph-1)*(Nloc/Dimph)
+       vloc_end = iph*(Nloc/Dimph)
+       call MPI_AllGatherv(Vloc(vloc_start:vloc_end),Nloc/DimPh,MPI_DOUBLE_COMPLEX,&
+            V(v_start:v_end),Counts,Offset,MPI_DOUBLE_COMPLEX,MpiComm,MpiIerr)
+    enddo
     !
     return
   end subroutine c_allgather_vector_MPI
