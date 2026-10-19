@@ -868,8 +868,6 @@ contains
     call substring_delete(umatrix_file,".ed")
     !
     !
-    !final cleanups
-    deallocate(Uloc_)
   end subroutine ed_read_input
 
   subroutine ed_update_input(name,vals)
